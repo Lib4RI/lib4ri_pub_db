@@ -1,6 +1,6 @@
 <?php 
 
-class lib4riMetaDataIntegrator{
+class Lib4riMetaDataIntegrator{
     
     private $authors = array(); //DOM element?
     
@@ -21,18 +21,67 @@ class lib4riMetaDataIntegrator{
     
 }
 
-class eawagMetaDataIntegrator extends lib4riMetaDataIntegrator{
+class EawagMetaDataIntegrator extends Lib4riMetaDataIntegrator{
     
 }
 
-class empaMetaDataIntegrator extends lib4riMetaDataIntegrator{
+class EmpaMetaDataIntegrator extends Lib4riMetaDataIntegrator{
     
 }
 
-class wslMetaDataIntegrator extends lib4riMetaDataIntegrator{
+class WslMetaDataIntegrator extends Lib4riMetaDataIntegrator{
     
 }
 
-class psiMetaDataIntegrator extends lib4riMetaDataIntegrator{
+class PsiMetaDataIntegrator extends Lib4riMetaDataIntegrator{
+    
+}
+
+
+
+/******************************************************************************
+ * Classes for metadata enrichment
+ *****************************************************************************/
+
+/**
+ * Generic class to enrich metadata with Lib4ri data
+ */
+
+class Lib4riMetaDataEnricher{
+    
+    protected $dom;
+    
+    /**
+     * Constructor.
+     */
+    
+    public function __construct() {
+        
+    }
+    
+    public function setDom($dom){
+        $this->dom = $dom;
+        return $this;
+    }
+    
+    public function addAffiliation(){
+        
+    }
+    
+}
+
+class EawagMetaDataEnricher extends Lib4riMetaDataEnricher{
+    
+}
+
+class EmpaMetaDataEnricher extends Lib4riMetaDataEnricher{
+    
+}
+
+class WslMetaDataEnricher extends Lib4riMetaDataEnricher{
+    
+}
+
+class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
     
 }
