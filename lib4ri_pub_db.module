@@ -178,3 +178,22 @@ function lib4ri_pub_db_get_mods($ids){
     $serv = new Scopus2ModsServant();    
     return $serv->setDoi($ids)->setKey('e040cda98964ba4abde3fd23b832e403')->serve()->getProcessedDom()[0];    
 }
+
+
+/**
+ * Implements hook_menu().
+ */
+function lib4ri_pub_db_menu() {
+    $items = array();
+    
+    $items['admin/islandora/lib4ri_pub_db/config'] = array(
+        'title' => 'PUB db',
+        'description' => 'Configure settings',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('lib4ri_pub_db_admin_form'),
+        'access arguments' => array('administer site configuration'),
+        'file' => 'includes/forms.inc',
+    );
+    
+    return $items;
+}
