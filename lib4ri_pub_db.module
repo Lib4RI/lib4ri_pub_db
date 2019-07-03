@@ -173,10 +173,15 @@ function lib4ri_pub_db_get_objects_by_doi($doi){
 
 function lib4ri_pub_db_get_mods($ids){
     module_load_include('php', 'publication_DB', 'lib/MetaDataServants');
+    module_load_include('inc', 'lib4ri_pub_db', 'utils/classes');
 //     $serv = new Crossref2ModsServant();
 //     return $serv->setDoi($ids)->setPid('libr:libr1129')->serve()->getProcessedDom()[0];
     $serv = new Scopus2ModsServant();    
-    return $serv->setDoi($ids)->setKey('e040cda98964ba4abde3fd23b832e403')->serve()->getProcessedDom()[0];    
+    $mods = $serv->setDoi($ids)->setKey('e040cda98964ba4abde3fd23b832e403')->serve()->getProcessedDom()[0];
+    
+    $enrich = new Lib4riMetaDataEnricher();
+    return $enrich->setDom($mods)->addStdName()->getDom();
+    
 }
 
 
