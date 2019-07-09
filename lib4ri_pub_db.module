@@ -2,6 +2,35 @@
 
 function lib4ri_pub_db_form_alter(&$form, &$form_state) {
     if ($form['form_step_id']['#value'] == 'lib4ridora_ingest_selector') {
+        
+        $doi = trim($_GET['doi'],'_');
+        $eid = trim($_GET['eid'],'_');
+        $type = trim($_GET['type'],'_');
+        
+        $fill_doi = false;
+        switch ($type) {
+            case 'Journal Article':
+                $form['ingest_selector']['#default_value'] = 'journal_article';
+                $fill_doi = true;
+                break;
+            case 'Proceeding Paper':
+                $form['ingest_selector']['#default_value'] = 'proceedings_paper';
+                $fill_doi = true;
+                break;
+        }
+        
+        
+        if ($fill_doi){
+            if (!empty($doi)){
+                $default['doi'] = $doi;
+                $form['journal_import_method']['#default_value'] = 'doi';
+            }
+            if (!empty($eid)){
+                $default['eid'] = $eid;
+                $form['journal_import_method']['#default_value'] = 'doi';
+            }
+        }
+        
         $form['doi'] = array(
             '#title' => t('Digital Object Identifier'),
             '#type' => 'textfield',
@@ -11,7 +40,8 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
             '#states' => array(
                 'visible' => array(
                     ':input[name="journal_import_method"]' => array('value' => 'doi'),
-                    ':input[name="ingest_selector"]' => array('value' => 'journal_article'),
+                    ':input[name="ingest_selector"]' => array(array('value' => 'journal_article'),
+                                                              array('value' => 'proceedings_paper')),
                 ),
             ),
         );
@@ -21,11 +51,13 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
             '#type' => 'textfield',
             '#description' => t(''),
 //            '#element_validate' => array('lib4ridora_doi_validate_id'),
-            "#default_value" => $default['doi'],
+            "#default_value" => $default['eid'],
             '#states' => array(
                 'visible' => array(
                     ':input[name="journal_import_method"]' => array('value' => 'doi'),
-                    ':input[name="ingest_selector"]' => array('value' => 'journal_article'),
+                    ':input[name="ingest_selector"]' => array(array('value' => 'journal_article'),
+                                                              array('value' => 'proceedings_paper')),
+                    
                 ),
             ),
         );
