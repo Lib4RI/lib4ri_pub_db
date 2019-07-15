@@ -67,14 +67,33 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     }
     
     public function addStdName(){
+        module_load_include('inc', 'lib4ri_pub_db', 'includes/functions');
+        
         $this->xpath = new DOMXPath($this->dom);
         $sections = $this->xpath->query("//mods:mods/mods:name [@type=\"personal\"]");
         foreach ($sections as $section){
             $fourri = $section->getElementsByTagName('fourri')[0]->nodeValue;
             if ($fourri == 'true'){
-                $elem = $this->dom->createElement('affiliation','INTERNAL');
-                $elem->setAttribute('type','group');
-                $section->appendChild($elem);
+                $name_parts = $section->getElementsByTagName('namePart');
+                foreach ($name_parts as $name_part){
+                   if ($name_part->getAttribute('type')=='family'){
+                       $f_name = $name_part->nodeValue;
+                   }
+                   if ($name_part->getAttribute('type')=='given'){
+                       $g_name = $name_part->nodeValue;
+                   }
+                }
+                
+                $auth_data = get_authors_data_from_name($g_name, $f_name);
+                 
+                $elemU = $this->dom->createElement('alternativeName');
+                $elemU->setAttribute('altType','formal_name');
+                
+                $elem = $this->dom->createElement('fullName',$f_name);
+//                $elem->setAttribute('type','group');
+                
+                $elemU->appendChild($elem);
+                $section->appendChild($elemU);
             }
             
         }

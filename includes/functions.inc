@@ -34,21 +34,25 @@ function get_authors_data_from_name($g_name, $f_name){
     $output = array();
     $ii = 0;
     
+    $ret = [];
+    
     foreach ($qp->islandoraSolrResult['response']['objects'] as $object) {
         $doc = $object['solr_doc'];
         $group = $doc[variable_get('lib4ri_pub_db_group_name_solr_search_field')][0];
         $std_name = $doc[variable_get('lib4ri_pub_db_std_name_solr_search_field')][0];
         $auth_pid = $doc['PID'];
+        array_push($ret, array('group' => $group, 'std_name' => $std_name, 'pid' => $auth_pid));
         $ii++;
     }
     
-    if ($ii==1){
-        return array('group' => $group, 'std_name' => $std_name, 'pid' => $auth_pid);
-    }
-    else{
-        return $ii;
-    }
-    
+//     if ($ii==1){
+//         return array('group' => $group, 'std_name' => $std_name, 'pid' => $auth_pid);
+//     }
+//     else{
+//         return $ii;
+//     }
+
+    return $ret;
 }
 
 function get_authors_affiliation_from_pid($pid){
