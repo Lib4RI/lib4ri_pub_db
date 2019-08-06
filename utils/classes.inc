@@ -72,7 +72,8 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         $this->xpath = new DOMXPath($this->dom);
         $sections = $this->xpath->query("//mods:mods/mods:name [@type=\"personal\"]");
         foreach ($sections as $section){
-            $fourri = $section->getElementsByTagName('fourri')[0]->nodeValue;
+            $fourri_node = $section->getElementsByTagName('fourri')[0];
+            $fourri = $fourri_node->nodeValue;
             if ($fourri == 'true'){
                 $name_parts = $section->getElementsByTagName('namePart');
                 foreach ($name_parts as $name_part){
@@ -95,7 +96,9 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 $elem2->setAttribute('type','authorId');
                 
                 $elemU->appendChild($elem);
+                $elemU->appendChild($elem2);
                 $section->appendChild($elemU);
+                $section->removeChild($fourri_node);
             }
             
         }
