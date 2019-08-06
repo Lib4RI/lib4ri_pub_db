@@ -89,8 +89,10 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 $elemU = $this->dom->createElement('alternativeName');
                 $elemU->setAttribute('altType','formal_name');
                 
-                $elem = $this->dom->createElement('fullName',$f_name);
+                $elem = $this->dom->createElement('namePart',$auth_data['std_name']);
 //                $elem->setAttribute('type','group');
+                $elem2 = $this->dom->createElement('nameIdentifier',$auth_data['pid']);
+                $elem2->setAttribute('type','authorId');
                 
                 $elemU->appendChild($elem);
                 $section->appendChild($elemU);
