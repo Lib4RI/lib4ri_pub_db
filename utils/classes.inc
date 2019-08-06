@@ -86,13 +86,17 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 }
                 
                 $auth_data = get_authors_data_from_name($g_name, $f_name);
+                if (sizeof($auth_data) > 1){
+                    $auth_data[0]['std_name'] = 'Internal author. Multiple matches.';
+                    $auth_data[0]['pid'] = '';
+                }
                  
                 $elemU = $this->dom->createElement('alternativeName');
                 $elemU->setAttribute('altType','formal_name');
                 
-                $elem = $this->dom->createElement('namePart',$auth_data['std_name']);
+                $elem = $this->dom->createElement('namePart',$auth_data[0]['std_name']);
 //                $elem->setAttribute('type','group');
-                $elem2 = $this->dom->createElement('nameIdentifier',$auth_data['pid']);
+                $elem2 = $this->dom->createElement('nameIdentifier',$auth_data[0]['pid']);
                 $elem2->setAttribute('type','authorId');
                 
                 $elemU->appendChild($elem);
