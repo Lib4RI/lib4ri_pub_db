@@ -79,7 +79,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         
          $this->xpath = new DOMXPath($this->dom);
          $sections = $this->xpath->query("//mods:mods/mods:name [@type=\"personal\"]");
-        foreach ($this->sections as $section){
+        foreach ($sections as $section){
             $fourri_node = $section->getElementsByTagName('fourri')[0];
             $fourri = $fourri_node->nodeValue;
             if ($fourri == 'true'){

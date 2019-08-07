@@ -76,14 +76,14 @@ function get_authors_affiliation_from_aff_name($group){
     foreach ($res as $affil) {
         array_push($affils, $affil);
     }
-    $affils[0]->s_name = get_section_from_id($affils[0]->s_id);
-    $affils[0]->l_name = get_department_from_id($affils[0]->l_id);
-    $affils[0]->d_name = get_division_from_id($affils[0]->d_id);
+    $affils[0]->s_name = lib4ri_pub_db_get_section_from_id($affils[0]->s_id);
+    $affils[0]->l_name = lib4ri_pub_db_get_department_from_id($affils[0]->l_id);
+    $affils[0]->d_name = lib4ri_pub_db_get_division_from_id($affils[0]->d_id);
     return $affils[0];
     
 }
 
-function get_section_from_id($id){
+function lib4ri_pub_db_get_section_from_id($id){
     $res = db_select(LIB4RI_PSI_AUTHORS_SECTIONS_TABLE, 'f')
     ->fields('f', array('name'))
     ->condition('id', $id)
@@ -96,7 +96,7 @@ function get_section_from_id($id){
     
 }
 
-function get_department_from_id($id){
+function lib4ri_pub_db_get_department_from_id($id){
     $res = db_select(LIB4RI_PSI_AUTHORS_DEPARTMENTS_TABLE, 'f')
     ->fields('f', array('name'))
     ->condition('id', $id)
@@ -109,7 +109,7 @@ function get_department_from_id($id){
     
 }
 
-function get_division_from_id($id){
+function lib4ri_pub_db_get_division_from_id($id){
     $res = db_select(LIB4RI_PSI_AUTHORS_DIVISIONS_TABLE, 'f')
     ->fields('f', array('name'))
     ->condition('id', $id)
