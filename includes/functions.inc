@@ -1,4 +1,9 @@
 <?php
+define('LIB4RI_PSI_AUTHORS_GROUPS_TABLE', 'lib4ri_psi_authors_groups');
+define('LIB4RI_PSI_AUTHORS_SECTIONS_TABLE', 'lib4ri_psi_authors_sections');
+define('LIB4RI_PSI_AUTHORS_DEPARTMENTS_TABLE', 'lib4ri_psi_authors_departments');
+define('LIB4RI_PSI_AUTHORS_DIVISIONS_TABLE', 'lib4ri_psi_authors_divisions');
+
 
 function get_authors_data_from_name($g_name, $f_name){
     $family_name_search = variable_get('lib4ri_pub_db_family_name_solr_search_field');
@@ -57,6 +62,62 @@ function get_authors_data_from_name($g_name, $f_name){
     return $ret;
 }
 
-function get_authors_affiliation_from_pid($pid){
+function get_authors_affiliation_from_aff_name($group){
+    $query = db_select(LIB4RI_PSI_AUTHORS_GROUPS_TABLE, 'g');
+    $query->condition('g.name',$group);
+    $query->addField('g', 'id', 'g_id');
+    $query->addField('g', 'section_id', 's_id');
+    $query->addField('g', 'department_id', 'l_id');
+    $query->addField('g', 'division_id', 'd_id');
+    $query->addField('g', 'name', 'g_name');
+    
+    $res = $query->execute();
+    $affils = [];
+    foreach ($res as $affil) {
+        array_push($affils, $affil);
+    }
+    $affils[0]->s_name = get_section_from_id($affils[0]->s_id);
+    $affils[0]->l_name = get_department_from_id($affils[0]->l_id);
+    $affils[0]->d_name = get_division_from_id($affils[0]->d_id);
+    return $affils[0];
+    
+}
+
+function get_section_from_id($id){
+    $res = db_select(LIB4RI_PSI_AUTHORS_SECTIONS_TABLE, 'f')
+    ->fields('f', array('name'))
+    ->condition('id', $id)
+    ->execute();
+    
+    foreach ($res as $name) {
+        $name = $name->name;
+    }
+    return $name;
+    
+}
+
+function get_department_from_id($id){
+    $res = db_select(LIB4RI_PSI_AUTHORS_DEPARTMENTS_TABLE, 'f')
+    ->fields('f', array('name'))
+    ->condition('id', $id)
+    ->execute();
+    
+    foreach ($res as $name) {
+        $name = $name->name;
+    }
+    return $name;
+    
+}
+
+function get_division_from_id($id){
+    $res = db_select(LIB4RI_PSI_AUTHORS_DIVISIONS_TABLE, 'f')
+    ->fields('f', array('name'))
+    ->condition('id', $id)
+    ->execute();
+    
+    foreach ($res as $name) {
+        $name = $name->name;
+    }
+    return $name;
     
 }

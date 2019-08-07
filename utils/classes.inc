@@ -52,6 +52,7 @@ class PsiMetaDataIntegrator extends Lib4riMetaDataIntegrator{
 class Lib4riMetaDataEnricher extends MetaDataAbstract{
     
     protected $dom;
+    protected $sections;
     
     /**
      * Constructor.
@@ -66,12 +67,19 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         return $this;
     }
     
+    public function getAuthSections(){
+        $this->xpath = new DOMXPath($this->dom);
+        $this->sections = $this->xpath->query("//mods:mods/mods:name [@type=\"personal\"]");
+        
+        return $this;
+    }
+    
     public function addStdName(){
         module_load_include('inc', 'lib4ri_pub_db', 'includes/functions');
         
-        $this->xpath = new DOMXPath($this->dom);
-        $sections = $this->xpath->query("//mods:mods/mods:name [@type=\"personal\"]");
-        foreach ($sections as $section){
+         $this->xpath = new DOMXPath($this->dom);
+         $sections = $this->xpath->query("//mods:mods/mods:name [@type=\"personal\"]");
+        foreach ($this->sections as $section){
             $fourri_node = $section->getElementsByTagName('fourri')[0];
             $fourri = $fourri_node->nodeValue;
             if ($fourri == 'true'){
@@ -85,12 +93,19 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                    }
                 }
                 
+                $affil_search = 1;
                 $auth_data = get_authors_data_from_name($g_name, $f_name);
                 if (sizeof($auth_data) > 1){
-                    $auth_data[0]['std_name'] = 'Internal author. Multiple matches.';
+                    $auth_data[0]['std_name'] = '4RI author. Multiple matches.';
                     $auth_data[0]['pid'] = '';
+                    $affil_search = 0;
                 }
-                 
+                if (sizeof($auth_data) == 0){
+                    $auth_data[0]['std_name'] = '4RI author. No matches.';
+                    $auth_data[0]['pid'] = '';
+                    $affil_search = 0;
+                }
+                                
                 $elemU = $this->dom->createElement('alternativeName');
                 $elemU->setAttribute('altType','formal_name');
                 
@@ -102,6 +117,27 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 $elemU->appendChild($elem);
                 $elemU->appendChild($elem2);
                 $section->appendChild($elemU);
+                
+                if ($affil_search){
+                    $affil_data = get_authors_affiliation_from_aff_name($auth_data[0]['group']);
+                    
+                    $elem_group = $this->dom->createElement('affiliation',$auth_data[0]['group']);
+                    $elem_group->setAttribute('type','group');
+                    
+                    $elem_section = $this->dom->createElement('affiliation',$affil_data->s_name);
+                    $elem_section->setAttribute('type','section');
+
+                    $elem_department = $this->dom->createElement('affiliation',$affil_data->l_name);
+                    $elem_department->setAttribute('type','department');
+
+                    $elem_division = $this->dom->createElement('affiliation',$affil_data->d_name);
+                    $elem_division->setAttribute('type','division');
+                }
+                $section->appendChild($elem_group);
+                $section->appendChild($elem_section);
+                $section->appendChild($elem_department);
+                $section->appendChild($elem_division);
+                
                 $section->removeChild($fourri_node);
             }
             
@@ -109,6 +145,20 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         return $this;
     }
     
+    public function addAffiliation(){
+        foreach ($this->sections as $section){
+            
+        }
+    }
+    
+    public function removeFourriTag(){
+        foreach ($this->sections as $section){
+            $fourri_node = $section->getElementsByTagName('fourri')[0];
+            $section->removeChild($fourri_node);
+        }
+        
+        return $this;
+    }
     
     
 }
