@@ -9,7 +9,8 @@ function get_authors_data_from_name($g_name, $f_name){
     $family_name_search = variable_get('lib4ri_pub_db_family_name_solr_search_field');
     $given_name_search = variable_get('lib4ri_pub_db_given_name_solr_search_field'); //configurable search field
     
-    $g_name = str_replace ('.', '', $g_name);
+    //$g_name = str_replace ('.', '', $g_name);
+    $g_name = trim($g_name)[0];
     
     $namespace = variable_get('lib4ri_pub_db_solr_namespace'); //configurable namespace
         
