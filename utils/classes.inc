@@ -80,6 +80,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
          $this->xpath = new DOMXPath($this->dom);
          $sections = $this->xpath->query("//mods:mods/mods:name [@type=\"personal\"]");
         foreach ($sections as $section){
+            unset($affil_data);
             $fourri_node = $section->getElementsByTagName('fourri')[0];
             $fourri = $fourri_node->nodeValue;
             if ($fourri == 'true'){
@@ -95,6 +96,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 
                 $affil_search = 1;
                 $auth_data = get_authors_data_from_name($g_name, $f_name);
+                
                 if (sizeof($auth_data) > 1){
                     $auth_data[0]['std_name'] = '4RI author. Multiple matches.';
                     $auth_data[0]['pid'] = '';
@@ -123,20 +125,20 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                     
                     $elem_group = $this->dom->createElement('affiliation',$auth_data[0]['group']);
                     $elem_group->setAttribute('type','group');
+                    $section->appendChild($elem_group);
                     
                     $elem_section = $this->dom->createElement('affiliation',$affil_data->s_name);
                     $elem_section->setAttribute('type','section');
-
+                    $section->appendChild($elem_section);
+                    
                     $elem_department = $this->dom->createElement('affiliation',$affil_data->l_name);
                     $elem_department->setAttribute('type','department');
+                    $section->appendChild($elem_department);
 
                     $elem_division = $this->dom->createElement('affiliation',$affil_data->d_name);
                     $elem_division->setAttribute('type','division');
+                    $section->appendChild($elem_division);
                 }
-                $section->appendChild($elem_group);
-                $section->appendChild($elem_section);
-                $section->appendChild($elem_department);
-                $section->appendChild($elem_division);
                 
                 $section->removeChild($fourri_node);
             }
