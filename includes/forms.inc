@@ -64,7 +64,7 @@ function lib4ri_pub_db_admin_form() {
     $form['lib4ri_pub_tabs']['lib4ri_pub_auth']['lib4ri_pub_db_group_id_solr_search_field'] = array(
         '#type' => 'textfield',
         '#title' => t('Group ID solr search field'),
-        '#default_value' => variable_get('lib4ri_pub_db_solr_namespace', ''),
+        '#default_value' => variable_get('lib4ri_pub_db_group_id_solr_search_field', ''),
         '#required' => false,
         '#states' => array(
             'visible' => array(
