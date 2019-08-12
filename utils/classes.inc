@@ -122,7 +122,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 
                 if ($affil_search){
                     $affil_data = get_authors_affiliation_from_aff_name($auth_data[0]['group']);
-                    $unit_id = get_authors_unit_from_aff_name($auth_data[0]['group']);
+                    $unit_id = get_authors_unit_from_aff_name($auth_data[0]['group'])['g_pid'];
                     
                     $elem_uid = $this->dom->createElement('nameIdentifier',$unit_id);
                     $elem_uid->setAttribute('type','organizational unit id');
