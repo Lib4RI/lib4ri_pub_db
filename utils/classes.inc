@@ -69,7 +69,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     
     public function getAuthSections(){
         $this->xpath = new DOMXPath($this->dom);
-        $this->sections = $this->xpath->query("//mods:mods/mods:name [@type=\"personal\"]");
+        $this->sections = $this->xpath->query(variable_get('lib4ri_pub_db_auth_xpath_query'));
         
         return $this;
     }
@@ -78,7 +78,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         module_load_include('inc', 'lib4ri_pub_db', 'includes/functions');
         
          $this->xpath = new DOMXPath($this->dom);
-         $sections = $this->xpath->query("//mods:mods/mods:name [@type=\"personal\"]");
+         $sections = $this->xpath->query(variable_get('lib4ri_pub_db_auth_xpath_query'));
         foreach ($sections as $section){
             unset($affil_data);
             $fourri_node = $section->getElementsByTagName('fourri')[0];
