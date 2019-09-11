@@ -152,6 +152,42 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         return $this;
     }
     
+    public function checkJournal(){
+        $this->xpath = new DOMXPath($this->dom);
+
+        $title = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:titleInfo/mods:title")[0]->nodeValue;
+        
+        $abbrev_title = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:titleInfo [@type=\"abbreviated\"]/mods:title")[0];
+        $publisher = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:originInfo/mods:publisher")[0];
+        $issn = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:identifier [@type=\"issn\"]")[0];
+        $e_issn = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:identifier [@type=\"e-issn\"]")[0];
+        $id = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:identifier [@type=\"journal id\"]")[0];
+        
+        $qp = new IslandoraSolrQueryProcessor();
+        $qp->buildQuery(format_string('!field:(!value)', array(
+            '!field' => islandora_solr_lesser_escape("mods_titleInfo_title_mt"),
+            '!value' => $title,
+        )));
+        
+        $qp->solrParams['fl'] = implode(',', array('PID','mods_titleInfo_abbreviated_title_mt', 'mods_originInfo_publisher_mt', '"mods_identifier_issn_mt', 'mods_identifier_e-issn_mt'));
+        $qp->solrParams['fq'] = array();
+        $qp->executeQuery(FALSE, TRUE);
+
+        
+        foreach ($qp->islandoraSolrResult['response']['objects'] as $object) {
+            $doc = $object['solr_doc'];
+            
+            $id->nodeValue = $doc['PID'];
+            $abbrev_title->nodeValue = $doc['mods_titleInfo_abbreviated_title_mt'];
+            $publisher->nodeValue = $doc['mods_originInfo_publisher_mt'];
+            $issn->nodeValue = $doc['mods_identifier_issn_mt'];
+            $e_issn->nodeValue = $doc['mods_identifier_e-issn_mt'];            
+        }
+                
+        
+        return $this;
+    }
+    
     public function addAffiliation(){
         foreach ($this->sections as $section){
             

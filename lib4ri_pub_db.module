@@ -89,7 +89,7 @@ function lib4ri_pub_db_doi_validate($element, &$form_state, $form, $ingesting=FA
     
     $doc_url = lib4ridora_doi_get_document_url(trim($element['#value']));
     $mods = lib4ri_pub_db_get_mods(trim($element['#value']));
-    $mods_isla = islandora_doi_get_mods(trim($element['#value']));
+//    $mods_isla = islandora_doi_get_mods(trim($element['#value']));
     if ($mods === FALSE) {
         if ($element['#value'] == "") {
             form_error($element, t('@title is required.', array(
@@ -212,7 +212,9 @@ function lib4ri_pub_db_get_mods($ids){
     $mods = $serv->setDoi($ids)->setKey('e040cda98964ba4abde3fd23b832e403')->serve()->getProcessedDom()[0];
     
     $enrich = new Lib4riMetaDataEnricher();
-    return $enrich->setDom($mods)->addStdName()->getDom();
+    $enrich->setDom($mods)->addStdName();
+    $enrich->setDom($mods)->checkJournal();
+    return $enrich->getDom();
     
 }
 
