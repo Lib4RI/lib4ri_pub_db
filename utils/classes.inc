@@ -169,7 +169,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             '!value' => $title,
         )));
         
-        $qp->solrParams['fl'] = implode(',', array('PID','mods_titleInfo_abbreviated_title_mt', 'mods_originInfo_publisher_mt', '"mods_identifier_issn_mt', 'mods_identifier_e-issn_mt'));
+        $qp->solrParams['fl'] = implode(',', array('PID','mods_titleInfo_abbreviated_title_mt', 'mods_originInfo_publisher_mt', 'mods_identifier_issn_mt', 'mods_identifier_e-issn_mt'));
         $qp->solrParams['fq'] = array();
         $qp->executeQuery(FALSE, TRUE);
 
@@ -177,11 +177,11 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         foreach ($qp->islandoraSolrResult['response']['objects'] as $object) {
             $doc = $object['solr_doc'];
             
-            $id->nodeValue = $doc['PID'];
-            $abbrev_title->nodeValue = $doc['mods_titleInfo_abbreviated_title_mt'];
-            $publisher->nodeValue = $doc['mods_originInfo_publisher_mt'];
-            $issn->nodeValue = $doc['mods_identifier_issn_mt'];
-            $e_issn->nodeValue = $doc['mods_identifier_e-issn_mt'];            
+            $id->nodeValue = $doc['PID'][0];
+            $abbrev_title->nodeValue = $doc['mods_titleInfo_abbreviated_title_mt'][0];
+            $publisher->nodeValue = $doc['mods_originInfo_publisher_mt'][0];
+            $issn->nodeValue = $doc['mods_identifier_issn_mt'][0];
+            $e_issn->nodeValue = $doc['mods_identifier_e-issn_mt'][0];            
         }
                 
         
