@@ -174,7 +174,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             '!field1' => islandora_solr_lesser_escape("mods_titleInfo_title_mt"),
             '!value1' => $title,
             '!field2' => islandora_solr_lesser_escape('PID'),
-            '!value2' => 'Journals:',
+            '!value2' => 'journals',
         )));
         
         
