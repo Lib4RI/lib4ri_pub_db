@@ -155,7 +155,8 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     public function checkJournal(){
         $this->xpath = new DOMXPath($this->dom);
 
-        $title = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:titleInfo/mods:title")[0]->nodeValue;
+        $title_node = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:titleInfo/mods:title")[0];
+        $title = $title_node->nodeValue;
         
         $abbrev_title = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:titleInfo [@type=\"abbreviated\"]/mods:title")[0];
         $publisher = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:originInfo/mods:publisher")[0];
@@ -173,17 +174,21 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         $qp->solrParams['fq'] = array();
         $qp->executeQuery(FALSE, TRUE);
 
-        
+        $found = 0;
         foreach ($qp->islandoraSolrResult['response']['objects'] as $object) {
+            $found = 1;
             $doc = $object['solr_doc'];
             
             $id->nodeValue = $doc['PID'][0];
             $abbrev_title->nodeValue = $doc['mods_titleInfo_abbreviated_title_mt'][0];
             $publisher->nodeValue = $doc['mods_originInfo_publisher_mt'][0];
             $issn->nodeValue = $doc['mods_identifier_issn_mt'][0];
-            $e_issn->nodeValue = $doc['mods_identifier_e-issn_mt'][0];            
+            $e_issn->nodeValue = $doc['mods_identifier_e-issn_mt'][0];             
         }
-                
+        
+        if (!$found){
+            $title_node->nodeValue = $title.' (NOT FOUND)';
+        }
         
         return $this;
     }
