@@ -165,10 +165,18 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         $id = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:identifier [@type=\"journal id\"]")[0];
         
         $qp = new IslandoraSolrQueryProcessor();
-        $qp->buildQuery(format_string('!field:(!value)', array(
-            '!field' => islandora_solr_lesser_escape("mods_titleInfo_title_mt"),
-            '!value' => $title,
+//         $qp->buildQuery(format_string('!field:(!value)', array(
+//             '!field' => islandora_solr_lesser_escape("mods_titleInfo_title_mt"),
+//             '!value' => $title,
+//         )));
+        
+        $qp->buildQuery(format_string('!field1:(!value1) AND !field2:(!value2*)', array(
+            '!field1' => islandora_solr_lesser_escape("mods_titleInfo_title_mt"),
+            '!value1' => $title,
+            '!field2' => islandora_solr_lesser_escape('PID'),
+            '!value2' => 'Journals:',
         )));
+        
         
         $qp->solrParams['fl'] = implode(',', array('PID','mods_titleInfo_abbreviated_title_mt', 'mods_originInfo_publisher_mt', 'mods_identifier_issn_mt', 'mods_identifier_e-issn_mt'));
         $qp->solrParams['fq'] = array();
