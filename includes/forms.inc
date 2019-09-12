@@ -7,17 +7,28 @@ function lib4ri_pub_db_admin_form() {
     $form = array(
         'lib4ri_pub_tabs' => array(
             '#type' => 'vertical_tabs',
+            'lib4ri_pub_gen' => array(
+                '#type' => 'fieldset',
+                '#title' => t('General config'),
+                ),
                 'lib4ri_pub_auth' => array(
                 '#type' => 'fieldset',
                 '#title' => t('Authors data'),
                 ),
-                'lib4ri_pub_b' => array(
+                'lib4ri_pub_journ' => array(
                 '#type' => 'fieldset',
-                '#title' => t('---'),
+                '#title' => t('Journal data'),
             )
             
          )
     );
+    $form['lib4ri_pub_tabs']['lib4ri_pub_gen']['lib4ri_pub_db_scopus_api_key'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Scopus API key'),
+        '#default_value' => variable_get('lib4ri_pub_db_scopus_api_key', ''),
+        '#required' => FALSE,
+    );
+    
     
     $form['lib4ri_pub_tabs']['lib4ri_pub_auth']['lib4ri_pub_db_auth_flag'] = array(
         '#type' => 'checkbox',
