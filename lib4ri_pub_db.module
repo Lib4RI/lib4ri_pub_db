@@ -71,16 +71,12 @@ function lib4ri_pub_db_doi_validate($element, &$form_state, $form, $ingesting=FA
     // check for valid doi
     module_load_include('inc', 'lib4ridora', 'includes/utilities');
     module_load_include('inc', 'islandora_scholar', 'modules/doi/includes/utilities');
-    $collections = array_map(function($val){return 'info\\:fedora/'.$val;},str_replace(':','\\:',array_map('trim',explode(',',variable_get('lib4ri_pub_db_search_collections')))));
-    
-    $collections = ['info:fedora/'.variable_get('lib4ri_staged_ingest_public_collection'),
-        'info:fedora/'.variable_get('lib4ri_staged_ingest_collection'),
-        'info:fedora/'.variable_get('lib4ri_staged_ingest_live_collection')];
-    
+    $collections = array_map(function($val){return 'info:fedora/'.$val;},array_map('trim',explode(',',variable_get('lib4ri_pub_db_search_collections'))));
+        
     $samedoiobjs = lib4ri_pub_db_get_objects_by_doi($element['#value']);
     
     if ($samedoiobjs !== FALSE) {
-        $doi_in_coll = lib4ri_staged_ingest_is_doi_in_collection($samedoiobjs, $collections);
+        $doi_in_coll = lib4ri_pub_db_is_doi_in_collection($samedoiobjs, $collections);
         if ($doi_in_coll !== FALSE){
             form_error($element, t('@doi is already present.', array(
                 '@doi' => $element['#value'],
@@ -236,4 +232,15 @@ function lib4ri_pub_db_menu() {
     );
     
     return $items;
+}
+
+function lib4ri_pub_db_is_doi_in_collection($samedoiobjs, $collections) {
+    
+    foreach ($samedoiobjs['objects'] as $object){
+        if (sizeof(array_intersect($collections, $object['collections'])) > 0){
+            return TRUE;
+        }
+    }
+    return FALSE;
+    
 }
