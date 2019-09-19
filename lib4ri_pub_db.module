@@ -215,7 +215,7 @@ function lib4ri_pub_db_get_mods($ids){
         return $enrich->getDom();
     }
     else{
-        return null;
+        return false;
     }
 }
 
