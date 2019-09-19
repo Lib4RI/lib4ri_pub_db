@@ -247,7 +247,7 @@ function lib4ri_pub_db_get_mods($id, $id_name){
         return $enrich->getDom();
     }
     else{
-        return null;
+        return false;
     }
 }
 
