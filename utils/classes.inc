@@ -234,3 +234,116 @@ class WslMetaDataEnricher extends Lib4riMetaDataEnricher{
 class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
     
 }
+
+/*******************************************************************************************
+*    Classes to validate IDs                                                               *                                                              
+*******************************************************************************************/
+
+class IdValidator{
+    protected $mods;
+    protected $error;
+    protected $id;
+    protected $idsolrfield;
+    protected $serv;
+    
+    
+    public function __construct() {
+        
+    }
+    
+    public function setId($id){
+        $this->id = $id;
+        return $this;
+    }
+    
+    public function validate(){
+        
+    }
+    
+    protected function setSolrfield(){
+        return $this;
+    }
+    
+    protected function setServantId(){
+        return $this;
+    }
+    
+    public function getMods(){
+        $this->serv = new Scopus2ModsServant();
+        $this->setServantId();
+        $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
+    }
+    
+    public function getSameIdObjects(){
+        module_load_include('inc', 'islandora_solr', 'includes/utilities');
+        module_load_include('inc', 'islandora', 'includes/utilities');
+
+        $collectionsolrfield = variable_get('islandora_solr_member_of_collection_field', 'RELS_EXT_isMemberOfCollection_uri_ms');
+        
+        $query = $this->idsolrfield . ":\"" . islandora_solr_lesser_escape(trim($id_element)) . "\"";
+        
+        global $user;
+        $original_user = $user;
+        $old_state = drupal_save_session();
+        drupal_save_session(FALSE);
+        $user = user_load(1);
+        
+        $qp = new IslandoraSolrQueryProcessor();
+        $qp->buildQuery($query);
+        $qp->solrParams['fl'] = "PID, $idsolrfield, $collectionsolrfield";
+        $qp->solrParams['sort'] = "PID asc";
+        $qp->executeQuery(FALSE);
+        
+        $user = $original_user;
+        drupal_save_session($old_state);
+        
+        $result = array();
+        $result['objects'] = array();
+        //    $result['collections'] = array();
+        $result['count'] = 0;
+        if (!empty($qp->islandoraSolrResult) && !empty($qp->islandoraSolrResult['response']) && isset($qp->islandoraSolrResult['response']['numFound']) && $qp->islandoraSolrResult['response']['numFound'] > 0){
+            foreach ($qp->islandoraSolrResult['response']['objects'] as $curobj) {
+                $pid = $curobj['PID'];
+                $result['objects'][$pid] = array('pid' => $pid,
+                    'doi' => $curobj['solr_doc'][$doisolrfield],
+                    'collections' => ($curobj['solr_doc'][$collectionsolrfield] ? $curobj['solr_doc'][$collectionsolrfield] : array('')),
+                );
+                $result['count']++;
+            }
+        }
+        
+        if ($result['count'] == 0) {
+            return FALSE;
+        }
+        return $result;
+        
+    }
+    
+    public function getError(){
+        
+    }
+}
+
+class DoiValidator extends IdValidator{
+    
+    protected function setSolrfield(){
+        $this->idsolrfield = variable_get('lib4ridora_solr_field_document_doi', 'mods_identifier_doi_mlt');
+    }
+    
+    protected function setServantId(){
+        $this->serv->setDoi($this->id);
+        return $this;
+    }
+}
+
+class EidValidator extends IdValidator{
+
+    protected function setSolrfield(){
+        $this->idsolrfield = 'mods_identifier_scopus_mlt';
+    }
+    
+    protected function setServantId(){
+        $this->serv->setEid($this->id);
+        return $this;
+    }
+}
