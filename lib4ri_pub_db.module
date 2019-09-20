@@ -136,7 +136,20 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
     if ((!empty($doi_element) ||  !empty($eid_element)) && $form_state['values']['journal_import_method'] == 'doi') {
         module_load_include('inc', 'lib4ri_staged_ingest', 'includes/utils');
         
+        if (!empty($doi_element)){
+            
+            $validator_instance = new DoiValidator();
+            $validator_instance->setId($doi_element);
+        }
+        elseif (!empty($eid_element)){
+            $validator_instance = new EidValidator();
+            $validator_instance->setId($eid_element);
+        }
         
+        $mods = $validator_instance->validate();
+        
+        
+/******************************************************
         if (!empty($doi_element)){
             $id_element = $doi_element;
             $id_name = 'doi';
@@ -148,6 +161,9 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
         
         
         $mods = lib4ri_pub_db_doi_validate($id_element, $id_name, TRUE);
+//***************************************************/        
+        
+        
         if ($mods !== FALSE) {
             $object = islandora_ingest_form_get_object($form_state);
             if (isset($object["MODS"])) {

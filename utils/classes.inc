@@ -241,7 +241,7 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
 
 class IdValidator{
     protected $mods;
-    protected $error;
+    protected $error = [];
     protected $id;
     protected $idsolrfield;
     protected $serv;
@@ -255,9 +255,18 @@ class IdValidator{
         $this->id = $id;
         return $this;
     }
-    
-    public function validate(){
         
+    public function validate(){
+        $same_id_obj = $this->getSameIdObjects();
+        if ($same_id_obj == TRUE){
+            return FALSE;
+        }
+        
+        $this->retrieveMods();
+        
+        if (isset($this->mods)){
+            $this->enrich();
+        }
     }
     
     protected function setSolrfield(){
@@ -268,13 +277,17 @@ class IdValidator{
         return $this;
     }
     
-    public function getMods(){
+    protected function retrieveMods(){
         $this->serv = new Scopus2ModsServant();
         $this->setServantId();
         $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
     }
     
-    public function getSameIdObjects(){
+    protected function enrichMods(){
+        
+    }
+    
+    protected function getSameIdObjects(){
         module_load_include('inc', 'islandora_solr', 'includes/utilities');
         module_load_include('inc', 'islandora', 'includes/utilities');
 
@@ -315,13 +328,31 @@ class IdValidator{
         if ($result['count'] == 0) {
             return FALSE;
         }
-        return $result;
+        else{
+            $collections = array_map(function($val){return 'info:fedora/'.$val;},array_map('trim',explode(',',variable_get('lib4ri_pub_db_search_collections'))));
+            $in_collection = FALSE;
+            foreach (result['objects'] as $object){
+                if (sizeof(array_intersect($collections, $object['collections'])) > 0){
+                    $in_collection = TRUE;
+                    return TRUE;
+                    //break;
+                }
+            }   
+        }
+        
+        
+        
+    }
+    
+    protected function setError($error){
         
     }
     
     public function getError(){
         
     }
+    
+    
 }
 
 class DoiValidator extends IdValidator{
