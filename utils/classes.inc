@@ -248,14 +248,18 @@ class IdValidator{
     
     
     public function __construct() {
-        
+        $this->setSolrfield();
     }
     
     public function setId($id){
         $this->id = $id;
         return $this;
     }
-        
+
+//     protected function setServant($serv){
+//         $this->serv = $serv;
+//     }
+    
     public function validate(){
         $same_id_obj = $this->getSameIdObjects();
         if ($same_id_obj == TRUE){
@@ -264,12 +268,11 @@ class IdValidator{
         
         $this->retrieveMods();
         
-        if (isset($this->mods)){
-            $this->enrich();
-        }
+        return $this;
     }
     
-    protected function setSolrfield(){
+    protected function setSolrfield($solr_field){
+        $this->idsolrfield = $solr_field;
         return $this;
     }
     
@@ -283,9 +286,6 @@ class IdValidator{
         $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
     }
     
-    protected function enrichMods(){
-        
-    }
     
     protected function getSameIdObjects(){
         module_load_include('inc', 'islandora_solr', 'includes/utilities');
@@ -352,6 +352,9 @@ class IdValidator{
         
     }
     
+    public function getMods(){
+        return $this->mods;
+    }
     
 }
 
