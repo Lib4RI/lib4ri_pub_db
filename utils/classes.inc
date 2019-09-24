@@ -281,9 +281,7 @@ class IdValidator{
     }
     
     protected function retrieveMods(){
-        $this->serv = new Scopus2ModsServant();
-        $this->setServantId();
-        $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
+
     }
     
     
@@ -348,6 +346,24 @@ class IdValidator{
         
     }
     
+    protected function fetchFromScopus(){
+        if (variable_get('lib4ri_pub_db_scopus_use')){
+            $this->serv = new Scopus2ModsServant();
+            $this->setServantId();
+            $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
+            }
+        return $this;
+    }
+
+    protected function fetchFromXref(){
+        if (variable_get('lib4ri_pub_db_xref_use')){
+            $this->serv = new Crossref2ModsServant();
+            $this->setServantId();
+            $this->mods = $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve()->getProcessedDom()[0];
+        }
+        return $this;
+    }
+    
     public function getError(){
         
     }
@@ -370,14 +386,10 @@ class DoiValidator extends IdValidator{
     }
     
     protected function retrieveMods(){
-        $this->serv = new Scopus2ModsServant();
-        $this->setServantId();
-        $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
+        $this->fetchFromScopus();
         
         if ($this->mods == FALSE){
-            $this->serv = new Crossref2ModsServant();
-            $this->setServantId();
-            $this->mods = $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve()->getProcessedDom()[0];
+            $this->fetchFromXref();        
         }
     }
     
