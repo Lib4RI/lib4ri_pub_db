@@ -368,6 +368,19 @@ class DoiValidator extends IdValidator{
         $this->serv->setDoi($this->id);
         return $this;
     }
+    
+    protected function retrieveMods(){
+        $this->serv = new Scopus2ModsServant();
+        $this->setServantId();
+        $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
+        
+        if ($this->mods == FALSE){
+            $this->serv = new Crossref2ModsServant();
+            $this->setServantId();
+            $this->mods = $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve()->getProcessedDom()[0];
+        }
+    }
+    
 }
 
 class EidValidator extends IdValidator{

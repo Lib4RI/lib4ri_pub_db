@@ -11,6 +11,14 @@ function lib4ri_pub_db_admin_form() {
                 '#type' => 'fieldset',
                 '#title' => t('General config'),
                 ),
+            'lib4ri_pub_scopus' => array(
+                '#type' => 'fieldset',
+                '#title' => t('Scopus config'),
+            ),
+            'lib4ri_pub_xref' => array(
+                '#type' => 'fieldset',
+                '#title' => t('Crossref config'),
+            ),
                 'lib4ri_pub_auth' => array(
                 '#type' => 'fieldset',
                 '#title' => t('Authors data'),
@@ -22,13 +30,35 @@ function lib4ri_pub_db_admin_form() {
             
          )
     );
-    $form['lib4ri_pub_tabs']['lib4ri_pub_gen']['lib4ri_pub_db_scopus_api_key'] = array(
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_scopus']['lib4ri_pub_db_scopus_use'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Fetch data from Scopus'),
+        '#default_value' => variable_get('lib4ri_pub_db_scopus_use', ''),
+        '#required' => FALSE,
+    );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_scopus']['lib4ri_pub_db_scopus_api_key'] = array(
         '#type' => 'textfield',
         '#title' => t('Scopus API key'),
         '#default_value' => variable_get('lib4ri_pub_db_scopus_api_key', ''),
         '#required' => FALSE,
     );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_xref']['lib4ri_pub_db_xref_use'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Fetch data from Crossref'),
+        '#default_value' => variable_get('lib4ri_pub_db_xref_use', ''),
+        '#required' => FALSE,
+    );
     
+    $form['lib4ri_pub_tabs']['lib4ri_pub_xref']['lib4ri_pub_db_xref_pid'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Crossref PID'),
+        '#default_value' => variable_get('lib4ri_pub_db_xref_pid', ''),
+        '#required' => FALSE,
+    );
+
     $form['lib4ri_pub_tabs']['lib4ri_pub_gen']['lib4ri_pub_db_search_collections'] = array(
         '#type' => 'textfield',
         '#title' => t('Collections to search for existing publications'),
