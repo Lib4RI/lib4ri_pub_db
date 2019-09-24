@@ -1,7 +1,18 @@
 <?php
 
+function lib4ri_pub_db_use_this_collection($url){
+    $collections = array_map('trim',explode(',',variable_get('lib4ri_pub_db_excl_collections')));
+    foreach ($collections as $collection){
+        if (strpos($url, $collection)){
+            return false;
+        }
+    }
+    
+    return true;
+}
+
 function lib4ri_pub_db_form_alter(&$form, &$form_state) {
-    if ($form['form_step_id']['#value'] == 'lib4ridora_ingest_selector') {
+    if (($form['form_step_id']['#value'] == 'lib4ridora_ingest_selector') && lib4ri_pub_db_use_this_collection($_GET['q']))  {
         
         $doi = trim($_GET['doi'],'_');
         $eid = trim($_GET['eid'],'_');
