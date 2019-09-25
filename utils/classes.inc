@@ -53,6 +53,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     
     protected $dom;
     protected $sections;
+    protected $messages = [];
     
     /**
      * Constructor.
@@ -60,6 +61,14 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     
     public function __construct() {
         
+    }
+    
+    protected function setMessage($message, $type = 'status'){
+        array_push($this->messages, array('message' => $message, 'type' => $type));
+    }
+    
+    public function getMessages(){
+        return $this->messages;
     }
     
     public function setDom($dom){
@@ -101,11 +110,13 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                     $auth_data[0]['std_name'] = '4RI author. Multiple matches.';
                     $auth_data[0]['pid'] = '';
                     $affil_search = 0;
+                    $this->setMessage('Multiple matches for auhor '.$g_name.' '.$f_name, 'warning');
                 }
                 if (sizeof($auth_data) == 0){
                     $auth_data[0]['std_name'] = '4RI author. No matches.';
                     $auth_data[0]['pid'] = '';
                     $affil_search = 0;
+                    $this->setMessage('No matches for auhor '.$g_name.' '.$f_name, 'warning');
                 }
                                 
                 $elemU = $this->dom->createElement('alternativeName');
@@ -196,6 +207,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         
         if (!$found){
             $title_node->nodeValue = $title.' (NOT FOUND)';
+            $this->setMessage('Journal not found in DORA', 'warning');
         }
         
         return $this;
@@ -241,7 +253,7 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
 
 class IdValidator{
     protected $mods;
-    protected $error = [];
+    protected $messages = [];
     protected $id;
     protected $idsolrfield;
     protected $serv;
@@ -342,8 +354,8 @@ class IdValidator{
         
     }
     
-    protected function setError($error){
-        
+    protected function setMessage($message, $type = 'status'){
+        array_push($this->messages, array('message' => $message, 'type' => $type));
     }
     
     protected function fetchFromScopus(){
@@ -352,6 +364,14 @@ class IdValidator{
             $this->setServantId();
             $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
             }
+            
+        if ($this->mods != FALSE){
+            $this->setMessage('Data fetched from Scopus', 'status');
+        }
+        else {
+            $this->setMessage('Cannot fetch data from Scopus', 'warning');
+        }
+        
         return $this;
     }
 
@@ -361,11 +381,19 @@ class IdValidator{
             $this->setServantId();
             $this->mods = $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve()->getProcessedDom()[0];
         }
+        
+        if ($this->mods != FALSE){
+            $this->setMessage('Data fetched from Crossref', 'status');
+        }
+        else {
+            $this->setMessage('Cannot fetch data from Crossref', 'warning');
+        }
+        
         return $this;
     }
     
-    public function getError(){
-        
+    public function getMessages(){
+        return $this->messages;
     }
     
     public function getMods(){

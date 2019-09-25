@@ -151,17 +151,21 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
         module_load_include('inc', 'lib4ri_staged_ingest', 'includes/utils');
         
         if (!empty($doi_element)){
-            
+            drupal_set_message('Using DOI to fetch data', 'status');
             $validator_instance = new DoiValidator();
             $validator_instance->setId($doi_element);
         }
         elseif (!empty($eid_element)){
+            drupal_set_message('Using ScopusID to fetch data', 'status');
             $validator_instance = new EidValidator();
             $validator_instance->setId($eid_element);
         }
         
         $mods = $validator_instance->validate()->getMods();
         
+        foreach ($validator_instance->getMessages() as $message){
+            drupal_set_message($message['message'], $message['type']);
+        }
         
 /******************************************************
         if (!empty($doi_element)){
@@ -183,6 +187,10 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
             $enrich->setDom($mods)->addStdName();
             $enrich->setDom($mods)->checkJournal();
             $mods = $enrich->getDom();
+            
+            foreach ($enrich->getMessages() as $message){
+                drupal_set_message($message['message'], $message['type']);
+            }
             
             $object = islandora_ingest_form_get_object($form_state);
             if (isset($object["MODS"])) {
