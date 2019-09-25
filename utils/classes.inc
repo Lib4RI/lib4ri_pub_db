@@ -419,6 +419,8 @@ class DoiValidator extends IdValidator{
         if ($this->mods == FALSE){
             $this->fetchFromXref();        
         }
+        
+        return $this;
     }
     
 }
@@ -431,6 +433,12 @@ class EidValidator extends IdValidator{
     
     protected function setServantId(){
         $this->serv->setEid($this->id);
+        return $this;
+    }
+    
+    protected function retrieveMods(){
+        $this->fetchFromScopus();
+     
         return $this;
     }
 }
