@@ -394,6 +394,7 @@ class IdValidator{
             return FALSE;
         }
         else{
+            global $base_url;
             $collections = array_map(function($val){return 'info:fedora/'.$val;},array_map('trim',explode(',',variable_get('lib4ri_pub_db_search_collections'))));
             $in_collection = "";
             foreach ($result['objects'] as $object){
