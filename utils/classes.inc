@@ -407,6 +407,7 @@ class IdValidator{
                 }
             }
             $this->setMessage('Object(s) with same ID already present in DORA: '.$in_collection, 'error');
+            return TRUE;
         }
         
         
