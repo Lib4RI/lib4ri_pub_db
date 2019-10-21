@@ -184,8 +184,10 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
         
         if ($mods != FALSE) {
             $enrich = new Lib4riMetaDataEnricher();
+            $enrich->setIds(array('doi'=>$doi_element, 'eid'=>$eid_element));
             $enrich->setDom($mods)->addStdName();
-            $enrich->setDom($mods)->checkJournal();
+            $enrich->/*setDom($mods)->*/checkJournal();
+            $enrich->addBeamlines();
             $mods = $enrich->getDom();
             
             foreach ($enrich->getMessages() as $message){

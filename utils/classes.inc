@@ -54,6 +54,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     protected $dom;
     protected $sections;
     protected $messages = [];
+    protected $ids = [];
     
     /**
      * Constructor.
@@ -61,6 +62,10 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     
     public function __construct() {
         
+    }
+    
+    public function setIds($ids){
+        $this->ids = $ids;
     }
     
     protected function setMessage($message, $type = 'status'){
@@ -216,6 +221,55 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     public function addAffiliation(){
         foreach ($this->sections as $section){
             
+        }
+    }
+    
+    public function addBeamlines(){
+        if (module_exists('protein_db')){
+            $this->xpath = new DOMXPath($this->dom);
+            module_load_include('inc', 'protein_db', 'includes/define');
+            
+            $res = db_select(PROTEIN_DB_DATA_TABLE,'f')
+            ->fields('f', array('pmid', 'facility', 'beamline'))
+            ->condition('doi', $this->ids['doi'], '=')
+            ->execute();
+            
+            $bls = [];
+            foreach ($res as $bl) {
+                array_push($bls, $bl);
+            }
+            
+            $extension = $this->xpath->query("//mods:mods/mods:extension")[0];
+            if (is_null($extension)){
+                $extension = $this->dom->createElement('extension');
+                $this->dom->documentElement->appendChild($extension);
+            }
+            
+            $rfs = $this->xpath->query("//mods:mods/mods:extension/mods:researchFacilities")[0];
+            if (is_null($rfs)){
+                $rfs = $this->dom->createElement('researchFacilities');
+                $extension->appendchild($rfs);
+            }
+            
+            foreach ($bls as $bl){
+                $rf = $this->dom->createElement('researchFacility');
+                $fac = $this->dom->createElement('facility', $bl->facility);
+                $beam = $this->dom->createElement('beamline', $bl->beamline);
+                
+                $rf->appendchild($fac);
+                $rf->appendchild($beam);
+                
+                $rfs->appendchild($rf);
+            }
+            
+            $pmid = $this->xpath->query("//mods:mods/mods:identifiar [@type=\"pmid\"]")[0];
+            if (is_null($rfs)){
+                $pmid = $this->dom->createElement('identifier', $bls[0]->pmid);
+                $pmid->setAttribute('type','pmid');
+                $this->dom->documentElement->appendChild($pmid);
+            }
+            
+            return $this;
         }
     }
     
