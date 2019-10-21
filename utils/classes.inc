@@ -329,10 +329,11 @@ class IdValidator{
     public function validate(){
         $same_id_obj = $this->getSameIdObjects();
         if ($same_id_obj == TRUE){
-            return FALSE;
+            $this->mods = FALSE;
         }
-        
-        $this->retrieveMods();
+        else{
+            $this->retrieveMods();
+        }
         
         return $this;
     }
