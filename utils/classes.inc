@@ -358,7 +358,7 @@ class IdValidator{
 
         $collectionsolrfield = variable_get('islandora_solr_member_of_collection_field', 'RELS_EXT_isMemberOfCollection_uri_ms');
         
-        $query = $this->idsolrfield . ":\"" . islandora_solr_lesser_escape(trim($id_element)) . "\"";
+        $query = $this->idsolrfield . ":\"" . islandora_solr_lesser_escape(trim($this->id)) . "\"";
         
         global $user;
         $original_user = $user;
@@ -368,7 +368,7 @@ class IdValidator{
         
         $qp = new IslandoraSolrQueryProcessor();
         $qp->buildQuery($query);
-        $qp->solrParams['fl'] = "PID, $idsolrfield, $collectionsolrfield";
+        $qp->solrParams['fl'] = "PID, $this->idsolrfield, $collectionsolrfield";
         $qp->solrParams['sort'] = "PID asc";
         $qp->executeQuery(FALSE);
         
@@ -395,14 +395,18 @@ class IdValidator{
         }
         else{
             $collections = array_map(function($val){return 'info:fedora/'.$val;},array_map('trim',explode(',',variable_get('lib4ri_pub_db_search_collections'))));
-            $in_collection = FALSE;
-            foreach (result['objects'] as $object){
+            $in_collection = "";
+            foreach ($result['objects'] as $object){
                 if (sizeof(array_intersect($collections, $object['collections'])) > 0){
-                    $in_collection = TRUE;
-                    return TRUE;
+                    $in_collection .= ' <a href="'.$base_url.'/islandora/object/'.$object['pid'].'">'.$object['pid'].'</a>';
+                    foreach ($object['collections'] as $collection){
+                        $in_collection .= ' ('.explode('/', $collection)[1].')';
+                    }
+//                    return TRUE;
                     //break;
                 }
-            }   
+            }
+            $this->setMessage('Object(s) with same ID already present in DORA: '.$in_collection, 'error');
         }
         
         
