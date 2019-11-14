@@ -279,7 +279,8 @@ function lib4ri_pub_db_get_mods($id, $id_name){
     module_load_include('inc', 'lib4ri_pub_db', 'utils/classes');
 //     $serv = new Crossref2ModsServant();
 //     return $serv->setDoi($ids)->setPid('libr:libr1129')->serve()->getProcessedDom()[0];
-    $serv = new Scopus2ModsServant();
+    $data_retrieveng_class = variable_get('lib4ri_pub_db_main_data_class');
+    $serv = new $data_retrieveng_class();
     if ($id_name == 'doi'){
         $serv->setDoi($id);
     }    

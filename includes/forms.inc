@@ -44,6 +44,13 @@ function lib4ri_pub_db_admin_form() {
         '#default_value' => variable_get('lib4ri_pub_db_scopus_api_key', ''),
         '#required' => FALSE,
     );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_scopus']['lib4ri_pub_db_scopus_data_class'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Class name for data fetching from Scopus'),
+        '#default_value' => variable_get('lib4ri_pub_db_scopus_data_class', ''),
+        '#required' => FALSE,
+    );
 
     $form['lib4ri_pub_tabs']['lib4ri_pub_xref']['lib4ri_pub_db_xref_use'] = array(
         '#type' => 'checkbox',
@@ -59,6 +66,13 @@ function lib4ri_pub_db_admin_form() {
         '#required' => FALSE,
     );
 
+    $form['lib4ri_pub_tabs']['lib4ri_pub_xref']['lib4ri_pub_db_xref_data_class'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Class name for data fetching from Xref'),
+        '#default_value' => variable_get('lib4ri_pub_db_xref_data_class', ''),
+        '#required' => FALSE,
+    );
+    
     $form['lib4ri_pub_tabs']['lib4ri_pub_gen']['lib4ri_pub_db_search_collections'] = array(
         '#type' => 'textfield',
         '#title' => t('Collections to search for existing publications'),
@@ -71,7 +85,7 @@ function lib4ri_pub_db_admin_form() {
         '#title' => t('Do not use this module for the following collections'),
         '#default_value' => variable_get('lib4ri_pub_db_excl_collections', ''),
         '#required' => FALSE,
-    );
+    );    
     
     $form['lib4ri_pub_tabs']['lib4ri_pub_auth']['lib4ri_pub_db_auth_flag'] = array(
         '#type' => 'checkbox',
