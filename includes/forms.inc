@@ -87,6 +87,20 @@ function lib4ri_pub_db_admin_form() {
         '#required' => FALSE,
     );    
     
+    $form['lib4ri_pub_tabs']['lib4ri_pub_gen']['lib4ri_pub_db_journal_enrich_class'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Class name for journal articles data enrichment'),
+        '#default_value' => variable_get('lib4ri_pub_db_journal_enrich_class', ''),
+        '#required' => FALSE,
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_gen']['lib4ri_pub_db_proceedings_enrich_class'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Class name for proceedings papers data enrichment'),
+        '#default_value' => variable_get('lib4ri_pub_db_proceedings_enrich_class', ''),
+        '#required' => FALSE,
+    );
+    
     $form['lib4ri_pub_tabs']['lib4ri_pub_auth']['lib4ri_pub_db_auth_flag'] = array(
         '#type' => 'checkbox',
         '#default_value' => variable_get('lib4ri_staged_ingest_pdfa_at_unstage', TRUE),

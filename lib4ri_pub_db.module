@@ -183,7 +183,18 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
         
         
         if ($mods != FALSE) {
-            $enrich = new Lib4riMetaDataEnricher();
+            
+            switch ($form_state['values']['ingest_selector']) {
+                case 'journal_article':
+                    $enricher_class = variable_get('lib4ri_pub_db_journal_enrich_class');
+                    break;
+                case 'proceedings_paper':
+                    $enricher_class = variable_get('lib4ri_pub_db_proceedings_enrich_class');
+                    break;
+            }
+            
+//            $enrich = new Lib4riMetaDataEnricher();
+            $enrich = new $enricher_class();
             $enrich->setIds(array('doi'=>$doi_element, 'eid'=>$eid_element));
             $enrich->setDom($mods)->addStdName();
             $enrich->/*setDom($mods)->*/checkJournal();
