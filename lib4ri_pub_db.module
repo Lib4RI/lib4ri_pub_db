@@ -78,53 +78,53 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
 }
 
 
-function lib4ri_pub_db_doi_validate($id_element, $id_name, $ingesting=FALSE) {
-    // check for valid doi
-    module_load_include('inc', 'lib4ridora', 'includes/utilities');
-    module_load_include('inc', 'islandora_scholar', 'modules/doi/includes/utilities');
-    $collections = array_map(function($val){return 'info:fedora/'.$val;},array_map('trim',explode(',',variable_get('lib4ri_pub_db_search_collections'))));
+// function lib4ri_pub_db_doi_validate($id_element, $id_name, $ingesting=FALSE) {
+//     // check for valid doi
+//     module_load_include('inc', 'lib4ridora', 'includes/utilities');
+//     module_load_include('inc', 'islandora_scholar', 'modules/doi/includes/utilities');
+//     $collections = array_map(function($val){return 'info:fedora/'.$val;},array_map('trim',explode(',',variable_get('lib4ri_pub_db_search_collections'))));
         
-    $samedoiobjs = lib4ri_pub_db_get_objects_by_id($id_element, $id_name);
+//     $samedoiobjs = lib4ri_pub_db_get_objects_by_id($id_element, $id_name);
     
-    if ($samedoiobjs !== FALSE) {
-        $doi_in_coll = lib4ri_pub_db_is_doi_in_collection($samedoiobjs, $collections);
-        if ($doi_in_coll !== FALSE){
-            form_error($element, t('@doi is already present.', array(
-                '@doi' => $element['#value'],
-            )));
-        }
-    }
+//     if ($samedoiobjs !== FALSE) {
+//         $doi_in_coll = lib4ri_pub_db_is_doi_in_collection($samedoiobjs, $collections);
+//         if ($doi_in_coll !== FALSE){
+//             form_error($element, t('@doi is already present.', array(
+//                 '@doi' => $element['#value'],
+//             )));
+//         }
+//     }
     
-    $doc_url = lib4ridora_doi_get_document_url(trim($id_element));
-    $mods = lib4ri_pub_db_get_mods(trim($id_element), $id_name);
+//     $doc_url = lib4ridora_doi_get_document_url(trim($id_element));
+//     $mods = lib4ri_pub_db_get_mods(trim($id_element), $id_name);
 
-    if ($mods === FALSE) {
-        if ($id_element == "") {
-            form_error($element, t('@title is required.', array(
-                '@title' => $id_name,
-            )));
-        }
-        elseif (trim($id_element) == "") {
-            form_error($element, t('"@value" is not a DOI.', array(
-                '@value' => $id_element,
-            )));
-        }
-        elseif ($doc_url !== FALSE) {
-            if ($element['#id'] == "edit-doi") {
-                form_error($element, t('"@value" does appear to be a valid DOI, but no MODS could be retrieved, so there could be an issue with the DOI configuration.', array(
-                    '@value' => $id_element,
-                )));
-            }
-        }
-        else {
-            form_error($element, t('"@value" does not appear to be a valid DOI.', array(
-                '@value' => $id_element,
-            )));
-        }
-        return (!$ingesting) ? $doc_url : FALSE;
-    }
-    return $mods;
-}
+//     if ($mods === FALSE) {
+//         if ($id_element == "") {
+//             form_error($element, t('@title is required.', array(
+//                 '@title' => $id_name,
+//             )));
+//         }
+//         elseif (trim($id_element) == "") {
+//             form_error($element, t('"@value" is not a DOI.', array(
+//                 '@value' => $id_element,
+//             )));
+//         }
+//         elseif ($doc_url !== FALSE) {
+//             if ($element['#id'] == "edit-doi") {
+//                 form_error($element, t('"@value" does appear to be a valid DOI, but no MODS could be retrieved, so there could be an issue with the DOI configuration.', array(
+//                     '@value' => $id_element,
+//                 )));
+//             }
+//         }
+//         else {
+//             form_error($element, t('"@value" does not appear to be a valid DOI.', array(
+//                 '@value' => $id_element,
+//             )));
+//         }
+//         return (!$ingesting) ? $doc_url : FALSE;
+//     }
+//     return $mods;
+// }
 
 /**
  * DOI-validation wrapper.
@@ -274,31 +274,31 @@ function lib4ri_pub_db_get_objects_by_id($id_element, $id_name){
     return $result;
 }
 
-function lib4ri_pub_db_get_mods($id, $id_name){
-    module_load_include('php', 'publication_DB', 'lib/MetaDataServants');
-    module_load_include('inc', 'lib4ri_pub_db', 'utils/classes');
-//     $serv = new Crossref2ModsServant();
-//     return $serv->setDoi($ids)->setPid('libr:libr1129')->serve()->getProcessedDom()[0];
-    $data_retrieveng_class = variable_get('lib4ri_pub_db_main_data_class');
-    $serv = new $data_retrieveng_class();
-    if ($id_name == 'doi'){
-        $serv->setDoi($id);
-    }    
-    if ($id_name == 'eid'){
-        $serv->setEid($id);
-    }
-    $mods = $serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
+// function lib4ri_pub_db_get_mods($id, $id_name){
+//     module_load_include('php', 'publication_DB', 'lib/MetaDataServants');
+//     module_load_include('inc', 'lib4ri_pub_db', 'utils/classes');
+// //     $serv = new Crossref2ModsServant();
+// //     return $serv->setDoi($ids)->setPid('libr:libr1129')->serve()->getProcessedDom()[0];
+//     $data_retrieveng_class = variable_get('lib4ri_pub_db_main_data_class');
+//     $serv = new $data_retrieveng_class();
+//     if ($id_name == 'doi'){
+//         $serv->setDoi($id);
+//     }    
+//     if ($id_name == 'eid'){
+//         $serv->setEid($id);
+//     }
+//     $mods = $serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
     
-    if (isset($mods)){
-        $enrich = new Lib4riMetaDataEnricher();
-        $enrich->setDom($mods)->addStdName();
-        $enrich->setDom($mods)->checkJournal();
-        return $enrich->getDom();
-    }
-    else{
-        return false;
-    }
-}
+//     if (isset($mods)){
+//         $enrich = new Lib4riMetaDataEnricher();
+//         $enrich->setDom($mods)->addStdName();
+//         $enrich->setDom($mods)->checkJournal();
+//         return $enrich->getDom();
+//     }
+//     else{
+//         return false;
+//     }
+// }
 
 
 /**
