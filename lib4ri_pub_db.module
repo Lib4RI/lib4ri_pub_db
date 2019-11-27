@@ -143,6 +143,7 @@ function lib4ri_pub_db_doi_validate_ingest($element, &$form_state, $form) {
 function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
     module_load_include('php', 'publication_DB', 'lib/MetaDataServants');
     module_load_include('inc', 'lib4ri_pub_db', 'utils/classes');
+    module_load_include('inc', 'lib4ri_pub_db', 'utils/data_servant_classes');
     
     $doi_element = $form_state['values']['doi'];
     $eid_element = $form_state['values']['eid'];

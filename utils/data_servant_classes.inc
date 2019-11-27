@@ -6,7 +6,9 @@ module_load_include('php', 'publication_DB', 'lib/MetaDataServants');
 /**
  * Class to get MODS from DOI using Crossref data
  */
-class PsiCrossref2ModsServant extends MetaDataServant{
+class Lib4riCrossref2ModsServant extends MetaDataServant{
+    
+    protected $xslt;
     
     /**
      * Constructor.
@@ -18,7 +20,8 @@ class PsiCrossref2ModsServant extends MetaDataServant{
         //                                        'rule' => 'crossref2mods',
         //                                        'source' => '',
             'type' => 'xslt',
-            'rule' => dirname(__FILE__).'/../xslts/psi-journal-article-crossref2mods.xslt',
+//            'rule' => dirname(__FILE__).'/../xslts/psi-journal-article-crossref2mods.xslt',
+            'rule' => dirname(__FILE__).'/../xslts/'.$this->xslt,
             'source' => 'file',
             'params' => array('editor' => FALSE,
                 'subtitle' => FALSE,
@@ -50,11 +53,17 @@ class PsiCrossref2ModsServant extends MetaDataServant{
     }
 }
 
+
+class PsiJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
+    protected $xslt = 'psi-journal-article-crossref2mods.xslt';
+}
+
 /**
  * Class to get MODS from DOI using Scopus data
  */
-class PsiScopus2ModsServant extends MetaDataServant{
+class Lib4riScopus2ModsServant extends MetaDataServant{
     
+    protected $xslt;
     /**
      * Constructor.
      */
@@ -62,7 +71,8 @@ class PsiScopus2ModsServant extends MetaDataServant{
         $this->fetcher = new ScopusAbstractFetcher();
         $this->processor = new MetaDataProcessor(null);
         $this->processor->addSteps(array('type' => 'xslt',
-            'rule' => dirname(__FILE__).'/../xslts/psi-journal-article-scopus2mods.xslt',
+//            'rule' => dirname(__FILE__).'/../xslts/psi-journal-article-scopus2mods.xslt',
+            'rule' => dirname(__FILE__).'/../xslts/'.$this->xslt,
             'source' => 'file',
             'params' => array('editor' => FALSE,
                 'subtitle' => FALSE,
@@ -127,3 +137,9 @@ class PsiScopus2ModsServant extends MetaDataServant{
     }
     
 }
+
+
+class PsiJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
+    protected $xslt = 'psi-journal-article-scopus2mods.xslt';
+}
+
