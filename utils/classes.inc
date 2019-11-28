@@ -64,6 +64,12 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         
     }
     
+    public function enrich(){
+        $this->addStdName();
+        $this->checkJournal();
+        $this->addBeamlines();
+    }
+    
     public function setIds($ids){
         $this->ids = $ids;
     }
