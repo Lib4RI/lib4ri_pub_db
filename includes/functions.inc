@@ -15,7 +15,7 @@ function get_authors_data_from_name($g_name, $f_name){
     $namespace = variable_get('lib4ri_pub_db_solr_namespace'); //configurable namespace
         
     module_load_include('inc', 'islandora_solr', 'includes/utilities');
-    module_load_include('inc', 'lib4ri_psi_authors', 'includes/queries');
+//    module_load_include('inc', 'lib4ri_psi_authors', 'includes/queries');
     
     $qp = new IslandoraSolrQueryProcessor();
     if ($given_name_search){

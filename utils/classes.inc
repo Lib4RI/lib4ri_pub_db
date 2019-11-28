@@ -65,9 +65,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     }
     
     public function enrich(){
-        $this->addStdName();
-        $this->checkJournal();
-        $this->addBeamlines();
+
     }
     
     public function setIds($ids){
@@ -230,6 +228,31 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         }
     }
     
+    
+    public function removeFourriTag(){
+        foreach ($this->sections as $section){
+            $fourri_node = $section->getElementsByTagName('fourri')[0];
+            $section->removeChild($fourri_node);
+        }
+        
+        return $this;
+    }
+    
+    
+}
+
+class ThreeRiMetaDataEnricher extends Lib4riMetaDataEnricher{
+    
+}
+
+class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
+    
+    public function enrich(){
+        $this->addStdName();
+        $this->checkJournal();
+        $this->addBeamlines();
+    }
+    
     public function addBeamlines(){
         if (module_exists('protein_db')){
             $this->xpath = new DOMXPath($this->dom);
@@ -275,35 +298,9 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 $this->dom->documentElement->appendChild($pmid);
             }
             
-            return $this;
         }
-    }
-    
-    public function removeFourriTag(){
-        foreach ($this->sections as $section){
-            $fourri_node = $section->getElementsByTagName('fourri')[0];
-            $section->removeChild($fourri_node);
-        }
-        
         return $this;
     }
-    
-    
-}
-
-class EawagMetaDataEnricher extends Lib4riMetaDataEnricher{
-    
-}
-
-class EmpaMetaDataEnricher extends Lib4riMetaDataEnricher{
-    
-}
-
-class WslMetaDataEnricher extends Lib4riMetaDataEnricher{
-    
-}
-
-class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
     
 }
 
