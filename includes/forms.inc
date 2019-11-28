@@ -103,7 +103,7 @@ function lib4ri_pub_db_admin_form() {
     
     $form['lib4ri_pub_tabs']['lib4ri_pub_auth']['lib4ri_pub_db_auth_flag'] = array(
         '#type' => 'checkbox',
-        '#default_value' => variable_get('lib4ri_staged_ingest_pdfa_at_unstage', TRUE),
+        '#default_value' => variable_get('lib4ri_pub_db_auth_affil_fetch', TRUE),
         '#title' => t('Attempt to add internal authors affiliation'),
     );
     
@@ -187,6 +187,132 @@ function lib4ri_pub_db_admin_form() {
         '#states' => array(
             'visible' => array(
                 ':input[name="lib4ri_pub_db_auth_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_journ_flag'] = array(
+        '#type' => 'checkbox',
+        '#default_value' => variable_get('lib4ri_pub_db_journal_data_fetch', TRUE),
+        '#title' => t('Attempt to fetch journal data from DORA'),
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_journ_title_xpath_query'] = array(
+        '#type' => 'textfield',
+        '#title' => t('MODS XPATH journal title query'),
+        '#default_value' => variable_get('lib4ri_pub_db_journ_title_xpath_query', "//mods:mods/mods:relatedItem [@type=\"host\"]/mods:titleInfo/mods:title"),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_abbr_title_xpath_query'] = array(
+        '#type' => 'textfield',
+        '#title' => t('MODS XPATH journal abbreviated title query'),
+        '#default_value' => variable_get('lib4ri_pub_db_abbr_title_xpath_query', "//mods:mods/mods:relatedItem [@type=\"host\"]/mods:titleInfo [@type=\"abbreviated\"]/mods:title"),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_journ_publish_xpath_query'] = array(
+        '#type' => 'textfield',
+        '#title' => t('MODS XPATH journal publisher query'),
+        '#default_value' => variable_get('llib4ri_pub_db_journ_publish_xpath_query', "//mods:mods/mods:relatedItem [@type=\"host\"]/mods:originInfo/mods:publisher"),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_journ_issn_xpath_query'] = array(
+        '#type' => 'textfield',
+        '#title' => t('MODS XPATH journal ISSN query'),
+        '#default_value' => variable_get('lib4ri_pub_db_journ_issn_xpath_query', "//mods:mods/mods:relatedItem [@type=\"host\"]/mods:identifier [@type=\"issn\"]"),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_journ_eissn_xpath_query'] = array(
+        '#type' => 'textfield',
+        '#title' => t('MODS XPATH journal e-ISSN query'),
+        '#default_value' => variable_get('lib4ri_pub_db_journ_eissn_xpath_query', "//mods:mods/mods:relatedItem [@type=\"host\"]/mods:identifier [@type=\"e-issn\"]"),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_journ_id_xpath_query'] = array(
+        '#type' => 'textfield',
+        '#title' => t('MODS XPATH journal ID query'),
+        '#default_value' => variable_get('lib4ri_pub_db_journ_id_xpath_query', "//mods:mods/mods:relatedItem [@type=\"host\"]/mods:identifier [@type=\"journal id\"]"),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_abbr_title_solr_field'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Journal abbreviated title Solr field'),
+        '#default_value' => variable_get('lib4ri_pub_db_abbr_title_solr_field', 'mods_titleInfo_abbreviated_title_mt'),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_journ_publish_solr_field'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Journal publisher Solr field'),
+        '#default_value' => variable_get('lib4ri_pub_db_journ_publish_solr_field', 'mods_originInfo_publisher_mt'),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_journ_issn_solr_field'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Journal ISSN Solr field'),
+        '#default_value' => variable_get('lib4ri_pub_db_journ_issn_solr_field', 'mods_identifier_issn_mt'),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_journ_eissn_solr_field'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Journal e-ISSN Solr field'),
+        '#default_value' => variable_get('lib4ri_pub_db_journ_eissn_solr_field', 'mods_identifier_e-issn_mt'),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
             ),
         ),
     );

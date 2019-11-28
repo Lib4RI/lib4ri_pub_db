@@ -175,14 +175,14 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     public function checkJournal(){
         $this->xpath = new DOMXPath($this->dom);
 
-        $title_node = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:titleInfo/mods:title")[0];
+        $title_node = $this->xpath->query(variable_get('lib4ri_pub_db_journ_title_xpath_query'))[0];
         $title = $title_node->nodeValue;
         
-        $abbrev_title = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:titleInfo [@type=\"abbreviated\"]/mods:title")[0];
-        $publisher = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:originInfo/mods:publisher")[0];
-        $issn = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:identifier [@type=\"issn\"]")[0];
-        $e_issn = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:identifier [@type=\"e-issn\"]")[0];
-        $id = $this->xpath->query("//mods:mods/mods:relatedItem [@type=\"host\"]/mods:identifier [@type=\"journal id\"]")[0];
+        $abbrev_title = $this->xpath->query(variable_get('lib4ri_pub_db_abbr_title_xpath_query'))[0];
+        $publisher = $this->xpath->query(variable_get('llib4ri_pub_db_journ_publish_xpath_query'))[0];
+        $issn = $this->xpath->query(variable_get('lib4ri_pub_db_journ_issn_xpath_query'))[0];
+        $e_issn = $this->xpath->query(variable_get('lib4ri_pub_db_journ_eissn_xpath_query'))[0];
+        $id = $this->xpath->query(variable_get('lib4ri_pub_db_journ_id_xpath_query'))[0];
         
         $qp = new IslandoraSolrQueryProcessor();
 //         $qp->buildQuery(format_string('!field:(!value)', array(
@@ -198,7 +198,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         )));
         
         
-        $qp->solrParams['fl'] = implode(',', array('PID','mods_titleInfo_abbreviated_title_mt', 'mods_originInfo_publisher_mt', 'mods_identifier_issn_mt', 'mods_identifier_e-issn_mt'));
+        $qp->solrParams['fl'] = implode(',', array('PID',variable_get('lib4ri_pub_db_abbr_title_solr_field'), variable_get('lib4ri_pub_db_journ_publish_solr_field'), variable_get('lib4ri_pub_db_journ_issn_solr_field'), variable_get('lib4ri_pub_db_journ_eissn_solr_field')));
         $qp->solrParams['fq'] = array();
         $qp->executeQuery(FALSE, TRUE);
 
@@ -208,10 +208,10 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             $doc = $object['solr_doc'];
             
             $id->nodeValue = $doc['PID'][0];
-            $abbrev_title->nodeValue = $doc['mods_titleInfo_abbreviated_title_mt'][0];
-            $publisher->nodeValue = $doc['mods_originInfo_publisher_mt'][0];
-            $issn->nodeValue = $doc['mods_identifier_issn_mt'][0];
-            $e_issn->nodeValue = $doc['mods_identifier_e-issn_mt'][0];             
+            $abbrev_title->nodeValue = $doc[variable_get('lib4ri_pub_db_abbr_title_solr_field')][0];
+            $publisher->nodeValue = $doc[variable_get('lib4ri_pub_db_journ_publish_solr_field')][0];
+            $issn->nodeValue = $doc[variable_get('lib4ri_pub_db_journ_issn_solr_field')][0];
+            $e_issn->nodeValue = $doc[variable_get('lib4ri_pub_db_journ_eissn_solr_field')][0];             
         }
         
         if (!$found){
