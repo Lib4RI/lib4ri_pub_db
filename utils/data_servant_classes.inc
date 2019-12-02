@@ -58,8 +58,16 @@ class PsiJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
     protected $xslt = 'psi-journal-article-crossref2mods.xslt';
 }
 
-class ThreeRiJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
-    protected $xslt = 'three-ri-journal-article-crossref2mods.xslt';
+class EawagJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
+    protected $xslt = 'eawag-journal-article-crossref2mods.xslt';
+}
+
+class EmpaJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
+    protected $xslt = 'empa-journal-article-crossref2mods.xslt';
+}
+
+class WslJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
+    protected $xslt = 'wsl-journal-article-crossref2mods.xslt';
 }
 
 /**
@@ -149,4 +157,12 @@ class PsiJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
 
 class EawagJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
     protected $xslt = 'eawag-journal-article-scopus2mods.xslt';
+}
+
+class EmpaJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
+    protected $xslt = 'empa-journal-article-scopus2mods.xslt';
+}
+
+class WslJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
+    protected $xslt = 'wsl-journal-article-scopus2mods.xslt';
 }
