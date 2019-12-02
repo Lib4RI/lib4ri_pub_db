@@ -61,11 +61,12 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
      */
     
     public function __construct() {
-        
+    
     }
     
     public function enrich(){
-
+        $this->addStdName();
+        $this->checkJournal();
     }
     
     public function setIds($ids){
