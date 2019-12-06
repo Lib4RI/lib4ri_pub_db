@@ -1,7 +1,7 @@
 <?php 
 
 module_load_include('php', 'publication_DB', 'lib/MetaDataServants');
-
+module_load_include('inc', 'lib4ri_pub_db', 'utils/servant_classes_callbacks');
 
 /**
  * Class to get MODS from DOI using Crossref data
@@ -26,6 +26,15 @@ class Lib4riCrossref2ModsServant extends MetaDataServant{
             'params' => array('editor' => FALSE,
                 'subtitle' => FALSE,
                 'publisher' => FALSE)
+        )
+            );
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_decimate_many_authors',
+            'source' => '',
+            'params' => array('first' => variable_get('lib4ri_pub_db_auth_first'),
+                'last' => variable_get('lib4ri_pub_db_auth_last'),
+                'threshold' => variable_get('lib4ri_pub_db_auth_th')
+            )
         )
             );
     }
@@ -89,6 +98,15 @@ class Lib4riScopus2ModsServant extends MetaDataServant{
             'params' => array('editor' => FALSE,
                 'subtitle' => FALSE,
                 'publisher' => FALSE)
+        )
+            );
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_decimate_many_authors',
+            'source' => '',
+            'params' => array('first' => variable_get('lib4ri_pub_db_auth_first'),
+                'last' => variable_get('lib4ri_pub_db_auth_last'),
+                'threshold' => variable_get('lib4ri_pub_db_auth_th')
+            )
         )
             );
     }

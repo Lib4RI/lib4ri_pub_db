@@ -190,6 +190,42 @@ function lib4ri_pub_db_admin_form() {
             ),
         ),
     );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_auth']['lib4ri_pub_db_auth_th'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Threshold for authors decimation (many authors)'),
+        '#default_value' => variable_get('lib4ri_pub_db_auth_th', '50'),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_auth_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_auth']['lib4ri_pub_db_auth_first'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Number of "first" authors (many authors)'),
+        '#default_value' => variable_get('lib4ri_pub_db_auth_first', '10'),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_auth_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_auth']['lib4ri_pub_db_auth_last'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Number of "last" authors (many authors)'),
+        '#default_value' => variable_get('lib4ri_pub_db_auth_last', '1'),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_auth_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
     
     $form['lib4ri_pub_tabs']['lib4ri_pub_journ']['lib4ri_pub_db_journ_flag'] = array(
         '#type' => 'checkbox',
