@@ -32,7 +32,7 @@ function lib4ri_pub_db_decimate_many_authors($dom, $params){
             if ($count <= $params['first']){
                 $remove = FALSE;
             }
-            if ($count >= $auth_n-$params['last']){
+            if ($count > $auth_n-$params['last']){
                 $remove = FALSE;
             }
             
