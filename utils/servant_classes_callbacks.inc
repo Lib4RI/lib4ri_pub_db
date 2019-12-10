@@ -51,3 +51,19 @@ function lib4ri_pub_db_decimate_many_authors($dom, $params){
     }
     return $dom;
 }
+
+function lib4ri_pub_db_cruch_given_name($dom, $params){
+    module_load_include('inc', 'lib4ridora', 'includes/utilities.author');
+    $xpath = new DOMXPath($dom);
+    $authors = $xpath->query(variable_get('lib4ri_pub_db_auth_xpath_query'));
+    
+    foreach ($authors as $author){
+        $name_parts = $author->getElementsByTagName('namePart');
+        foreach ($name_parts as $name_part){
+            if ($name_part->getAttribute('type')=='given'){
+                $name_part->nodeValue = lib4ridora_unspace_name_given($name_part->nodeValue);
+            }
+        }
+    }
+    return $dom;
+}
