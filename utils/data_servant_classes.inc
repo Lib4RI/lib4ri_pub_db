@@ -28,6 +28,15 @@ class Lib4riCrossref2ModsServant extends MetaDataServant{
                 'publisher' => FALSE)
         )
             );
+        
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_cruch_given_name',
+            'source' => '',
+            'params' => array(
+            )
+        )
+            );
+        
         $this->processor->addSteps(array('type' => 'callback',
             'rule' => 'lib4ri_pub_db_decimate_many_authors',
             'source' => '',
