@@ -175,9 +175,15 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
 //             '!value' => $title,
 //         )));
         
+        $s_issn = str_replace('-','',$issn);
+        $s_issn = substr($s_issn,0,4).substr($s_issn,4,4);
+        $s_e_issn = str_replace('-','',$e_issn);
+        $s_e_issn = substr($s_e_issn,0,4).'-'.substr($s_e_issn,4,4);
         $qp->buildQuery(format_string('!field1:(!value1) AND !field2:(!value2*)', array(
-            '!field1' => islandora_solr_lesser_escape("mods_titleInfo_title_mt"),
-            '!value1' => $title,
+            '!field0' => islandora_solr_lesser_escape(variable_get('lib4ri_pub_db_journ_issn_solr_field')),
+            '!value0' => $s_issn,
+            '!field1' => islandora_solr_lesser_escape(variable_get('lib4ri_pub_db_journ_eissn_solr_field')),
+            '!value1' => $s_e_issn,
             '!field2' => islandora_solr_lesser_escape('PID'),
             '!value2' => 'journals',
         )));
