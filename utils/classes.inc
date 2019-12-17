@@ -164,7 +164,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         $title = $title_node->nodeValue;
         
         $abbrev_title = $this->xpath->query(variable_get('lib4ri_pub_db_abbr_title_xpath_query'))[0];
-        $publisher = $this->xpath->query(variable_get('llib4ri_pub_db_journ_publish_xpath_query'))[0];
+        $publisher = $this->xpath->query(variable_get('lib4ri_pub_db_journ_publish_xpath_query'))[0];
         $issn = $this->xpath->query(variable_get('lib4ri_pub_db_journ_issn_xpath_query'))[0];
         $e_issn = $this->xpath->query(variable_get('lib4ri_pub_db_journ_eissn_xpath_query'))[0];
         $id = $this->xpath->query(variable_get('lib4ri_pub_db_journ_id_xpath_query'))[0];
