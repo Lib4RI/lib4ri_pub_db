@@ -79,7 +79,7 @@ function get_authors_unit_from_aff_name($group){
     foreach ($qp->islandoraSolrResult['response']['objects'] as $object) {
         $doc = $object['solr_doc'];
         $group_id = $doc['PID'];
-        $g_cname = $doc[variable_get('lib4ri_pub_db_std_name_solr_search_field')][0];
+        $g_cname = $doc[variable_get('lib4ri_pub_db_group_current_solr_search_field')][0];
         array_push($ret, array('g_pid' => $group_id, 'g_cname' => $g_cname));
     }
     
