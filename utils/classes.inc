@@ -200,7 +200,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             $found = 1;
             $doc = $object['solr_doc'];
             
-            $id->nodeValue = $doc['PID'][0];
+            $id->nodeValue = $doc['PID'];
             $abbrev_title->nodeValue = $doc[variable_get('lib4ri_pub_db_abbr_title_solr_field')][0];
             $publisher->nodeValue = $doc[variable_get('lib4ri_pub_db_journ_publish_solr_field')][0];
             $issn->nodeValue = $doc[variable_get('lib4ri_pub_db_journ_issn_solr_field')][0];
