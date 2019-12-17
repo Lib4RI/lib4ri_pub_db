@@ -175,18 +175,20 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
 //             '!value' => $title,
 //         )));
         
-        $s_issn = str_replace('-','',$issn);
-        $s_issn = substr($s_issn,0,4).substr($s_issn,4,4);
-        $s_e_issn = str_replace('-','',$e_issn);
+        $s_issn = str_replace('-','',$issn->nodeValue);
+        $s_issn = substr($s_issn,0,4).'-'.substr($s_issn,4,4);
+        $s_e_issn = str_replace('-','',$e_issn->nodeValue);
         $s_e_issn = substr($s_e_issn,0,4).'-'.substr($s_e_issn,4,4);
-        $qp->buildQuery(format_string('!field1:(!value1) AND !field2:(!value2*)', array(
+        
+        $qp->buildQuery(format_string('(!field0:(!value0) OR !field1:(!value1)) AND !field2:(!value2*)', array(
             '!field0' => islandora_solr_lesser_escape(variable_get('lib4ri_pub_db_journ_issn_solr_field')),
-            '!value0' => $s_issn,
+            '!value0' => islandora_solr_lesser_escape($s_issn),
             '!field1' => islandora_solr_lesser_escape(variable_get('lib4ri_pub_db_journ_eissn_solr_field')),
-            '!value1' => $s_e_issn,
+            '!value1' => islandora_solr_lesser_escape($s_e_issn),
             '!field2' => islandora_solr_lesser_escape('PID'),
             '!value2' => 'journals',
         )));
+        
         
         
         $qp->solrParams['fl'] = implode(',', array('PID',variable_get('lib4ri_pub_db_abbr_title_solr_field'), variable_get('lib4ri_pub_db_journ_publish_solr_field'), variable_get('lib4ri_pub_db_journ_issn_solr_field'), variable_get('lib4ri_pub_db_journ_eissn_solr_field')));
