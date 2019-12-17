@@ -137,13 +137,15 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 $section->appendChild($elem2);
                 
                 if ($affil_search){
-                    $unit_id = get_authors_unit_from_aff_name($auth_data[0]['group'])[0]['g_pid'];
+                    $unit_data = get_authors_unit_from_aff_name($auth_data[0]['group'])[0];
+                    $unit_id = $unit_data['g_pid'];
+                    $unit_name = $unit_data['g_cname'];
                     
                     $elem_uid = $this->dom->createElement('nameIdentifier',$unit_id);
                     $elem_uid->setAttribute('type','organizational unit id');
                     $section->appendChild($elem_uid);
                     
-                    $elem_group = $this->dom->createElement('affiliation',$auth_data[0]['group']);
+                    $elem_group = $this->dom->createElement('affiliation',$unit_name);
 //                    $elem_group->setAttribute('type','group');
                     $section->appendChild($elem_group);
                 }
@@ -334,14 +336,16 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
                 $section->appendChild($elemU);
                 
                 if ($affil_search){
-                    $affil_data = get_authors_affiliation_from_aff_name($auth_data[0]['group']);
-                    $unit_id = get_authors_unit_from_aff_name($auth_data[0]['group'])[0]['g_pid'];
+                    $unit_data = get_authors_unit_from_aff_name($auth_data[0]['group'])[0];
+                    $unit_id = $unit_data['g_pid'];
+                    $unit_name = $unit_data['g_cname'];
+                    $affil_data = get_authors_affiliation_from_aff_name($unit_name);
                     
                     $elem_uid = $this->dom->createElement('nameIdentifier',$unit_id);
                     $elem_uid->setAttribute('type','organizational unit id');
                     $section->appendChild($elem_uid);
                     
-                    $elem_group = $this->dom->createElement('affiliation',$auth_data[0]['group']);
+                    $elem_group = $this->dom->createElement('affiliation',$unit_name);
                     $elem_group->setAttribute('type','group');
                     $section->appendChild($elem_group);
                     

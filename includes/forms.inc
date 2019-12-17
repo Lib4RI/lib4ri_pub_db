@@ -154,6 +154,18 @@ function lib4ri_pub_db_admin_form() {
             ),
         ),
     );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_auth']['lib4ri_pub_db_group_current_solr_search_field'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Group current name solr search field'),
+        '#default_value' => variable_get('lib4ri_pub_db_group_current_solr_search_field', ''),
+        '#required' => false,
+        '#states' => array(
+            'visible' => array(
+                ':input[name="lib4ri_pub_db_auth_flag"]' => array('checked' => TRUE),
+            ),
+        ),
+    );
     
     $form['lib4ri_pub_tabs']['lib4ri_pub_auth']['lib4ri_pub_db_std_name_solr_search_field'] = array(
         '#type' => 'textfield',
