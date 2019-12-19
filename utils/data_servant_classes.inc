@@ -100,6 +100,15 @@ class Lib4riScopus2ModsServant extends MetaDataServant{
     public function __construct() {
         $this->fetcher = new ScopusAbstractFetcher();
         $this->processor = new MetaDataProcessor(null);
+        
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_crunch_abstract',
+            'source' => '',
+            'params' => array(
+            )
+        )
+            );
+        
         $this->processor->addSteps(array('type' => 'xslt',
 //            'rule' => dirname(__FILE__).'/../xslts/psi-journal-article-scopus2mods.xslt',
             'rule' => dirname(__FILE__).'/../xslts/'.$this->xslt,

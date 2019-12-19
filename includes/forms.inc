@@ -22,10 +22,14 @@ function lib4ri_pub_db_admin_form() {
                 'lib4ri_pub_auth' => array(
                 '#type' => 'fieldset',
                 '#title' => t('Authors data'),
-                ),
+            ),
                 'lib4ri_pub_journ' => array(
                 '#type' => 'fieldset',
                 '#title' => t('Journal data'),
+            ),
+            'lib4ri_pub_abstr' => array(
+                '#type' => 'fieldset',
+                '#title' => t('Abstract data'),
             )
             
          )
@@ -363,6 +367,13 @@ function lib4ri_pub_db_admin_form() {
                 ':input[name="lib4ri_pub_db_journ_flag"]' => array('checked' => TRUE),
             ),
         ),
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_abstr']['lib4ri_pub_db_abstr_tags'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Allowed html tags in abstract'),
+        '#default_value' => variable_get('lib4ri_pub_db_abstr_tags', '<sup><inf><i>'),
+        '#required' => false,
     );
     
     return system_settings_form($form);
