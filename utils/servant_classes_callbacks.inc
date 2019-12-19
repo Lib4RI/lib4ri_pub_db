@@ -4,6 +4,7 @@ function lib4ri_pub_db_crunch_abstract($dom, $params){
     $xpath = new DOMXPath($dom);
     $abstractDomNode = $xpath->query('//dc:description/abstract/ce:para')[0];
     $abstractXML = $dom->saveXML($abstractDomNode);
+    
     $abstract = htmlentities(strip_tags(html_entity_decode(str_replace('</ce:para>', '', str_replace('<ce:para>', '', $abstractXML))), variable_get('lib4ri_pub_db_abstr_tags')));
     
     $abstractDomNode->nodeValue = $abstract;
