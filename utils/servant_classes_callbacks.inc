@@ -7,11 +7,12 @@ function lib4ri_pub_db_crunch_abstract($dom, $params){
     //$abstractXML = str_replace('inf>', 'sub>', $abstractXML);
     
     $abstract = str_replace('</ce:para>', '', str_replace('<ce:para>', '', $abstractXML));
-    $abstract = html_entity_decode($abstract);
-    $abstract = strip_tags($abstract, variable_get('lib4ri_pub_db_abstr_tags'));
-    $abstract = str_replace('inf>', 'sub>', $abstract);
-    $abstract = htmlentities($abstract);
-    
+     $abstract = html_entity_decode($abstract);
+     $abstract = strip_tags($abstract, variable_get('lib4ri_pub_db_abstr_tags'));
+     $abstract = str_replace('<inf>', '<sub>', $abstract);
+     $abstract = str_replace('</inf>', '</sub>', $abstract);
+     $abstract = htmlspecialchars($abstract);
+
     $abstractDomNode->nodeValue = $abstract;
     return $dom;
 }
