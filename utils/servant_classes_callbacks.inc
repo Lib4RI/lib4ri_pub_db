@@ -4,8 +4,13 @@ function lib4ri_pub_db_crunch_abstract($dom, $params){
     $xpath = new DOMXPath($dom);
     $abstractDomNode = $xpath->query('//dc:description/abstract/ce:para')[0];
     $abstractXML = $dom->saveXML($abstractDomNode);
+    //$abstractXML = str_replace('inf>', 'sub>', $abstractXML);
     
-    $abstract = htmlentities(strip_tags(html_entity_decode(str_replace('</ce:para>', '', str_replace('<ce:para>', '', $abstractXML))), variable_get('lib4ri_pub_db_abstr_tags')));
+    $abstract = str_replace('</ce:para>', '', str_replace('<ce:para>', '', $abstractXML));
+    $abstract = html_entity_decode($abstract);
+    $abstract = strip_tags($abstract, variable_get('lib4ri_pub_db_abstr_tags'));
+    $abstract = str_replace('inf>', 'sub>', $abstract);
+    $abstract = htmlentities($abstract);
     
     $abstractDomNode->nodeValue = $abstract;
     return $dom;
