@@ -11,6 +11,8 @@ function lib4ri_pub_db_crunch_abstract($dom, $params){
      $abstract = strip_tags($abstract, variable_get('lib4ri_pub_db_abstr_tags'));
      $abstract = str_replace('<inf>', '<sub>', $abstract);
      $abstract = str_replace('</inf>', '</sub>', $abstract);
+     $abstract = str_replace('<i>', '<em>', $abstract);
+     $abstract = str_replace('</i>', '</em>', $abstract);
      $abstract = htmlspecialchars($abstract);
 
     $abstractDomNode->nodeValue = $abstract;
