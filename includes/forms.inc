@@ -27,11 +27,14 @@ function lib4ri_pub_db_admin_form() {
                 '#type' => 'fieldset',
                 '#title' => t('Journal data'),
             ),
+            'lib4ri_pub_title' => array(
+                '#type' => 'fieldset',
+                '#title' => t('Title data'),
+            ),
             'lib4ri_pub_abstr' => array(
                 '#type' => 'fieldset',
                 '#title' => t('Abstract data'),
-            )
-            
+            ),
          )
     );
     
@@ -372,7 +375,15 @@ function lib4ri_pub_db_admin_form() {
     $form['lib4ri_pub_tabs']['lib4ri_pub_abstr']['lib4ri_pub_db_abstr_tags'] = array(
         '#type' => 'textfield',
         '#title' => t('Allowed html tags in abstract'),
-        '#default_value' => variable_get('lib4ri_pub_db_abstr_tags', '<sup><inf><i>'),
+        '#default_value' => variable_get('lib4ri_pub_db_abstr_tags', '<sup><inf><i><sub><em>'),
+        '#required' => false,
+    );
+
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_title']['lib4ri_pub_db_title_tags'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Allowed html tags in title'),
+        '#default_value' => variable_get('lib4ri_pub_db_title_tags', '<sup><inf><i><sub><em>'),
         '#required' => false,
     );
     

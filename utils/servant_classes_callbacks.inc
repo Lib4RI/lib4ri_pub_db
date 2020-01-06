@@ -19,6 +19,24 @@ function lib4ri_pub_db_crunch_abstract($dom, $params){
     return $dom;
 }
 
+function lib4ri_pub_db_crunch_title($dom, $params){
+    $xpath = new DOMXPath($dom);
+    $titleDomNode = $xpath->query('//citation-title/titletext')[0];
+    $titleXML = $dom->saveXML($titleDomNode);
+    
+    $title = str_replace('</title>', '', str_replace('<title>', '', $titleXML));
+    $title = html_entity_decode($title);
+    $title = strip_tags($title, variable_get('lib4ri_pub_db_title_tags'));
+    $title = str_replace('<inf>', '<sub>', $title);
+    $title = str_replace('</inf>', '</sub>', $title);
+    $title = str_replace('<i>', '<em>', $title);
+    $title = str_replace('</i>', '</em>', $title);
+    $title = htmlspecialchars($title);
+    
+    $titleDomNode->nodeValue = $title;
+    return $dom;
+}
+
 
 function lib4ri_pub_db_decimate_many_authors($dom, $params){
     $xpath = new DOMXPath($dom);
