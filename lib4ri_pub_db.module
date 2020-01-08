@@ -24,7 +24,7 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
                 $form['ingest_selector']['#default_value'] = 'journal_article';
                 $fill_doi = true;
                 break;
-            case 'Proceeding Paper':
+            case 'Proceedings Paper':
                 $form['ingest_selector']['#default_value'] = 'proceedings_paper';
                 $fill_doi = true;
                 break;
