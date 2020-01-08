@@ -14,6 +14,7 @@ function lib4ri_pub_db_crunch_abstract($dom, $params){
      $abstract = str_replace('<i>', '<em>', $abstract);
      $abstract = str_replace('</i>', '</em>', $abstract);
      $abstract = htmlspecialchars($abstract);
+     $abstract = trim(preg_replace('/\s+/', ' ',$abstract));
 
     $abstractDomNode->nodeValue = $abstract;
     return $dom;
@@ -32,6 +33,7 @@ function lib4ri_pub_db_crunch_title($dom, $params){
     $title = str_replace('<i>', '<em>', $title);
     $title = str_replace('</i>', '</em>', $title);
     $title = htmlspecialchars($title);
+    $title = trim(preg_replace('/\s+/', ' ',$title));
     
     $titleDomNode->nodeValue = $title;
     return $dom;
