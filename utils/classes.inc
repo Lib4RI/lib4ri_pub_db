@@ -389,6 +389,9 @@ class IdValidator{
     protected $id;
     protected $idsolrfield;
     protected $serv;
+    protected $pub_type;
+    protected $scopus_retrieving_class;
+    protected $xref_retrieving_class;
     
     
     public function __construct() {
@@ -400,6 +403,20 @@ class IdValidator{
         return $this;
     }
 
+    public  function setPubType($pub_type){
+        switch ($pub_type) {
+            case 'journal_article':
+                $this->scopus_retrieving_class = variable_get('lib4ri_pub_db_scopus_journal_data_class');
+                $this->xref_retrieving_class = variable_get('lib4ri_pub_db_xref_journal_data_class');
+                break;
+            case 'proceedings_paper':
+                $this->scopus_retrieving_class = variable_get('lib4ri_pub_db_scopus_proceedings_data_class');
+                $this->xref_retrieving_class = variable_get('lib4ri_pub_db_xref_proceedings_data_class');
+                break;
+        }
+        
+        return $this;
+    }
 //     protected function setServant($serv){
 //         $this->serv = $serv;
 //     }
@@ -499,8 +516,8 @@ class IdValidator{
     
     protected function fetchFromScopus(){
         if (variable_get('lib4ri_pub_db_scopus_use')){
-            $data_retrieveng_class = variable_get('lib4ri_pub_db_scopus_data_class');
-            $this->serv = new $data_retrieveng_class();
+//            $data_retrieveng_class = variable_get('lib4ri_pub_db_scopus_data_class');
+            $this->serv = new $this->scopus_retrieving_class();
 //            $this->serv = new Scopus2ModsServant();
             $this->setServantId();
             $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
@@ -518,8 +535,8 @@ class IdValidator{
 
     protected function fetchFromXref(){
         if (variable_get('lib4ri_pub_db_xref_use')){
-            $data_retrieveng_class = variable_get('lib4ri_pub_db_xref_data_class');
-            $this->serv = new $data_retrieveng_class();
+//            $data_retrieveng_class = variable_get('lib4ri_pub_db_xref_data_class');
+            $this->serv = new $this->xref_retrieving_class();
 //            $this->serv = new Crossref2ModsServant();
             $this->setServantId();
             $this->mods = $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve()->getProcessedDom()[0];

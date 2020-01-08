@@ -52,13 +52,20 @@ function lib4ri_pub_db_admin_form() {
         '#required' => FALSE,
     );
     
-    $form['lib4ri_pub_tabs']['lib4ri_pub_scopus']['lib4ri_pub_db_scopus_data_class'] = array(
+    $form['lib4ri_pub_tabs']['lib4ri_pub_scopus']['lib4ri_pub_db_scopus_journal_data_class'] = array(
         '#type' => 'textfield',
-        '#title' => t('Class name for data fetching from Scopus'),
-        '#default_value' => variable_get('lib4ri_pub_db_scopus_data_class', ''),
+        '#title' => t('Class name for journal articles data fetching from Scopus'),
+        '#default_value' => variable_get('lib4ri_pub_db_scopus_journal_data_class', ''),
         '#required' => FALSE,
     );
 
+    $form['lib4ri_pub_tabs']['lib4ri_pub_scopus']['lib4ri_pub_db_scopus_proceedings_data_class'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Class name for proceedings papers data fetching from Scopus'),
+        '#default_value' => variable_get('lib4ri_pub_db_scopus_proceedings_data_class', ''),
+        '#required' => FALSE,
+    );
+    
     $form['lib4ri_pub_tabs']['lib4ri_pub_xref']['lib4ri_pub_db_xref_use'] = array(
         '#type' => 'checkbox',
         '#title' => t('Fetch data from Crossref'),
@@ -73,10 +80,17 @@ function lib4ri_pub_db_admin_form() {
         '#required' => FALSE,
     );
 
-    $form['lib4ri_pub_tabs']['lib4ri_pub_xref']['lib4ri_pub_db_xref_data_class'] = array(
+    $form['lib4ri_pub_tabs']['lib4ri_pub_xref']['lib4ri_pub_db_xref_journal_data_class'] = array(
         '#type' => 'textfield',
-        '#title' => t('Class name for data fetching from Xref'),
-        '#default_value' => variable_get('lib4ri_pub_db_xref_data_class', ''),
+        '#title' => t('Class name for journal articles data fetching from Xref'),
+        '#default_value' => variable_get('lib4ri_pub_db_xref_journal_data_class', ''),
+        '#required' => FALSE,
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_xref']['lib4ri_pub_db_xref_proceedings_data_class'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Class name for proceedings papers data fetching from Xref'),
+        '#default_value' => variable_get('lib4ri_pub_db_xref_proceedings_data_class', ''),
         '#required' => FALSE,
     );
     
