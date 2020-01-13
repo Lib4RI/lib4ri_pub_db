@@ -379,6 +379,13 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
     
 }
 
+
+class Lib4riProceedingsPaperMetaDataEnricher extends Lib4riMetaDataEnricher{
+    
+    public function enrich(){
+    }
+}
+
 /*******************************************************************************************
 *    Classes to validate IDs                                                               *                                                              
 *******************************************************************************************/
