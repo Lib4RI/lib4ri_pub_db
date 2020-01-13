@@ -88,6 +88,12 @@ class WslJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
     protected $xslt = 'wsl-journal-article-crossref2mods.xslt';
 }
 
+
+class PsiProceedingsPaperCrossref2ModsServant extends Lib4riCrossref2ModsServant{
+    protected $xslt = 'psi-proceedings-paper-crossref2mods.xslt';
+}
+
+
 /**
  * Class to get MODS from DOI using Scopus data
  */
@@ -217,4 +223,9 @@ class EmpaJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
 
 class WslJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
     protected $xslt = 'wsl-journal-article-scopus2mods.xslt';
+}
+
+
+class PsiProceedingsPaperScopus2ModsServant extends Lib4riScopus2ModsServant{
+    protected $xslt = 'psi-proceedings-paper-scopus2mods.xslt';
 }
