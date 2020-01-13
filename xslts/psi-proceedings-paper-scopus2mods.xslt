@@ -79,11 +79,48 @@
 			<dateOther type="conferenceDate"></dateOther>
 		</originInfo>
 		<relatedItem type="host">
-			
+			<titleInfo>
+				<title>
+					<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issuetitle"/>
+				</title>
+			</titleInfo>	
+			<xsl:for-each select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/contributor-group/contributor[@role='edit']">
+				    <name type="personal">
+  					<namePart type="family"><xsl:value-of select="ce:surname"/></namePart>
+  					<namePart type="given"><xsl:value-of select="ce:given-name"/></namePart>
+  					<role>
+  						<roleTerm authority="marcrelator" type="text">editor</roleTerm>
+  					</role>
+  					</name>
+			</xsl:for-each>
 		</relatedItem>
 		<originInfo>
 			<dateIssued encoding="w3cdtf" keyDate="yes"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/publicationdate/year"/></dateIssued>
 		</originInfo>
+		<originInfo>
+			<publisher><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/publisher/publishername"/></publisher>
+			<place>
+				<placeTerm type="text"></placeTerm>
+			</place>
+		</originInfo>
+		<part>
+			<detail type="volume">
+				<number><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:volume"/></number>
+			</detail>
+			<detail type="issue">
+				<number/>
+			</detail>
+			<extent unit="pages">
+				<start>109600B (7 pp.)</start>
+				<end/>
+			</extent>
+		</part>
+		<relatedItem type="series">
+			<titleInfo>
+				<title><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:publicationName"/></title>
+			</titleInfo>
+			<identifier type="issn"><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:issn"/></identifier>
+		</relatedItem>
 	</mods>
 	</xsl:template>
 </xsl:stylesheet>
