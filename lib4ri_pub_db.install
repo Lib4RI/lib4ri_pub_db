@@ -1,2 +1,8 @@
 <?php
 
+function lib4ri_pub_db_install() {
+    db_update('system')
+    ->fields(array('weight' => 6))
+    ->condition('name', 'lib4ri_staged_ingest', '=')
+    ->execute();
+}
