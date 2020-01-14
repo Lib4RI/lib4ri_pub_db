@@ -73,6 +73,7 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
             ),
         );
         
+        $form['prev']['#weight'] = 19;
         $form['next']['#weight'] = 20;
     }
 }
