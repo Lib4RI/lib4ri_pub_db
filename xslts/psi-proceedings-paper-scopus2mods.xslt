@@ -93,6 +93,24 @@
   					</role>
   					</name>
 			</xsl:for-each>
+			<relatedItem type="series">
+				<titleInfo>
+					<title><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:publicationName"/></title>
+				</titleInfo>
+				<identifier type="issn"><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:issn"/></identifier>
+			</relatedItem>
+			<part>
+				<detail type="volume">
+					<number><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:volume"/></number>
+				</detail>
+				<detail type="issue">
+					<number/>
+				</detail>
+				<extent unit="pages">
+					<start>109600B (7 pp.)</start>
+					<end/>
+				</extent>
+			</part>
 		</relatedItem>
 		<originInfo>
 			<dateIssued encoding="w3cdtf" keyDate="yes"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/publicationdate/year"/></dateIssued>
@@ -103,24 +121,6 @@
 				<placeTerm type="text"></placeTerm>
 			</place>
 		</originInfo>
-		<part>
-			<detail type="volume">
-				<number><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:volume"/></number>
-			</detail>
-			<detail type="issue">
-				<number/>
-			</detail>
-			<extent unit="pages">
-				<start>109600B (7 pp.)</start>
-				<end/>
-			</extent>
-		</part>
-		<relatedItem type="series">
-			<titleInfo>
-				<title><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:publicationName"/></title>
-			</titleInfo>
-			<identifier type="issn"><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:issn"/></identifier>
-		</relatedItem>
 	</mods>
 	</xsl:template>
 </xsl:stylesheet>
