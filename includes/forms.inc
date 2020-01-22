@@ -372,20 +372,20 @@ function lib4ri_pub_db_admin_form() {
         ),
     );
 
-    $form['lib4ri_pub_tabs']['lib4ri_pub_abstr']['lib4ri_pub_db_abstr_tags'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Allowed html tags in abstract'),
-        '#default_value' => variable_get('lib4ri_pub_db_abstr_tags', '<sup><inf><i><sub><em>'),
-        '#required' => false,
-    );
+//     $form['lib4ri_pub_tabs']['lib4ri_pub_abstr']['lib4ri_pub_db_abstr_tags'] = array(
+//         '#type' => 'textfield',
+//         '#title' => t('Allowed html tags in abstract'),
+//         '#default_value' => variable_get('lib4ri_pub_db_abstr_tags', '<sup><inf><i><sub><em>'),
+//         '#required' => false,
+//     );
 
     
-    $form['lib4ri_pub_tabs']['lib4ri_pub_title']['lib4ri_pub_db_title_tags'] = array(
-        '#type' => 'textfield',
-        '#title' => t('Allowed html tags in title'),
-        '#default_value' => variable_get('lib4ri_pub_db_title_tags', '<sup><inf><i><sub><em>'),
-        '#required' => false,
-    );
+//     $form['lib4ri_pub_tabs']['lib4ri_pub_title']['lib4ri_pub_db_title_tags'] = array(
+//         '#type' => 'textfield',
+//         '#title' => t('Allowed html tags in title'),
+//         '#default_value' => variable_get('lib4ri_pub_db_title_tags', '<sup><inf><i><sub><em>'),
+//         '#required' => false,
+//     );
     
     return system_settings_form($form);
 }
