@@ -21,7 +21,7 @@
 	<xsl:template match="/">
 	<mods>
 		<titleInfo>
-			<title><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/dc:title"/></title>
+			<title><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/citation-title/titletext"/></title>
 		</titleInfo>
 		<originInfo>
     		<dateIssued encoding="w3cdtf" keyDate="yes"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/ait:process-info/ait:date-sort/@year"/></dateIssued>
