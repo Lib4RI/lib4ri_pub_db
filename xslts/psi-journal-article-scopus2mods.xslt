@@ -89,8 +89,16 @@
 					<number><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:issueIdentifier"/></number>
 				</detail>
 				<extent unit="page">
-					<start><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:startingPage"/></start>
-					<end><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:endingPage"/></end>
+					<xsl:choose>
+						<xsl:when test="/dtd:abstracts-retrieval-response/dtd:coredata/prism:startingPage">
+							<start><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:startingPage"/></start>
+							<end><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:endingPage"/></end>
+						</xsl:when>
+						<xsl:otherwise>
+							<start><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/dtd:article-number"/></start>
+							<end></end>
+						</xsl:otherwise>
+					</xsl:choose>				
 				</extent>
 			</part>
   		</relatedItem>
