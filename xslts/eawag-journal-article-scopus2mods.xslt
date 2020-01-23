@@ -17,8 +17,6 @@
   
   <xsl:output method="xml" indent="yes"/>
   <xsl:variable name="internal_affiliation" select="/dtd:abstracts-retrieval-response/dtd:affiliation[dtd:affilname='Swiss Federal Institute of Aquatic Science and Technology']/@id" />
-  <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'" />
-  <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
   <aff_id><xsl:value-of select="$internal_affiliation" /></aff_id>
 	<xsl:template match="/">
 	<mods>
@@ -66,7 +64,7 @@
 		<subject>
 		<topic/>
 			<xsl:for-each select="/dtd:abstracts-retrieval-response/dtd:authkeywords/dtd:author-keyword">
-				<topic><xsl:value-of select="translate(current(), $uppercase, $lowercase)"/></topic>
+				<topic><xsl:value-of select="current()"/></topic>
 			</xsl:for-each>
 		</subject>
   		<abstract><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/dc:description/abstract/ce:para"/></abstract>
