@@ -214,18 +214,3 @@ class Lib4riJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
     protected $xslt = 'journal-article-scopus2mods.xslt';
 }
 
-class PsiJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
-    protected $xslt = 'psi-journal-article-scopus2mods.xslt';
-}
-
-class EawagJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
-    protected $xslt = 'eawag-journal-article-scopus2mods.xslt';
-}
-
-class EmpaJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
-    protected $xslt = 'empa-journal-article-scopus2mods.xslt';
-}
-
-class WslJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
-    protected $xslt = 'wsl-journal-article-scopus2mods.xslt';
-}
