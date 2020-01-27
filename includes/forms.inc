@@ -59,6 +59,13 @@ function lib4ri_pub_db_admin_form() {
         '#required' => FALSE,
     );
 
+    $form['lib4ri_pub_tabs']['lib4ri_pub_scopus']['lib4ri_pub_db_scopus_affil_ids'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Lib4RI authors affiliation codes'),
+        '#default_value' => variable_get('lib4ri_pub_db_scopus_affil_ids', ''),
+        '#required' => FALSE,
+    );
+    
     $form['lib4ri_pub_tabs']['lib4ri_pub_xref']['lib4ri_pub_db_xref_use'] = array(
         '#type' => 'checkbox',
         '#title' => t('Fetch data from Crossref'),

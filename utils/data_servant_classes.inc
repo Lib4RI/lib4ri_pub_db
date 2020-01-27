@@ -116,6 +116,14 @@ class Lib4riScopus2ModsServant extends MetaDataServant{
             )
         )
             );
+
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_spot_internal_authors',
+            'source' => '',
+            'params' => array(
+            )
+        )
+            );
         
         $this->processor->addSteps(array('type' => 'xslt',
 //            'rule' => dirname(__FILE__).'/../xslts/psi-journal-article-scopus2mods.xslt',
@@ -202,6 +210,9 @@ class Lib4riScopus2ModsServant extends MetaDataServant{
     
 }
 
+class Lib4riJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
+    protected $xslt = 'journal-article-scopus2mods.xslt';
+}
 
 class PsiJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
     protected $xslt = 'psi-journal-article-scopus2mods.xslt';

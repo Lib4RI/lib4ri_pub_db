@@ -106,6 +106,20 @@ function lib4ri_pub_db_cruch_given_name($dom, $params){
     return $dom;
 }
 
+function lib4ri_pub_db_spot_internal_authors($dom, $params){
+    $xpath = new DOMXPath($dom);
+    $authors = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("authors")->item(0)->getElementsByTagName("author");
+    foreach ($authors as $author){
+        $affiliations = $author->getElementsByTagName('affiliation');
+        foreach ($affiliations as $affiliation){
+            if (in_array($affiliation->getAttribute('id'), explode(',',variable_get('lib4ri_pub_db_scopus_affil_ids')))){
+                $author->setAttribute('fourri', 'true');
+            }
+        }
+    }
+    return $dom;
+}
+
 /**
  * Copied from lib4ridora module
  * TODO: FIX: (René M. -> RenéM.)
