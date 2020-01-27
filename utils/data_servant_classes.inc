@@ -71,22 +71,10 @@ class Lib4riCrossref2ModsServant extends MetaDataServant{
     }
 }
 
-
-class PsiJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
-    protected $xslt = 'psi-journal-article-crossref2mods.xslt';
+class Lib4riJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
+    protected $xslt = 'journal-article-crossref2mods.xslt';
 }
 
-class EawagJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
-    protected $xslt = 'eawag-journal-article-crossref2mods.xslt';
-}
-
-class EmpaJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
-    protected $xslt = 'empa-journal-article-crossref2mods.xslt';
-}
-
-class WslJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
-    protected $xslt = 'wsl-journal-article-crossref2mods.xslt';
-}
 
 /**
  * Class to get MODS from DOI using Scopus data
