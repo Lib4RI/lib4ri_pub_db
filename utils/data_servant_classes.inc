@@ -77,8 +77,8 @@ class Lib4riJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServan
 
 
 
-class PsiProceedingsPaperCrossref2ModsServant extends Lib4riCrossref2ModsServant{
-    protected $xslt = 'psi-proceedings-paper-crossref2mods.xslt';
+class Lib4riProceedingsPaperCrossref2ModsServant extends Lib4riCrossref2ModsServant{
+    protected $xslt = 'proceedings-paper-crossref2mods.xslt';
 }
 
 
