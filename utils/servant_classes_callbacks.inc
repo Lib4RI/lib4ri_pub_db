@@ -16,8 +16,6 @@ function lib4ri_pub_db_crunch_abstract($dom, $params){
     $abstract = str_replace('</i>', '</em>', $abstract);
     $abstract = htmlspecialchars($abstract);
     $abstract = trim(preg_replace('/\s+/', ' ',$abstract));
-
-
     $abstractDomNode->nodeValue = $abstract;
     return $dom;
 }
@@ -28,15 +26,14 @@ function lib4ri_pub_db_crunch_title($dom, $params){
     $titleXML = $dom->saveXML($titleDomNode);
     
     $title = str_replace('</titletext>', '', str_replace('<titletext>', '', $titleXML));
-//    $title = html_entity_decode($title);
-    $title = strip_tags($title, variable_get('lib4ri_pub_db_title_tags'));
+    $title = html_entity_decode($title);
+//    $title = strip_tags($title, variable_get('lib4ri_pub_db_title_tags'));
     $title = str_replace('<inf>', '<sub>', $title);
     $title = str_replace('</inf>', '</sub>', $title);
     $title = str_replace('<i>', '<em>', $title);
     $title = str_replace('</i>', '</em>', $title);
     $title = htmlspecialchars($title);
     $title = trim(preg_replace('/\s+/', ' ',$title));
-    
     $titleDomNode->nodeValue = $title;
     return $dom;
 }
@@ -104,6 +101,20 @@ function lib4ri_pub_db_cruch_given_name($dom, $params){
         foreach ($name_parts as $name_part){
             if ($name_part->getAttribute('type')=='given'){
                 $name_part->nodeValue = lib4ri_pub_db_unspace_name_given($name_part->nodeValue);
+            }
+        }
+    }
+    return $dom;
+}
+
+function lib4ri_pub_db_spot_internal_authors($dom, $params){
+    $xpath = new DOMXPath($dom);
+    $authors = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("authors")->item(0)->getElementsByTagName("author");
+    foreach ($authors as $author){
+        $affiliations = $author->getElementsByTagName('affiliation');
+        foreach ($affiliations as $affiliation){
+            if (in_array($affiliation->getAttribute('id'), explode(',',variable_get('lib4ri_pub_db_scopus_affil_ids')))){
+                $author->setAttribute('fourri', 'true');
             }
         }
     }

@@ -71,22 +71,10 @@ class Lib4riCrossref2ModsServant extends MetaDataServant{
     }
 }
 
-
-class PsiJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
-    protected $xslt = 'psi-journal-article-crossref2mods.xslt';
+class Lib4riJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
+    protected $xslt = 'journal-article-crossref2mods.xslt';
 }
 
-class EawagJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
-    protected $xslt = 'eawag-journal-article-crossref2mods.xslt';
-}
-
-class EmpaJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
-    protected $xslt = 'empa-journal-article-crossref2mods.xslt';
-}
-
-class WslJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServant{
-    protected $xslt = 'wsl-journal-article-crossref2mods.xslt';
-}
 
 
 class PsiProceedingsPaperCrossref2ModsServant extends Lib4riCrossref2ModsServant{
@@ -117,6 +105,14 @@ class Lib4riScopus2ModsServant extends MetaDataServant{
         
         $this->processor->addSteps(array('type' => 'callback',
             'rule' => 'lib4ri_pub_db_crunch_abstract',
+            'source' => '',
+            'params' => array(
+            )
+        )
+            );
+
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_spot_internal_authors',
             'source' => '',
             'params' => array(
             )
@@ -208,24 +204,7 @@ class Lib4riScopus2ModsServant extends MetaDataServant{
     
 }
 
-
-class PsiJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
-    protected $xslt = 'psi-journal-article-scopus2mods.xslt';
+class Lib4riJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
+    protected $xslt = 'journal-article-scopus2mods.xslt';
 }
 
-class EawagJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
-    protected $xslt = 'eawag-journal-article-scopus2mods.xslt';
-}
-
-class EmpaJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
-    protected $xslt = 'empa-journal-article-scopus2mods.xslt';
-}
-
-class WslJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
-    protected $xslt = 'wsl-journal-article-scopus2mods.xslt';
-}
-
-
-class PsiProceedingsPaperScopus2ModsServant extends Lib4riScopus2ModsServant{
-    protected $xslt = 'psi-proceedings-paper-scopus2mods.xslt';
-}

@@ -16,8 +16,6 @@
   exclude-result-prefixes="dtd xsl prism dn ait ce cto dc prism xocs">
   
   <xsl:output method="xml" indent="yes"/>
-  <xsl:variable name="internal_affiliation" select="/dtd:abstracts-retrieval-response/dtd:affiliation[dtd:affilname='Empa - Swiss Federal Laboratories for Materials Science and Technology']/@id" />
-  <aff_id><xsl:value-of select="$internal_affiliation" /></aff_id>
 	<xsl:template match="/">
 	<mods>
 		<titleInfo>
@@ -39,7 +37,7 @@
   						<roleTerm authority="marcrelator" type="text">author</roleTerm>
   					</role>
   					<xsl:choose>
-		  				<xsl:when test="dtd:affiliation/@id=$internal_affiliation">
+		  				<xsl:when test="@fourri='true'">
 		  					<fourri>true</fourri>
 		  				</xsl:when>
 		  			</xsl:choose>  					
@@ -53,7 +51,7 @@
   						<roleTerm authority="marcrelator" type="text">author</roleTerm>
   					</role>
 		  			<xsl:choose>
-		  				<xsl:when test="dtd:affiliation/@id=$internal_affiliation">
+		  				<xsl:when test="@fourri='true'">
 		  					<fourri>true</fourri>
 		  				</xsl:when>
 		  			</xsl:choose>  					

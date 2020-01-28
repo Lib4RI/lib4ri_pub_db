@@ -27,7 +27,7 @@
   						<roleTerm authority="marcrelator" type="text">author</roleTerm>
   					</role>
   					<xsl:choose>
-		  				<xsl:when test="affiliation=''">
+		  				<xsl:when test="@fourri='true'">
 		  					<fourri>true</fourri>
 		  				</xsl:when>
 		  			</xsl:choose>  					  					
@@ -41,7 +41,7 @@
   						<roleTerm authority="marcrelator" type="text">author</roleTerm>
   					</role>
   					<xsl:choose>
-		  				<xsl:when test="affiliation=''">
+		  				<xsl:when test="@fourri='true'">
 		  					<fourri>true</fourri>
 		  				</xsl:when>
 		  			</xsl:choose>  					  					
