@@ -103,7 +103,16 @@
 					<number/>
 				</detail>
 				<extent unit="pages">
-					<start>109600B (7 pp.)</start>
+					<xsl:choose>
+						<xsl:when test="/dtd:abstracts-retrieval-response/dtd:coredata/prism:startingPage">
+							<start><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:startingPage"/></start>
+							<end><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:endingPage"/></end>
+						</xsl:when>
+						<xsl:otherwise>
+							<start><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/dtd:article-number"/></start>
+							<end></end>
+						</xsl:otherwise>
+					</xsl:choose>								
 					<end/>
 				</extent>
 			</part>
