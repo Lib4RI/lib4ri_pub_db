@@ -208,3 +208,6 @@ class Lib4riJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
     protected $xslt = 'journal-article-scopus2mods.xslt';
 }
 
+class Lib4riProceedingsPaperScopus2ModsServant extends Lib4riScopus2ModsServant{
+    protected $xslt = 'proceedings-paper-scopus2mods.xslt';
+}
