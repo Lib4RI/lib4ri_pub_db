@@ -16,10 +16,6 @@
   exclude-result-prefixes="dtd xsl prism dn ait ce cto dc prism xocs">
   
   <xsl:output method="xml" indent="yes"/>
-  <xsl:variable name="internal_affiliation" select="/dtd:abstracts-retrieval-response/dtd:affiliation[dtd:affilname='Paul Scherrer Institut']/@id" />
-  <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'" />
-  <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
-  <aff_id><xsl:value-of select="$internal_affiliation" /></aff_id>
 	<xsl:template match="/">
 	<mods>
 		<titleInfo>
@@ -41,7 +37,7 @@
   						<roleTerm authority="marcrelator" type="text">author</roleTerm>
   					</role>
   					<xsl:choose>
-		  				<xsl:when test="dtd:affiliation/@id=$internal_affiliation">
+		  				<xsl:when test="@fourri='true'">
 		  					<fourri>true</fourri>
 		  				</xsl:when>
 		  			</xsl:choose>  					
@@ -55,7 +51,7 @@
   						<roleTerm authority="marcrelator" type="text">author</roleTerm>
   					</role>
 		  			<xsl:choose>
-		  				<xsl:when test="dtd:affiliation/@id=$internal_affiliation">
+		  				<xsl:when test="@fourri='true'">
 		  					<fourri>true</fourri>
 		  				</xsl:when>
 		  			</xsl:choose>  					
@@ -66,7 +62,7 @@
 		<subject>
 		<topic/>
 			<xsl:for-each select="/dtd:abstracts-retrieval-response/dtd:authkeywords/dtd:author-keyword">
-				<topic><xsl:value-of select="translate(current(), $uppercase, $lowercase)"/></topic>
+				<topic><xsl:value-of select="current()"/></topic>
 			</xsl:for-each>
 		</subject>
   		<abstract><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/dc:description/abstract/ce:para"/></abstract>
