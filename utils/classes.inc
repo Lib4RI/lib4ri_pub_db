@@ -389,6 +389,7 @@ class IdValidator{
     protected $id;
     protected $idsolrfield;
     protected $serv;
+    protected $pub_type_checker;
     
     
     public function __construct() {
@@ -501,16 +502,24 @@ class IdValidator{
         if (variable_get('lib4ri_pub_db_scopus_use')){
             $data_retrieveng_class = variable_get('lib4ri_pub_db_scopus_data_class');
             $this->serv = new $data_retrieveng_class();
+            $this->pub_type_checker = new ScopusPubTypeMatcher();
 //            $this->serv = new Scopus2ModsServant();
             $this->setServantId();
-            $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
-            }
+            $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve();
+            $this->mods = $this->serv->getProcessedDom()[0];
             
-        if ($this->mods != FALSE){
-            $this->setMessage('Data fetched from Scopus', 'status');
-        }
-        else {
-            $this->setMessage('Cannot fetch data from Scopus', 'warning');
+            if ($this->mods != FALSE){
+                if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
+                    $this->setMessage('The publication does not appear to be a journal article', 'error');
+                    $this->mods = FALSE;
+                }
+                else {
+                    $this->setMessage('Data fetched from Scopus', 'status');
+                }
+            }
+            else {
+                $this->setMessage('Cannot fetch data from Scopus', 'warning');
+            }
         }
         
         return $this;
@@ -520,16 +529,21 @@ class IdValidator{
         if (variable_get('lib4ri_pub_db_xref_use')){
             $data_retrieveng_class = variable_get('lib4ri_pub_db_xref_data_class');
             $this->serv = new $data_retrieveng_class();
+            $this->pub_type_checker = new CrossrefPubTypeMatcher();
 //            $this->serv = new Crossref2ModsServant();
             $this->setServantId();
-            $this->mods = $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve()->getProcessedDom()[0];
-        }
+            $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve();
+            $this->mods = $this->serv->getProcessedDom()[0];
         
-        if ($this->mods != FALSE){
-            $this->setMessage('Data fetched from Crossref', 'status');
-        }
-        else {
-            $this->setMessage('Cannot fetch data from Crossref', 'warning');
+            if ($this->mods != FALSE){
+                $this->setMessage('Data fetched from Crossref', 'status');
+                if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
+                    $this->setMessage('The publication does not appear to be a journal article', 'error');
+                }
+            }
+            else {
+                $this->setMessage('Cannot fetch data from Crossref', 'warning');
+            }
         }
         
         return $this;
@@ -584,4 +598,26 @@ class EidValidator extends IdValidator{
      
         return $this;
     }
+}
+
+class ScopusPubTypeMatcher {
+    public function __construct() {
+        
+    }
+
+    public function check($dom){
+        $type = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("aggregationType")->item(0)->nodeValue;
+        $subtype = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("subtypeDescription")->item(0)->nodeValue;
+        if ($type == 'Journal' AND ($subtype == 'Article' OR $subtype == 'Review' OR $subtype == 'Conference Paper' OR $subtype == 'Letter' OR $subtype == 'Note' OR $subtype == 'Editorial')){
+            return TRUE;
+        }
+        return FALSE;   
+    }
+}
+
+class CrossrefPubTypeMatcher {
+    public function __construct() {
+        
+    }
+    
 }
