@@ -486,7 +486,7 @@ class IdValidator{
                     //break;
                 }
             }
-            $this->setMessage('Object(s) with same ID already present in DORA: '.$in_collection, 'error');
+            $this->setMessage('This publication is already in DORA. You can view the publication here: '.$in_collection, 'error');
             return TRUE;
         }
         
@@ -510,8 +510,8 @@ class IdValidator{
             
             if ($this->mods != FALSE){
                 if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
-                    $this->setMessage('The publication does not appear to be a journal article', 'error');
-                    $this->mods = FALSE;
+                    $this->setMessage('This DOI does not belong to a Journal Article. Currently it is only possible to import a publication via DOI for Journal Articles. For all other document types please enter the publication details manually.', 'error');
+                    $this->mods = -1;
                 }
                 else {
                     $this->setMessage('Data fetched from Scopus', 'status');
@@ -537,8 +537,8 @@ class IdValidator{
         
             if ($this->mods != FALSE){
                 if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
-                    $this->setMessage('The publication does not appear to be a journal article', 'error');
-                    $this->mods = FALSE;
+                    $this->setMessage('This DOI does not belong to a Journal Article. Currently it is only possible to import a publication via DOI for Journal Articles. For all other document types please enter the publication details manually.', 'error');
+                    $this->mods = -1;
                 }
                 else {
                     $this->setMessage('Data fetched from Scopus', 'status');

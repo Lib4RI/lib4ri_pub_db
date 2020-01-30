@@ -183,8 +183,10 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
         $mods = lib4ri_pub_db_doi_validate($id_element, $id_name, TRUE);
 //***************************************************/        
         
-        
-        if ($mods != FALSE) {
+        if ($mods == -1){
+            
+        }
+        elseif ($mods != FALSE) {
             
             switch ($form_state['values']['ingest_selector']) {
                 case 'journal_article':
@@ -225,7 +227,7 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
             }
         }
         else{
-            form_error($element, t('Metadata not retrieved'));
+            form_error($element, t('Unfortunately we could not retrieve DOI metadata automatically for this publication, please enter the publication details manually.'));
         }
     }
 }
