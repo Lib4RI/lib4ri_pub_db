@@ -415,7 +415,7 @@ class IdValidator{
     public function validate(){
         $same_id_obj = $this->getSameIdObjects();
         if ($same_id_obj == TRUE){
-            $this->mods = FALSE;
+            $this->mods = -1;
         }
         else{
             $this->retrieveMods();
@@ -486,9 +486,10 @@ class IdValidator{
             foreach ($result['objects'] as $object){
                 if (sizeof(array_intersect($collections, $object['collections'])) > 0){
                     $in_collection .= ' <a href="'.$base_url.'/islandora/object/'.$object['pid'].'">'.$object['pid'].'</a>';
-                    foreach ($object['collections'] as $collection){
-                        $in_collection .= ' ('.explode('/', $collection)[1].')';
-                    }
+//                     foreach ($object['collections'] as $collection){
+//                         $in_collection .= ' ('.explode('/', $collection)[1].')';
+//                     }
+
 //                    return TRUE;
                     //break;
                 }
