@@ -391,6 +391,7 @@ class IdValidator{
     protected $serv;
     protected $pub_type_checker;
     protected $check_pub_type = TRUE;
+    protected $id_label;
     
     
     public function __construct() {
@@ -517,7 +518,7 @@ class IdValidator{
             if ($this->mods != FALSE){
                 if ($this->check_pub_type){
                     if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
-                        $this->setMessage('This DOI does not belong to a Journal Article. Currently it is only possible to import a publication via DOI for Journal Articles. For all other document types please enter the publication details manually.', 'error');
+                        $this->setMessage("This $this->id_label does not belong to a Journal Article. Currently it is only possible to import a publication via DOI for Journal Articles. For all other document types please enter the publication details manually.", 'error');
                         $this->mods = -1;
                     }
                     else {
@@ -549,7 +550,7 @@ class IdValidator{
             if ($this->mods != FALSE){
                 if ($this->check_pub_type){
                     if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
-                        $this->setMessage('This DOI does not belong to a Journal Article. Currently it is only possible to import a publication via DOI for Journal Articles. For all other document types please enter the publication details manually.', 'error');
+                        $this->setMessage("This $this->id_label does not belong to a Journal Article. Currently it is only possible to import a publication via DOI for Journal Articles. For all other document types please enter the publication details manually.", 'error');
                         $this->mods = -1;
                     }
                     else {
@@ -579,6 +580,7 @@ class IdValidator{
 }
 
 class DoiValidator extends IdValidator{
+    protected $id_label = 'DOI';
     
     protected function setSolrfield(){
         $this->idsolrfield = variable_get('lib4ridora_solr_field_document_doi', 'mods_identifier_doi_mlt');
@@ -602,6 +604,7 @@ class DoiValidator extends IdValidator{
 }
 
 class EidValidator extends IdValidator{
+    protected $id_label = 'Scopus Id';
 
     protected function setSolrfield(){
         $this->idsolrfield = 'mods_identifier_scopus_mlt';
