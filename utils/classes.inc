@@ -390,6 +390,7 @@ class IdValidator{
     protected $idsolrfield;
     protected $serv;
     protected $pub_type_checker;
+    protected $check_pub_type = TRUE;
     
     
     public function __construct() {
@@ -404,6 +405,11 @@ class IdValidator{
 //     protected function setServant($serv){
 //         $this->serv = $serv;
 //     }
+    
+    public function setPubTypeCheck($flag){
+        $this->check_pub_type = $flag;
+        return $this;
+    }
     
     public function validate(){
         $same_id_obj = $this->getSameIdObjects();
@@ -509,9 +515,14 @@ class IdValidator{
             $this->mods = $this->serv->getProcessedDom()[0];
             
             if ($this->mods != FALSE){
-                if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
-                    $this->setMessage('This DOI does not belong to a Journal Article. Currently it is only possible to import a publication via DOI for Journal Articles. For all other document types please enter the publication details manually.', 'error');
-                    $this->mods = -1;
+                if ($this->check_pub_type){
+                    if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
+                        $this->setMessage('This DOI does not belong to a Journal Article. Currently it is only possible to import a publication via DOI for Journal Articles. For all other document types please enter the publication details manually.', 'error');
+                        $this->mods = -1;
+                    }
+                    else {
+                        $this->setMessage('Data fetched from Scopus', 'status');
+                    }
                 }
                 else {
                     $this->setMessage('Data fetched from Scopus', 'status');
@@ -536,9 +547,14 @@ class IdValidator{
             $this->mods = $this->serv->getProcessedDom()[0];
         
             if ($this->mods != FALSE){
-                if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
-                    $this->setMessage('This DOI does not belong to a Journal Article. Currently it is only possible to import a publication via DOI for Journal Articles. For all other document types please enter the publication details manually.', 'error');
-                    $this->mods = -1;
+                if ($this->check_pub_type){
+                    if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
+                        $this->setMessage('This DOI does not belong to a Journal Article. Currently it is only possible to import a publication via DOI for Journal Articles. For all other document types please enter the publication details manually.', 'error');
+                        $this->mods = -1;
+                    }
+                    else {
+                        $this->setMessage('Data fetched from Scopus', 'status');
+                    }
                 }
                 else {
                     $this->setMessage('Data fetched from Scopus', 'status');

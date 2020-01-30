@@ -14,6 +14,8 @@ function lib4ri_pub_db_use_this_collection($url){
 function lib4ri_pub_db_form_alter(&$form, &$form_state) {
     if (($form['form_step_id']['#value'] == 'lib4ridora_ingest_selector') && lib4ri_pub_db_use_this_collection($_GET['q']))  {
         
+        global $user;
+        
         $doi = trim($_GET['doi'],'_');
         $eid = trim($_GET['eid'],'_');
         $type = trim($_GET['type'],'_');
@@ -57,21 +59,38 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
             ),
         );
 
-        $form['eid'] = array(
-            '#title' => t('Scopus ID'),
-            '#type' => 'textfield',
-            '#description' => t(''),
-//            '#element_validate' => array('lib4ridora_doi_validate_id'),
-            "#default_value" => $default['eid'],
-            '#states' => array(
-                'visible' => array(
-                    ':input[name="journal_import_method"]' => array('value' => 'doi'),
-                    ':input[name="ingest_selector"]' => array(array('value' => 'journal_article'),
-                                                              array('value' => 'proceedings_paper')),
-                    
+        if ($user->name != 'anonymous'){
+            $form['eid'] = array(
+                '#title' => t('Scopus ID'),
+                '#type' => 'textfield',
+                '#description' => t(''),
+    //            '#element_validate' => array('lib4ridora_doi_validate_id'),
+                "#default_value" => $default['eid'],
+                '#states' => array(
+                    'visible' => array(
+                        ':input[name="journal_import_method"]' => array('value' => 'doi'),
+                        ':input[name="ingest_selector"]' => array(array('value' => 'journal_article'),
+                                                                  array('value' => 'proceedings_paper')),
+                        
+                    ),
                 ),
-            ),
-        );
+            );
+            
+            $form['override'] = array(
+                '#title' => t('Override DOI importer publication type check'),
+                '#type' => 'checkbox',
+                '#description' => t('Proceed with DOI importer regardless of the detected publication type'),
+                "#default_value" => FALSE,
+                '#states' => array(
+                    'visible' => array(
+                        ':input[name="journal_import_method"]' => array('value' => 'doi'),
+                        ':input[name="ingest_selector"]' => array(array('value' => 'journal_article'),
+                            array('value' => 'proceedings_paper')),
+                    ),
+                ),
+            );
+            
+        }
         
         $form['prev']['#weight'] = 19;
         $form['next']['#weight'] = 20;
@@ -163,6 +182,10 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
             $validator_instance->setId($eid_element);
         }
         
+        if ($form_state['values']['override'] == TRUE){
+            $validator_instance->setPubTypeCheck(FALSE);
+        }
+        
         $mods = $validator_instance->validate()->getMods();
         
         foreach ($validator_instance->getMessages() as $message){
@@ -184,7 +207,7 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
 //***************************************************/        
         
         if ($mods == -1){
-            
+            form_error($element, '');
         }
         elseif ($mods != FALSE) {
             
