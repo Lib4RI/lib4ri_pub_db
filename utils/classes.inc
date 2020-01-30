@@ -536,9 +536,12 @@ class IdValidator{
             $this->mods = $this->serv->getProcessedDom()[0];
         
             if ($this->mods != FALSE){
-                $this->setMessage('Data fetched from Crossref', 'status');
                 if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
                     $this->setMessage('The publication does not appear to be a journal article', 'error');
+                    $this->mods = FALSE;
+                }
+                else {
+                    $this->setMessage('Data fetched from Scopus', 'status');
                 }
             }
             else {
@@ -607,8 +610,8 @@ class ScopusPubTypeMatcher {
 
     public function check($dom){
         $type = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("aggregationType")->item(0)->nodeValue;
-        $subtype = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("subtypeDescription")->item(0)->nodeValue;
-        if ($type == 'Journal' AND ($subtype == 'Article' OR $subtype == 'Review' OR $subtype == 'Conference Paper' OR $subtype == 'Letter' OR $subtype == 'Note' OR $subtype == 'Editorial')){
+//        $subtype = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("subtypeDescription")->item(0)->nodeValue;
+        if ($type == 'Journal' /*AND ($subtype == 'Article' OR $subtype == 'Review' OR $subtype == 'Conference Paper' OR $subtype == 'Letter' OR $subtype == 'Note' OR $subtype == 'Editorial')*/){
             return TRUE;
         }
         return FALSE;   
@@ -619,5 +622,11 @@ class CrossrefPubTypeMatcher {
     public function __construct() {
         
     }
-    
+    public function check($dom){
+        $journal = $dom->getElementsByTagName("journal")->item(0);
+        if ($journal){
+            return TRUE;
+        }
+        return FALSE;
+    }
 }
