@@ -177,7 +177,7 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
             $validator_instance->setId($doi_element);
         }
         elseif (!empty($eid_element)){
-            drupal_set_message('Using ScopusID to fetch data', 'status');
+            drupal_set_message('Using Scopus ID to fetch data', 'status');
             $validator_instance = new EidValidator();
             $validator_instance->setId($eid_element);
         }
