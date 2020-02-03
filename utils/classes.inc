@@ -555,11 +555,11 @@ class IdValidator{
                         $this->mods = -1;
                     }
                     else {
-                        $this->setMessage('Data fetched from Scopus', 'status');
+                        $this->setMessage('Data fetched from Crossref', 'status');
                     }
                 }
                 else {
-                    $this->setMessage('Data fetched from Scopus', 'status');
+                    $this->setMessage('Data fetched from Crossref', 'status');
                 }
             }
             else {
