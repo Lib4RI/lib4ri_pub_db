@@ -165,6 +165,8 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
     module_load_include('inc', 'lib4ri_pub_db', 'utils/classes');
     module_load_include('inc', 'lib4ri_pub_db', 'utils/data_servant_classes');
     
+    global $user;
+    
     $doi_element = $form_state['values']['doi'];
     $eid_element = $form_state['values']['eid'];
     
@@ -172,12 +174,16 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
         module_load_include('inc', 'lib4ri_staged_ingest', 'includes/utils');
         
         if (!empty($doi_element)){
-            drupal_set_message('Using DOI to fetch data', 'status');
+            if ($user->name != 'anonymous'){
+                drupal_set_message('Using DOI to fetch data', 'status');
+            }
             $validator_instance = new DoiValidator();
             $validator_instance->setId($doi_element);
         }
         elseif (!empty($eid_element)){
-            drupal_set_message('Using Scopus ID to fetch data', 'status');
+            if ($user->name != 'anonymous'){
+                drupal_set_message('Using Scopus ID to fetch data', 'status');
+            }
             $validator_instance = new EidValidator();
             $validator_instance->setId($eid_element);
         }
@@ -250,7 +256,7 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
             }
         }
         else{
-            form_error($element, t('Unfortunately we could not retrieve DOI metadata automatically for this publication, please enter the publication details manually.'));
+            form_error($element, t('Unfortunately we could not retrieve metadata automatically for this publication, please enter the publication details manually.'));
         }
     }
 }

@@ -516,6 +516,8 @@ class IdValidator{
             $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve();
             $this->mods = $this->serv->getProcessedDom()[0];
             
+            global $user;
+            
             if ($this->mods != FALSE){
                 if ($this->check_pub_type){
                     if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
@@ -523,15 +525,21 @@ class IdValidator{
                         $this->mods = -1;
                     }
                     else {
-                        $this->setMessage('Data fetched from Scopus', 'status');
+                        if ($user->name != 'anonymous'){
+                            $this->setMessage('Data fetched from Scopus', 'status');
+                        }
                     }
                 }
                 else {
-                    $this->setMessage('Data fetched from Scopus', 'status');
+                    if ($user->name != 'anonymous'){
+                        $this->setMessage('Data fetched from Scopus', 'status');
+                    }
                 }
             }
             else {
-                $this->setMessage('Cannot fetch data from Scopus', 'warning');
+                if ($user->name != 'anonymous'){
+                    $this->setMessage('Cannot fetch data from Scopus', 'warning');
+                }
             }
         }
         
@@ -548,22 +556,30 @@ class IdValidator{
             $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve();
             $this->mods = $this->serv->getProcessedDom()[0];
         
+            global $user;
+            
             if ($this->mods != FALSE){
                 if ($this->check_pub_type){
                     if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
-                        $this->setMessage("This $this->id_label does not belong to a Journal Article. Currently it is only possible to import a publication via $this->id_label for Journal Articles. For all other document types please enter the publication details manually.", 'error');
+                        $this->setMessage("This $this->id_label does not belong to a Journal Article. Currently it is only possible to import a publication via $this->id_label for Journal Articles. For all other publication types please enter the publication details manually.", 'error');
                         $this->mods = -1;
                     }
                     else {
-                        $this->setMessage('Data fetched from Crossref', 'status');
+                        if ($user->name != 'anonymous'){
+                            $this->setMessage('Data fetched from Crossref', 'status');
+                        }
                     }
                 }
                 else {
-                    $this->setMessage('Data fetched from Crossref', 'status');
+                    if ($user->name != 'anonymous'){
+                        $this->setMessage('Data fetched from Crossref', 'status');
+                    }
                 }
             }
             else {
-                $this->setMessage('Cannot fetch data from Crossref', 'warning');
+                if ($user->name != 'anonymous'){
+                    $this->setMessage('Cannot fetch data from Crossref', 'warning');
+                }
             }
         }
         
