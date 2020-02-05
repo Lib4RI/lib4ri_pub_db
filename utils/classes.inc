@@ -604,7 +604,7 @@ class DoiValidator extends IdValidator{
     }
     
     protected function setServantId(){
-        $this->serv->setDoi($this->id);
+        $this->serv->setDoi(trim($this->id));
         return $this;
     }
     
@@ -628,7 +628,7 @@ class EidValidator extends IdValidator{
     }
     
     protected function setServantId(){
-        $this->serv->setEid($this->id);
+        $this->serv->setEid(trim($this->id));
         return $this;
     }
     
