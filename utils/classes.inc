@@ -396,9 +396,15 @@ class IdValidator{
     protected $id;
     protected $idsolrfield;
     protected $serv;
+
     protected $pub_type;
     protected $scopus_retrieving_class;
     protected $xref_retrieving_class;
+
+    protected $pub_type_checker;
+    protected $check_pub_type = TRUE;
+    protected $id_label;
+
     
     
     public function __construct() {
@@ -428,10 +434,15 @@ class IdValidator{
 //         $this->serv = $serv;
 //     }
     
+    public function setPubTypeCheck($flag){
+        $this->check_pub_type = $flag;
+        return $this;
+    }
+    
     public function validate(){
         $same_id_obj = $this->getSameIdObjects();
         if ($same_id_obj == TRUE){
-            $this->mods = FALSE;
+            $this->mods = -1;
         }
         else{
             $this->retrieveMods();
@@ -502,14 +513,15 @@ class IdValidator{
             foreach ($result['objects'] as $object){
                 if (sizeof(array_intersect($collections, $object['collections'])) > 0){
                     $in_collection .= ' <a href="'.$base_url.'/islandora/object/'.$object['pid'].'">'.$object['pid'].'</a>';
-                    foreach ($object['collections'] as $collection){
-                        $in_collection .= ' ('.explode('/', $collection)[1].')';
-                    }
+//                     foreach ($object['collections'] as $collection){
+//                         $in_collection .= ' ('.explode('/', $collection)[1].')';
+//                     }
+
 //                    return TRUE;
                     //break;
                 }
             }
-            $this->setMessage('Object(s) with same ID already present in DORA: '.$in_collection, 'error');
+            $this->setMessage('This publication is already in DORA. You can view the publication here: '.$in_collection, 'error');
             return TRUE;
         }
         
@@ -523,18 +535,40 @@ class IdValidator{
     
     protected function fetchFromScopus(){
         if (variable_get('lib4ri_pub_db_scopus_use')){
-//            $data_retrieveng_class = variable_get('lib4ri_pub_db_scopus_data_class');
+
             $this->serv = new $this->scopus_retrieving_class();
+            $this->pub_type_checker = new ScopusPubTypeMatcher();
+
 //            $this->serv = new Scopus2ModsServant();
             $this->setServantId();
-            $this->mods = $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve()->getProcessedDom()[0];
-            }
+            $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve();
+            $this->mods = $this->serv->getProcessedDom()[0];
             
-        if ($this->mods != FALSE){
-            $this->setMessage('Data fetched from Scopus', 'status');
-        }
-        else {
-            $this->setMessage('Cannot fetch data from Scopus', 'warning');
+            global $user;
+            
+            if ($this->mods != FALSE){
+                if ($this->check_pub_type){
+                    if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
+                        $this->setMessage("This $this->id_label does not belong to a Journal Article. Currently it is only possible to import a publication via $this->id_label for Journal Articles. For all other publication types please enter the publication details manually.", 'error');
+                        $this->mods = -1;
+                    }
+                    else {
+                        if ($user->name != 'anonymous'){
+                            $this->setMessage('Data fetched from Scopus', 'status');
+                        }
+                    }
+                }
+                else {
+                    if ($user->name != 'anonymous'){
+                        $this->setMessage('Data fetched from Scopus', 'status');
+                    }
+                }
+            }
+            else {
+                if ($user->name != 'anonymous'){
+                    $this->setMessage('Cannot fetch data from Scopus', 'warning');
+                }
+            }
         }
         
         return $this;
@@ -542,18 +576,41 @@ class IdValidator{
 
     protected function fetchFromXref(){
         if (variable_get('lib4ri_pub_db_xref_use')){
-//            $data_retrieveng_class = variable_get('lib4ri_pub_db_xref_data_class');
+
             $this->serv = new $this->xref_retrieving_class();
+
+            $this->pub_type_checker = new CrossrefPubTypeMatcher();
+
 //            $this->serv = new Crossref2ModsServant();
             $this->setServantId();
-            $this->mods = $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve()->getProcessedDom()[0];
-        }
+            $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve();
+            $this->mods = $this->serv->getProcessedDom()[0];
         
-        if ($this->mods != FALSE){
-            $this->setMessage('Data fetched from Crossref', 'status');
-        }
-        else {
-            $this->setMessage('Cannot fetch data from Crossref', 'warning');
+            global $user;
+            
+            if ($this->mods != FALSE){
+                if ($this->check_pub_type){
+                    if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
+                        $this->setMessage("This $this->id_label does not belong to a Journal Article. Currently it is only possible to import a publication via $this->id_label for Journal Articles. For all other publication types please enter the publication details manually.", 'error');
+                        $this->mods = -1;
+                    }
+                    else {
+                        if ($user->name != 'anonymous'){
+                            $this->setMessage('Data fetched from Crossref', 'status');
+                        }
+                    }
+                }
+                else {
+                    if ($user->name != 'anonymous'){
+                        $this->setMessage('Data fetched from Crossref', 'status');
+                    }
+                }
+            }
+            else {
+                if ($user->name != 'anonymous'){
+                    $this->setMessage('Cannot fetch data from Crossref', 'warning');
+                }
+            }
         }
         
         return $this;
@@ -570,13 +627,14 @@ class IdValidator{
 }
 
 class DoiValidator extends IdValidator{
+    protected $id_label = 'DOI';
     
     protected function setSolrfield(){
         $this->idsolrfield = variable_get('lib4ridora_solr_field_document_doi', 'mods_identifier_doi_mlt');
     }
     
     protected function setServantId(){
-        $this->serv->setDoi($this->id);
+        $this->serv->setDoi(trim($this->id));
         return $this;
     }
     
@@ -593,13 +651,14 @@ class DoiValidator extends IdValidator{
 }
 
 class EidValidator extends IdValidator{
+    protected $id_label = 'Scopus ID';
 
     protected function setSolrfield(){
         $this->idsolrfield = 'mods_identifier_scopus_mlt';
     }
     
     protected function setServantId(){
-        $this->serv->setEid($this->id);
+        $this->serv->setEid(trim($this->id));
         return $this;
     }
     
@@ -607,5 +666,33 @@ class EidValidator extends IdValidator{
         $this->fetchFromScopus();
      
         return $this;
+    }
+}
+
+class ScopusPubTypeMatcher {
+    public function __construct() {
+        
+    }
+
+    public function check($dom){
+        $type = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("aggregationType")->item(0)->nodeValue;
+//        $subtype = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("subtypeDescription")->item(0)->nodeValue;
+        if ($type == 'Journal' /*AND ($subtype == 'Article' OR $subtype == 'Review' OR $subtype == 'Conference Paper' OR $subtype == 'Letter' OR $subtype == 'Note' OR $subtype == 'Editorial')*/){
+            return TRUE;
+        }
+        return FALSE;   
+    }
+}
+
+class CrossrefPubTypeMatcher {
+    public function __construct() {
+        
+    }
+    public function check($dom){
+        $journal = $dom->getElementsByTagName("journal")->item(0);
+        if ($journal){
+            return TRUE;
+        }
+        return FALSE;
     }
 }
