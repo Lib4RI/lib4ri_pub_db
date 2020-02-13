@@ -170,6 +170,8 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
     $doi_element = $form_state['values']['doi'];
     $eid_element = $form_state['values']['eid'];
     
+    $selected_type = $form_state['values']['ingest_selector'];
+    
     if ((!empty($doi_element) ||  !empty($eid_element)) && $form_state['values']['journal_import_method'] == 'doi') {
         module_load_include('inc', 'lib4ri_staged_ingest', 'includes/utils');
         
@@ -189,7 +191,7 @@ function lib4ri_pub_db_doi_validate_id($element, &$form_state, $form){
         }
         
 
-        $validator_instance->setPubType($form_state['values']['ingest_selector']);
+        $validator_instance->setPubType($selected_type);
 
         if ($form_state['values']['override'] == TRUE){
             $validator_instance->setPubTypeCheck(FALSE);

@@ -405,6 +405,7 @@ class IdValidator{
     protected $check_pub_type = TRUE;
     protected $id_label;
 
+    protected $error_pub_types = array('journal_article' => 'Journal article', 'proceedings_paper' => 'Proceedings Paper');
     
     
     public function __construct() {
@@ -417,6 +418,7 @@ class IdValidator{
     }
 
     public  function setPubType($pub_type){
+        $this->pub_type = $pub_type;
         switch ($pub_type) {
             case 'journal_article':
                 $this->scopus_retrieving_class = variable_get('lib4ri_pub_db_scopus_journal_data_class');
@@ -538,6 +540,7 @@ class IdValidator{
 
             $this->serv = new $this->scopus_retrieving_class();
             $this->pub_type_checker = new ScopusPubTypeMatcher();
+            $this->pub_type_checker->setPubType($this->pub_type);
 
 //            $this->serv = new Scopus2ModsServant();
             $this->setServantId();
@@ -549,7 +552,8 @@ class IdValidator{
             if ($this->mods != FALSE){
                 if ($this->check_pub_type){
                     if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
-                        $this->setMessage("This $this->id_label does not belong to a Journal Article. Currently it is only possible to import a publication via $this->id_label for Journal Articles. For all other publication types please enter the publication details manually.", 'error');
+//                        $this->setMessage("This $this->id_label does not belong to a {$this->error_pub_types[$this->pub_type]}. Currently it is only possible to import a publication via $this->id_label for Journal Articles and Proceedings Papers. For all other publication types please enter the publication details manually.", 'error');
+                        $this->setMessage("Selected type {$this->error_pub_types[$this->pub_type]}", 'error');
                         $this->mods = -1;
                     }
                     else {
@@ -580,7 +584,8 @@ class IdValidator{
             $this->serv = new $this->xref_retrieving_class();
 
             $this->pub_type_checker = new CrossrefPubTypeMatcher();
-
+            $this->pub_type_checker->setPubType($this->pub_type);
+            
 //            $this->serv = new Crossref2ModsServant();
             $this->setServantId();
             $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve();
@@ -591,7 +596,7 @@ class IdValidator{
             if ($this->mods != FALSE){
                 if ($this->check_pub_type){
                     if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
-                        $this->setMessage("This $this->id_label does not belong to a Journal Article. Currently it is only possible to import a publication via $this->id_label for Journal Articles. For all other publication types please enter the publication details manually.", 'error');
+                        $this->setMessage("This $this->id_label does not belong to a $this->error_pub_types[$this->pub_type]. Currently it is only possible to import a publication via $this->id_label for Journal Articles and Proceedings Papers. For all other publication types please enter the publication details manually.", 'error');
                         $this->mods = -1;
                     }
                     else {
@@ -669,30 +674,63 @@ class EidValidator extends IdValidator{
     }
 }
 
-class ScopusPubTypeMatcher {
+class PubTypeMatcher {
+    protected $pub_type;
+    
     public function __construct() {
         
     }
-
-    public function check($dom){
-        $type = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("aggregationType")->item(0)->nodeValue;
-//        $subtype = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("subtypeDescription")->item(0)->nodeValue;
-        if ($type == 'Journal' /*AND ($subtype == 'Article' OR $subtype == 'Review' OR $subtype == 'Conference Paper' OR $subtype == 'Letter' OR $subtype == 'Note' OR $subtype == 'Editorial')*/){
-            return TRUE;
-        }
-        return FALSE;   
+    
+    public function setPubType($pub_type){
+        $this->pub_type =  $pub_type;
     }
 }
 
-class CrossrefPubTypeMatcher {
-    public function __construct() {
-        
-    }
+class ScopusPubTypeMatcher extends PubTypeMatcher{
+
     public function check($dom){
-        $journal = $dom->getElementsByTagName("journal")->item(0);
-        if ($journal){
-            return TRUE;
+        $ret = FALSE;
+        $type = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("aggregationType")->item(0)->nodeValue;
+        
+        switch ($this->pub_type) {
+            case 'journal_article':
+                if ($type == 'Journal' /*AND ($subtype == 'Article' OR $subtype == 'Review' OR $subtype == 'Conference Paper' OR $subtype == 'Letter' OR $subtype == 'Note' OR $subtype == 'Editorial')*/){
+                    $ret = TRUE;
+                }
+                break;
+            case 'proceedings_paper':
+                if ($type == 'Conference Proceeding'){
+                    $ret = TRUE;
+                }
+                break;
         }
-        return FALSE;
+       
+//        $subtype = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("subtypeDescription")->item(0)->nodeValue;
+
+        return $ret;
     }
+}
+
+class CrossrefPubTypeMatcher extends PubTypeMatcher{
+
+    public function check($dom){
+        
+        switch ($this->pub_type) {
+            case 'journal_article':
+                $journal = $dom->getElementsByTagName("journal")->item(0);
+                if ($journal){
+                    $ret = TRUE;
+                }
+                break;
+            case 'proceedings_paper':
+                $journal = $dom->getElementsByTagName("conference")->item(0);
+                if ($journal){
+                    $ret = TRUE;
+                }
+                break;
+        }
+        
+        return $ret;
+    }
+    
 }
