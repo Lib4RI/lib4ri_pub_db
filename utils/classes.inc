@@ -379,10 +379,19 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
     
 }
 
+class PsiProceedingsPapersMetaDataEnricher extends PsiMetaDataEnricher{
+    
+    public function enrich(){
+        $this->addStdName();
+        $this->addBeamlines();
+    }
+    
+}
 
 class Lib4riProceedingsPaperMetaDataEnricher extends Lib4riMetaDataEnricher{
     
     public function enrich(){
+        $this->addStdName();
     }
 }
 
