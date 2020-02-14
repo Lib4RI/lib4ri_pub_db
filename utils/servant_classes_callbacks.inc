@@ -108,7 +108,7 @@ function lib4ri_pub_db_cruch_given_name($dom, $params){
 }
 
 function lib4ri_pub_db_spot_internal_authors($dom, $params){
-    $xpath = new DOMXPath($dom);
+//    $xpath = new DOMXPath($dom);
     $authors = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("authors")->item(0)->getElementsByTagName("author");
     foreach ($authors as $author){
         $affiliations = $author->getElementsByTagName('affiliation');
@@ -121,6 +121,16 @@ function lib4ri_pub_db_spot_internal_authors($dom, $params){
     return $dom;
 }
 
+
+function lib4ri_pub_db_crunch_keywords($dom, $params){
+    if(variable_get('lib4ri_pub_db_kw_lc')){
+        $keywords = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("authkeywords")->item(0)->getElementsByTagName("author-keyword");
+        foreach ($keywords as $keyword){
+            $keyword->nodeValue = strtolower($keyword->nodeValue);
+        }
+    }
+    return $dom;
+}
 /**
  * Copied from lib4ridora module
  * TODO: FIX: (René M. -> RenéM.)

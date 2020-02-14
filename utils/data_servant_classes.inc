@@ -118,6 +118,14 @@ class Lib4riScopus2ModsServant extends MetaDataServant{
             )
         )
             );
+
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_crunch_keywords',
+            'source' => '',
+            'params' => array(
+            )
+        )
+            );
         
         $this->processor->addSteps(array('type' => 'xslt',
 //            'rule' => dirname(__FILE__).'/../xslts/psi-journal-article-scopus2mods.xslt',
