@@ -93,7 +93,15 @@
 				<titleInfo>
 					<title><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:publicationName"/></title>
 				</titleInfo>
-				<identifier type="issn"><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:issn"/></identifier>
+				
+				<xsl:choose>
+					<xsl:when test="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='electronic']">
+						<identifier type="issn"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='electronic']"/></identifier>
+					</xsl:when>
+					<xsl:otherwise>
+						<identifier type="issn"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='print']"/></identifier>
+					</xsl:otherwise>					
+				</xsl:choose>
 			</relatedItem>
 			<part>
 				<detail type="volume">
