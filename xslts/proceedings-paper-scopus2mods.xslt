@@ -21,6 +21,14 @@
 		<titleInfo>
 			<title><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/citation-title/titletext"/></title>
 		</titleInfo>
+		<xsl:choose>
+			<xsl:when test="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/isbn[@type='electronic']">
+				<identifier type="isbn"><xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='electronic'],1,3)"/>-<xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/isbn[@type='electronic'],4,1)"/>-<xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/isbn[@type='electronic'],5,5)"/>-<xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/isbn[@type='electronic'],10,3)"/>-<xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/isbn[@type='electronic'],13,1)"/></identifier>
+			</xsl:when>
+			<xsl:otherwise>
+				<identifier type="isbn"><xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='print'],1,3)"/>-<xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/isbn[@type='print'],4,1)"/>-<xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/isbn[@type='print'],5,5)"/>-<xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/isbn[@type='print'],10,3)"/>-<xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/isbn[@type='print'],13,1)"/></identifier>
+			</xsl:otherwise>					
+		</xsl:choose>
 		<identifier type="doi"><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:doi"/></identifier>
   		<identifier type="scopus"><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/dtd:eid"/></identifier>
   		<identifier type="pmid"><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/dtd:pubmed-id"/></identifier>
@@ -71,13 +79,20 @@
 				<placeTerm type="text"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/conflocation/city"/></placeTerm>
 			</place>
 		</originInfo>
+		<name type="conference">
+			<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confname"/>
+		</name>
 		<originInfo>
 			<dateOther type="conferenceDate"></dateOther>
 		</originInfo>
 		<relatedItem type="host">
 			<titleInfo>
 				<title>
-					<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issuetitle"/>
+					<xsl:choose>
+						<xsl:when test="dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confseriestitle != /dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confname">
+							<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confseriestitle"/>
+						</xsl:when>
+					</xsl:choose>
 				</title>
 			</titleInfo>	
 			<xsl:for-each select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/contributor-group/contributor[@role='edit']">
@@ -91,24 +106,23 @@
 			</xsl:for-each>
 			<relatedItem type="series">
 				<titleInfo>
-					<title><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:publicationName"/></title>
-				</titleInfo>
-				
+					<title><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/sourcetitle"/></title>
+				</titleInfo>				
 				<xsl:choose>
 					<xsl:when test="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='electronic']">
-						<identifier type="issn"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='electronic']"/></identifier>
+						<identifier type="issn"><xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='electronic'],1,4)"/>-<xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='electronic'],5,4)"/></identifier>
 					</xsl:when>
 					<xsl:otherwise>
-						<identifier type="issn"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='print']"/></identifier>
+						<identifier type="issn"><xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='print'],1,4)"/>-<xsl:value-of select="substring(/dtd:abstracts-retrieval-response/item/bibrecord/head/source/issn[@type='print'],5,4)"/></identifier>
 					</xsl:otherwise>					
 				</xsl:choose>
 			</relatedItem>
 			<part>
 				<detail type="volume">
-					<number><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:volume"/></number>
+					<number><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/volisspag/voliss/@volume"/></number>
 				</detail>
 				<detail type="issue">
-					<number/>
+					<number><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/volisspag/voliss/@issue"/></number>
 				</detail>
 				<extent unit="pages">
 					<xsl:choose>
