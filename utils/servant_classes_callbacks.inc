@@ -131,6 +131,60 @@ function lib4ri_pub_db_crunch_keywords($dom, $params){
     }
     return $dom;
 }
+
+function lib4ri_pub_db_crunch_confdate($dom, $params){
+    $num2month = array('1' => 'January',
+                       '2' => 'February',
+                       '3' => 'March',
+                       '4' => 'April',
+                       '5' => 'May',
+                       '6' => 'June',
+                       '7' => 'July',
+                       '8' => 'August',
+                       '9' => 'September',
+                      '01' => 'January',
+                      '02' => 'February',
+                      '03' => 'March',
+                      '04' => 'April',
+                      '05' => 'May',
+                      '06' => 'June',
+                      '07' => 'July',
+                      '08' => 'August',
+                      '09' => 'September',
+                      '10' => 'October',
+                      '11' => 'November',
+                      '12' => 'December',
+    );
+    
+    $xpath = new DOMXPath($dom);
+    $date_element = $xpath->query(variable_get('lib4ri_pub_db_conf_date_xpath_query'))[0];
+//    $date = trim(preg_replace('/\s\s+/', ' ', $date_element->nodeValue));
+    $date = str_replace("\n", '', $date_element->nodeValue);
+    $dates = explode('-', $date);
+    $start = explode('.', $dates[0]);
+    $end = explode('.', $dates[1]);
+    
+    if (empty($dates[1]) OR $dates[1]==''){
+        if (empty($start[2]) OR $start[2]==''){
+//            05.2017 –> May 2017 
+        }
+        else{
+//            01.05.2017 –> May 1, 2017 
+        }
+    }
+    elseif ($start[0] != $end[0]){
+        //31.12.16-05.1.17 –> December 31, 2016 – January 5, 2017
+    }
+    elseif ($start[1] != $end[1]){
+        //30.6-04.7.2017 -> June 30 – July 4, 2017 
+    }
+    else{
+        //1.-2.6.2017 -> June 1-2, 2017
+        $date_element->nodeValue = "{$num2month[$start[1]]} $start[2]-$end[2], $start[0]";
+    }
+    
+    return $dom;
+}
 /**
  * Copied from lib4ridora module
  * TODO: FIX: (René M. -> RenéM.)

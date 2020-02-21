@@ -79,12 +79,19 @@
 				<placeTerm type="text"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/conflocation/city"/></placeTerm>
 			</place>
 		</originInfo>
+		<originInfo>
+			<dateOther type="conferenceDate">
+				<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confdate/startdate/@year"/>.
+<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confdate/startdate/@month"/>.
+<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confdate/startdate/@day"/>-
+<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confdate/enddate/@year"/>.
+<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confdate/enddate/@month"/>.
+<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confdate/enddate/@day"/>
+			</dateOther>
+		</originInfo>		
 		<name type="conference">
 			<xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/additional-srcinfo/conferenceinfo/confevent/confname"/>
 		</name>
-		<originInfo>
-			<dateOther type="conferenceDate"></dateOther>
-		</originInfo>
 		<relatedItem type="host">
 			<titleInfo>
 				<title>

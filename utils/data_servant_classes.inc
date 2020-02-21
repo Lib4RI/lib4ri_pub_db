@@ -218,4 +218,17 @@ class Lib4riJournalArticleScopus2ModsServant extends Lib4riScopus2ModsServant{
 
 class Lib4riProceedingsPaperScopus2ModsServant extends Lib4riScopus2ModsServant{
     protected $xslt = 'proceedings-paper-scopus2mods.xslt';
+    
+    public function __construct()
+    {
+        parent::__construct();
+        
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_crunch_confdate',
+            'source' => '',
+            'params' => array(
+                )
+            )
+        );
+    }
 }

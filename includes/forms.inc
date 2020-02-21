@@ -27,6 +27,10 @@ function lib4ri_pub_db_admin_form() {
                 '#type' => 'fieldset',
                 '#title' => t('Journal data'),
             ),
+            'lib4ri_pub_conf' => array(
+                '#type' => 'fieldset',
+                '#title' => t('Conference items data'),
+            ),
             'lib4ri_pub_title' => array(
                 '#type' => 'fieldset',
                 '#title' => t('Title data'),
@@ -414,6 +418,13 @@ function lib4ri_pub_db_admin_form() {
         ),
     );
 
+    $form['lib4ri_pub_tabs']['lib4ri_pub_conf']['lib4ri_pub_db_conf_date_xpath_query'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Conference date XPATH query' ),
+        '#default_value' => variable_get('lib4ri_pub_db_conf_date_xpath_query', '//mods:mods/mods:originInfo/mods:dateOther [@type="conferenceDate"]'),
+        '#required' => true,
+    );
+    
 //     $form['lib4ri_pub_tabs']['lib4ri_pub_abstr']['lib4ri_pub_db_abstr_tags'] = array(
 //         '#type' => 'textfield',
 //         '#title' => t('Allowed html tags in abstract'),
