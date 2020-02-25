@@ -144,12 +144,12 @@
 					</xsl:choose>
 				</extent>
 			</part>
+			<originInfo>
+				<publisher><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/publisher/publishername"/></publisher>
+			</originInfo>			
 		</relatedItem>
 		<originInfo>
 			<dateIssued encoding="w3cdtf" keyDate="yes"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/publicationdate/year"/></dateIssued>
-		</originInfo>
-		<originInfo>
-			<publisher><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/publisher/publishername"/></publisher>
 		</originInfo>
 	</mods>
 	</xsl:template>
