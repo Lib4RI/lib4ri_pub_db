@@ -151,9 +151,6 @@
 		</originInfo>
 		<originInfo>
 			<publisher><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/publisher/publishername"/></publisher>
-			<place>
-				<placeTerm type="text"></placeTerm>
-			</place>
 		</originInfo>
 	</mods>
 	</xsl:template>
