@@ -17,7 +17,7 @@
     		<dateIssued encoding="w3cdtf" keyDate="yes"><xsl:value-of select="/doi_records/doi_record/crossref/journal/journal_issue/publication_date/year"/></dateIssued>
   		</originInfo>
 		<identifier type="doi"><xsl:value-of select="/doi_records/doi_record/crossref/journal/journal_article/doi_data/doi"/></identifier>
-  		<xsl:for-each select="/doi_records/doi_record/crossref/journal/journal_article/contributors/person_name">
+  		<xsl:for-each select="/doi_records/doi_record/crossref/journal/journal_article/contributors/person_name[@contributor_role='author']">
   			<xsl:choose>
   				<xsl:when test="@sequence='first'">
   					<name type="personal" usage="primary">
