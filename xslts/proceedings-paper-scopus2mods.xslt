@@ -142,7 +142,6 @@
 							<end></end>
 						</xsl:otherwise>
 					</xsl:choose>								
-					<end/>
 				</extent>
 			</part>
 		</relatedItem>
