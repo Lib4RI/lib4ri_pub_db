@@ -462,6 +462,15 @@ class IdValidator{
         return $this;
     }
     
+    protected function setPubTypeError(){
+        if($this->pub_type_checker->getDetectedType()){
+            $this->setMessage("Selected type {$this->error_pub_types[$this->pub_type]}. Detected type {$this->error_pub_types[$this->pub_type_checker->getDetectedType()]}", 'error');
+        }
+        else{
+            $this->setMessage("No DOI import for this pub", 'error');
+        }
+    }
+    
     protected function setSolrfield($solr_field){
         $this->idsolrfield = $solr_field;
         return $this;
@@ -561,8 +570,9 @@ class IdValidator{
             if ($this->mods != FALSE){
                 if ($this->check_pub_type){
                     if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
+                        $this->setPubTypeError();
 //                        $this->setMessage("This $this->id_label does not belong to a {$this->error_pub_types[$this->pub_type]}. Currently it is only possible to import a publication via $this->id_label for Journal Articles and Proceedings Papers. For all other publication types please enter the publication details manually.", 'error');
-                        $this->setMessage("Selected type {$this->error_pub_types[$this->pub_type]}", 'error');
+//                        $this->setMessage("Selected type {$this->error_pub_types[$this->pub_type]}", 'error');
                         $this->mods = -1;
                     }
                     else {
@@ -605,7 +615,8 @@ class IdValidator{
             if ($this->mods != FALSE){
                 if ($this->check_pub_type){
                     if (!$this->pub_type_checker->check($this->serv->getFetchedDom()[0])){
-                        $this->setMessage("This $this->id_label does not belong to a {$this->error_pub_types[$this->pub_type]}. Currently it is only possible to import a publication via $this->id_label for Journal Articles and Proceedings Papers. For all other publication types please enter the publication details manually.", 'error');
+                        $this->setPubTypeError();
+//                        $this->setMessage("This $this->id_label does not belong to a {$this->error_pub_types[$this->pub_type]}. Currently it is only possible to import a publication via $this->id_label for Journal Articles and Proceedings Papers. For all other publication types please enter the publication details manually.", 'error');
                         $this->mods = -1;
                     }
                     else {
@@ -685,6 +696,7 @@ class EidValidator extends IdValidator{
 
 class PubTypeMatcher {
     protected $pub_type;
+    protected $detected_type = FALSE;
     
     public function __construct() {
         
@@ -693,53 +705,89 @@ class PubTypeMatcher {
     public function setPubType($pub_type){
         $this->pub_type =  $pub_type;
     }
+    
+    public function getDetectedType() {
+        return $this->detected_type;
+    }
+    
+    public function check($dom) {
+        $this->detect_type($dom);
+        
+        if ($this->detected_type == $this->pub_type){
+            return TRUE;
+        }
+        else{
+            return FALSE;
+        }
+    }
 }
 
 class ScopusPubTypeMatcher extends PubTypeMatcher{
 
-    public function check($dom){
-        $ret = FALSE;
+    public function detect_type($dom){
+//        $ret = FALSE;
         $type = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("aggregationType")->item(0)->nodeValue;
-        
-        switch ($this->pub_type) {
-            case 'journal_article':
-                if ($type == 'Journal' /*AND ($subtype == 'Article' OR $subtype == 'Review' OR $subtype == 'Conference Paper' OR $subtype == 'Letter' OR $subtype == 'Note' OR $subtype == 'Editorial')*/){
-                    $ret = TRUE;
-                }
-                break;
-            case 'proceedings_paper':
-                if ($type == 'Conference Proceeding'){
-                    $ret = TRUE;
-                }
-                break;
+        //$subtype = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("subtypeDescription")->item(0)->nodeValue;
+        if ($type == 'Journal'){
+            $this->detected_type = 'journal_article';
+            return $this->detected_type;
         }
+        if ($type == 'Conference Proceeding'){
+            $this->detected_type = 'proceedings_paper';
+            return $this->detected_type;
+        }
+        
+        return FALSE;
+//         switch ($this->pub_type) {
+//             case 'journal_article':
+//                 if ($type == 'Journal' /*AND ($subtype == 'Article' OR $subtype == 'Review' OR $subtype == 'Conference Paper' OR $subtype == 'Letter' OR $subtype == 'Note' OR $subtype == 'Editorial')*/){
+//                     $ret = TRUE;
+//                 }
+//                 break;
+//             case 'proceedings_paper':
+//                 if ($type == 'Conference Proceeding'){
+//                     $ret = TRUE;
+//                 }
+//                 break;
+//         }
        
-//        $subtype = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("subtypeDescription")->item(0)->nodeValue;
+// //        $subtype = $dom->getElementsByTagName("abstracts-retrieval-response")->item(0)->getElementsByTagName("coredata")->item(0)->getElementsByTagName("subtypeDescription")->item(0)->nodeValue;
 
-        return $ret;
+//         return $ret;
     }
 }
 
 class CrossrefPubTypeMatcher extends PubTypeMatcher{
 
-    public function check($dom){
-        
-        switch ($this->pub_type) {
-            case 'journal_article':
-                $journal = $dom->getElementsByTagName("journal")->item(0);
-                if ($journal){
-                    $ret = TRUE;
-                }
-                break;
-            case 'proceedings_paper':
-                $journal = $dom->getElementsByTagName("conference")->item(0);
-                if ($journal){
-                    $ret = TRUE;
-                }
-                break;
+    public function detect_type($dom){
+
+        if ($dom->getElementsByTagName("conference")->item(0)){
+            $this->detected_type = 'proceedings_paper';
+            return $this->detected_type;
         }
         
-        return $ret;
+        if ($dom->getElementsByTagName("journal")->item(0)){
+            $this->detected_type = 'journal_article';
+            return $this->detected_type;
+        }
+        
+        return FALSE;
+//         switch ($this->pub_type) {
+//             case 'journal_article':
+//                 $journal = $dom->getElementsByTagName("journal")->item(0);
+//                 if ($journal){
+//                     $ret = TRUE;
+//                 }
+//                 break;
+//             case 'proceedings_paper':
+//                 $journal = $dom->getElementsByTagName("conference")->item(0);
+//                 if ($journal){
+//                     $ret = TRUE;
+//                 }
+//                 break;
+//         }
+        
+//         return $ret;
     }
     
 }
