@@ -141,7 +141,7 @@
 							<start><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/dtd:article-number"/></start>
 							<end></end>
 						</xsl:otherwise>
-					</xsl:choose>								
+					</xsl:choose>
 				</extent>
 			</part>
 		</relatedItem>
