@@ -414,7 +414,10 @@ class IdValidator{
     protected $check_pub_type = TRUE;
     protected $id_label;
 
-    protected $error_pub_types = array('journal_article' => 'Journal article', 'proceedings_paper' => 'Proceedings Paper');
+    protected $error_pub_types = array('journal_article' => 'Journal Article',
+        'proceedings_paper' => 'Proceedings Paper',
+        'book' => 'Book'
+    );
     
     
     public function __construct() {
@@ -464,10 +467,12 @@ class IdValidator{
     
     protected function setPubTypeError(){
         if($this->pub_type_checker->getDetectedType()){
-            $this->setMessage("Selected type {$this->error_pub_types[$this->pub_type]}. Detected type {$this->error_pub_types[$this->pub_type_checker->getDetectedType()]}", 'error');
+            
+            $this->setMessage("This DOI belongs to a {$this->error_pub_types[$this->pub_type_checker->getDetectedType()]} but {$this->error_pub_types[$this->pub_type]} is selected for import. Please select the right publication type to preceed.", 'error');
         }
         else{
-            $this->setMessage("No DOI import for this pub", 'error');
+            $this->setMessage("This DOI does not belong to a Journal Article or a Proceedings Paper. Currently it is only possible to import a publication via DOI for Journal Articles and Proceedings Papers. For all other publication types please enter the publication details manually.
+", 'error');
         }
     }
     
