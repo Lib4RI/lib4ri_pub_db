@@ -474,10 +474,10 @@ class IdValidator{
         if($this->pub_type_checker->getDetectedType()){
             
 //            $this->setMessage("This DOI belongs to a {$this->error_pub_types[$this->pub_type_checker->getDetectedType()]} but {$this->error_pub_types[$this->pub_type]} is selected for import. Please select the right publication type to preceed.", 'error');
-            $this->setMessage("This DOI belongs to a {$this->error_pub_types[$this->pub_type_checker->getDetectedType()]} but another publication type is selected for import. Please select the right publication type to preceed.", 'error');
+            $this->setMessage("This $this->id_label belongs to a {$this->error_pub_types[$this->pub_type_checker->getDetectedType()]} but another publication type is selected for import. Please select the right publication type to preceed.", 'error');
         }
         else{
-            $this->setMessage("This DOI does not belong to a Journal Article or a Proceedings Paper. Currently it is only possible to import a publication via DOI for Journal Articles and Proceedings Papers. For all other publication types please enter the publication details manually.
+            $this->setMessage("This $this->id_label does not belong to a Journal Article or a Proceedings Paper. Currently it is only possible to import a publication via DOI for Journal Articles and Proceedings Papers. For all other publication types please enter the publication details manually.
 ", 'error');
         }
     }
