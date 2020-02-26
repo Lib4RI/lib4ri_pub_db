@@ -416,7 +416,9 @@ class IdValidator{
 
     protected $error_pub_types = array('journal_article' => 'Journal Article',
         'proceedings_paper' => 'Proceedings Paper',
-        'book' => 'Book'
+//         'book' => 'Book',
+//         'book_chapter' => 'Book Chapter',
+//         'edited_book' => 'Edited Book',
     );
     
     
@@ -431,6 +433,9 @@ class IdValidator{
 
     public  function setPubType($pub_type){
         $this->pub_type = $pub_type;
+        $this->scopus_retrieving_class = variable_get('lib4ri_pub_db_scopus_journal_data_class');
+        $this->xref_retrieving_class = variable_get('lib4ri_pub_db_xref_journal_data_class');
+        
         switch ($pub_type) {
             case 'journal_article':
                 $this->scopus_retrieving_class = variable_get('lib4ri_pub_db_scopus_journal_data_class');
@@ -468,7 +473,8 @@ class IdValidator{
     protected function setPubTypeError(){
         if($this->pub_type_checker->getDetectedType()){
             
-            $this->setMessage("This DOI belongs to a {$this->error_pub_types[$this->pub_type_checker->getDetectedType()]} but {$this->error_pub_types[$this->pub_type]} is selected for import. Please select the right publication type to preceed.", 'error');
+//            $this->setMessage("This DOI belongs to a {$this->error_pub_types[$this->pub_type_checker->getDetectedType()]} but {$this->error_pub_types[$this->pub_type]} is selected for import. Please select the right publication type to preceed.", 'error');
+            $this->setMessage("This DOI belongs to a {$this->error_pub_types[$this->pub_type_checker->getDetectedType()]} but another publication type is selected for import. Please select the right publication type to preceed.", 'error');
         }
         else{
             $this->setMessage("This DOI does not belong to a Journal Article or a Proceedings Paper. Currently it is only possible to import a publication via DOI for Journal Articles and Proceedings Papers. For all other publication types please enter the publication details manually.
@@ -614,7 +620,7 @@ class IdValidator{
             $this->setServantId();
             $this->serv->setPid(variable_get('lib4ri_pub_db_xref_pid'))->serve();
             $this->mods = $this->serv->getProcessedDom()[0];
-        
+
             global $user;
             
             if ($this->mods != FALSE){
