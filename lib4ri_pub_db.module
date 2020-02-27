@@ -44,6 +44,11 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
             }
         }
         
+        if ($form['journal_import_method']){
+            $form['journal_import_method']['#states']['visible'][':input[name="ingest_selector"]'] = array(array('value' => 'journal_article'),
+                                                                                                           array('value' => 'proceedings_paper'));
+        
+        }
         $form['doi'] = array(
             '#title' => t('Digital Object Identifier'),
             '#type' => 'textfield',
