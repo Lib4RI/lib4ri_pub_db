@@ -15,12 +15,12 @@
 		</titleInfo>
 		<xsl:choose>
 			<xsl:when test="/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn[@media_type='electronic']">
-				<identifier type="isbn"><xsl:value-of select="substring(/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn[@media_type='electronic'],1,3)"/>-<xsl:value-of select="substring(/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn[@media_type='electronic'],4,1)"/>-<xsl:value-of select="substring(/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn[@media_type='electronic'],5,5)"/>-<xsl:value-of select="substring(/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn[@media_type='electronic'],10,3)"/>-<xsl:value-of select="substring(/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn[@media_type='electronic'],13,1)"/></identifier>
+				<identifier type="isbn"><xsl:value-of select="/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn[@media_type='electronic']"/></identifier>
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:choose>
 					<xsl:when test="/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn">
-						<identifier type="isbn"><xsl:value-of select="substring(/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn,1,3)"/>-<xsl:value-of select="substring(/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn,4,1)"/>-<xsl:value-of select="substring(/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn,5,5)"/>-<xsl:value-of select="substring(/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn,10,3)"/>-<xsl:value-of select="substring(/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn,13,1)"/></identifier>
+						<identifier type="isbn"><xsl:value-of select="/doi_records/doi_record/crossref/conference/proceedings_metadata/isbn"/></identifier>
 					</xsl:when>
 				</xsl:choose>								
 			</xsl:otherwise>					
