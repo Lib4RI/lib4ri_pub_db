@@ -59,6 +59,11 @@
   			</xsl:choose>
 		</xsl:for-each>  
 		<relatedItem type="host">
+					<titleInfo>
+				<title>
+					<xsl:value-of select="/doi_records/doi_record/crossref/conference/proceedings_metadata/proceedings_title"/>
+				</title>
+			</titleInfo>	
 			<xsl:for-each select="/doi_records/doi_record/crossref/conference/conference_paper/contributors/person_name[@contributor_role='editor']">
 		    	<name type="personal">
   		    		<namePart type="family"><xsl:value-of select="surname"/></namePart>
@@ -71,9 +76,33 @@
 			<part>
 				<extent unit="pages">
 						<start><xsl:value-of select="/doi_records/doi_record/crossref/conference/conference_paper/first_page"/></start>
+						<end><xsl:value-of select="/doi_records/doi_record/crossref/conference/conference_paper/last_page"/></end>
 				</extent>
 			</part>
+			<originInfo>
+				<publisher><xsl:value-of select="/doi_records/doi_record/crossref/conference/proceedings_metadata/publisher/publisher_name"/></publisher>
+			</originInfo>			
 		</relatedItem>
+		<name type="conference"><xsl:value-of select="/doi_records/doi_record/crossref/conference/event_metadata/conference_name"/></name>
+		<originInfo>
+			<place>
+				<placeTerm type="text"><xsl:value-of select="/doi_records/doi_record/crossref/conference/event_metadata/conference_location"/></placeTerm>
+			</place>
+		</originInfo>
+		<originInfo>
+			<dateOther type="conferenceDate">
+				<xsl:value-of select="/doi_records/doi_record/crossref/conference/event_metadata/conference_date/@start_year"/>.
+<xsl:value-of select="/doi_records/doi_record/crossref/conference/event_metadata/conference_date/@start_month"/>.
+<xsl:value-of select="/doi_records/doi_record/crossref/conference/event_metadata/conference_date/@start_day"/>-
+<xsl:value-of select="/doi_records/doi_record/crossref/conference/event_metadata/conference_date/@end_year"/>.
+<xsl:value-of select="/doi_records/doi_record/crossref/conference/event_metadata/conference_date/@end_month"/>.
+<xsl:value-of select="/doi_records/doi_record/crossref/conference/event_metadata/conference_date/@end_day"/>
+			</dateOther>
+		</originInfo>				
+		<originInfo>
+			<dateIssued encoding="w3cdtf" keyDate="yes"><xsl:value-of select="/doi_records/doi_record/crossref/conference/proceedings_metadata/publication_date/year"/></dateIssued>
+		</originInfo>
+		
 		</mods>
 	</xsl:template>
 </xsl:stylesheet>
