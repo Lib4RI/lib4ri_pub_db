@@ -79,6 +79,19 @@ class Lib4riJournalArticleCrossref2ModsServant extends Lib4riCrossref2ModsServan
 
 class Lib4riProceedingsPaperCrossref2ModsServant extends Lib4riCrossref2ModsServant{
     protected $xslt = 'proceedings-paper-crossref2mods.xslt';
+    
+    public function __construct()
+    {
+        parent::__construct();
+        
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_crunch_confdate',
+            'source' => '',
+            'params' => array(
+            )
+        )
+            );
+    }
 }
 
 
