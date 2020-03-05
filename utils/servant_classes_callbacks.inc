@@ -121,6 +121,24 @@ function lib4ri_pub_db_spot_internal_authors($dom, $params){
     return $dom;
 }
 
+function lib4ri_pub_db_spot_internal_authors_crossref($dom, $params){
+    $xpath = new DOMXPath($dom);
+    $authors = $xpath->query('//contributors/person_name[@contributor_role="author"]');
+    
+    foreach ($authors as $author){
+        $affiliations = $author->getElementsByTagName('affiliation');
+        foreach ($affiliations as $affiliation){
+            $affil_strs = explode('|',variable_get('lib4ri_pub_db_xref_affiliation_strings'));
+            foreach ($affil_strs as $affil_str){
+                if(strpos($affil_str, $affiliation->nodeValue) !== FALSE){
+                    $author->setAttribute('fourri', 'true');
+                }
+            }
+        }
+    }
+    return $dom;
+}
+
 
 function lib4ri_pub_db_crunch_keywords($dom, $params){
     if(variable_get('lib4ri_pub_db_kw_lc')){

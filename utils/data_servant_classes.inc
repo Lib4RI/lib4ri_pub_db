@@ -16,6 +16,15 @@ class Lib4riCrossref2ModsServant extends MetaDataServant{
     public function __construct() {
         $this->fetcher = new CrossrefFetcher();
         $this->processor = new MetaDataProcessor(null);
+        
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_spot_internal_authors_crossref',
+            'source' => '',
+            'params' => array(
+            )
+        )
+            );
+        
         $this->processor->addSteps(array(//'type' => 'callback',
         //                                        'rule' => 'crossref2mods',
         //                                        'source' => '',

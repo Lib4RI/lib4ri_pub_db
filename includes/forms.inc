@@ -113,6 +113,13 @@ function lib4ri_pub_db_admin_form() {
         '#default_value' => variable_get('lib4ri_pub_db_xref_proceedings_data_class', ''),
         '#required' => FALSE,
     );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_xref']['lib4ri_pub_db_xref_affiliation_strings'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Lib4RI authors affiliation sub-strings ("|" separated)'),
+        '#default_value' => variable_get('lib4ri_pub_db_xref_affiliation_strings', ''),
+        '#required' => FALSE,
+    );
     
     $form['lib4ri_pub_tabs']['lib4ri_pub_gen']['lib4ri_pub_db_search_collections'] = array(
         '#type' => 'textfield',
