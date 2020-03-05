@@ -75,8 +75,8 @@
 			</xsl:for-each>
 			<part>
 				<extent unit="pages">
-						<start><xsl:value-of select="/doi_records/doi_record/crossref/conference/conference_paper/first_page"/></start>
-						<end><xsl:value-of select="/doi_records/doi_record/crossref/conference/conference_paper/last_page"/></end>
+						<start><xsl:value-of select="/doi_records/doi_record/crossref/conference/conference_paper/pages/first_page"/></start>
+						<end><xsl:value-of select="/doi_records/doi_record/crossref/conference/conference_paper/pages/last_page"/></end>
 				</extent>
 			</part>
 			<originInfo>
