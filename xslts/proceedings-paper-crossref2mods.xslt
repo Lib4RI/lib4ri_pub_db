@@ -59,9 +59,13 @@
   			</xsl:choose>
 		</xsl:for-each>  
 		<relatedItem type="host">
-					<titleInfo>
+			<titleInfo>
 				<title>
-					<xsl:value-of select="/doi_records/doi_record/crossref/conference/proceedings_metadata/proceedings_title"/>
+					<xsl:choose>
+						<xsl:when test="/doi_records/doi_record/crossref/conference/proceedings_metadata/proceedings_title != /doi_records/doi_record/crossref/conference/event_metadata/conference_name">
+								<xsl:value-of select="/doi_records/doi_record/crossref/conference/proceedings_metadata/proceedings_title"/>
+						</xsl:when>
+					</xsl:choose>
 				</title>
 			</titleInfo>	
 			<xsl:for-each select="/doi_records/doi_record/crossref/conference/conference_paper/contributors/person_name[@contributor_role='editor']">
