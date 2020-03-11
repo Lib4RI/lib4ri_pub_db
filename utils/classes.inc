@@ -158,6 +158,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     }
     
     public function checkJournal(){
+        global $user;
         $this->xpath = new DOMXPath($this->dom);
 
         $title_node = $this->xpath->query(variable_get('lib4ri_pub_db_journ_title_xpath_query'))[0];
@@ -209,7 +210,9 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         
         if (!$found){
             $title_node->nodeValue = $title.' (NOT FOUND)';
-            $this->setMessage('Journal not found in DORA', 'warning');
+            if ($user->name != 'anonymous'){
+                $this->setMessage('Journal not found in DORA', 'warning');
+            }
         }
         
         return $this;
