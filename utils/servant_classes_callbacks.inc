@@ -179,22 +179,32 @@ function lib4ri_pub_db_crunch_confdate($dom, $params){
 //    $date = trim(preg_replace('/\s\s+/', ' ', $date_element->nodeValue));
     $date = str_replace("\n", '', $date_element->nodeValue);
     $dates = explode('-', $date);
-    $start = explode('.', $dates[0]);
-    $end = explode('.', $dates[1]);
+    if (sizeof($dates) >= 1){
+        $start = explode('.', $dates[0]);
+        $start[2] = ltrim($start[2], '0');
+    }
+    if (sizeof($dates) >= 1){
+        $end = explode('.', $dates[1]);
+        $end[2] = ltrim($end[2], '0');
+    }
     
     if (empty($dates[1]) OR $dates[1]==''){
         if (empty($start[2]) OR $start[2]==''){
 //            05.2017 –> May 2017 
+            $date_element->nodeValue = "{$num2month[$start[1]]} $start[0]";
         }
         else{
-//            01.05.2017 –> May 1, 2017 
+//            01.05.2017 –> May 1, 2017
+            $date_element->nodeValue = "{$num2month[$start[1]]} $start[2]. $start[0]";
         }
     }
     elseif ($start[0] != $end[0]){
         //31.12.16-05.1.17 –> December 31, 2016 – January 5, 2017
+        $date_element->nodeValue = "{$num2month[$start[1]]} $start[2], $start[0] - {$num2month[$end[1]]} $end[2], $end[0]";
     }
     elseif ($start[1] != $end[1]){
-        //30.6-04.7.2017 -> June 30 – July 4, 2017 
+        //30.6-04.7.2017 -> June 30 – July 4, 2017
+        $date_element->nodeValue = "{$num2month[$start[1]]} $start[2] - {$num2month[$end[1]]} $end[2], $start[0]";
     }
     else{
         //1.-2.6.2017 -> June 1-2, 2017
