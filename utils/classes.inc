@@ -486,9 +486,9 @@ class IdValidator{
         }
     }
     
-    protected function setSolrfield($solr_field){
-        $this->idsolrfield = $solr_field;
-        return $this;
+    protected function setSolrfield(){
+//         $this->idsolrfield = $solr_field;
+//         return $this;
     }
     
     protected function setServantId(){
