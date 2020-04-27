@@ -257,6 +257,7 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
             $res = db_select(PROTEIN_DB_DATA_TABLE,'f')
             ->fields('f', array('pmid', 'facility', 'beamline'))
             ->condition('doi', $this->ids['doi'], '=')
+            ->condition('doi', '', '!=')
             ->execute();
             
             $bls = [];
