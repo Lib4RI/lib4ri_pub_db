@@ -171,6 +171,9 @@ function lib4ri_pub_db_doi_validate_ingest($element, &$form_state, $form) {
         foreach ($validator_instance->getMessages() as $message){
             drupal_set_message($message['message'], $message['type']);
         }
+        if ($isIn){
+            form_error($element, '');
+        }
         return (!$isIn);
     }
     else{
