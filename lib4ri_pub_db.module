@@ -104,7 +104,7 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
     if ($form['form_step_id']['#value'] == 'xml_form_builder_metadata_step') {
         if (in_array('identifiers', $form) && in_array('doi', $form['identifiers'])) {
 //            unset ($form['identifiers']['doi']['#element_validate']);          
-            $form['identifiers']['doi']['#element_validate'][] = 'lib4ri_pub_db_doi_validate_ingest';
+            $form['identifiers']['doi']['#element_validate'] = array('lib4ri_pub_db_doi_validate_ingest');
         }
     }
 }
@@ -167,8 +167,11 @@ function lib4ri_pub_db_doi_validate_ingest($element, &$form_state, $form) {
 //         return lib4ri_pub_db_doi_validate($element, $form_state, $form, TRUE);
         module_load_include('inc', 'lib4ri_pub_db', 'utils/classes');
         $validator_instance = new DoiValidator();
-        $validator_instance->setId($element);
-        return (!$validator_instance->isInRepo());
+        $isIn = $validator_instance->setId($element)->isInRepo();
+        foreach ($validator_instance->getMessages() as $message){
+            drupal_set_message($message['message'], $message['type']);
+        }
+        return (!$isIn);
     }
     else{
         return TRUE;
