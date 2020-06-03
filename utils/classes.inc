@@ -474,6 +474,16 @@ class IdValidator{
         return $this;
     }
     
+    public function isInRepo(){
+        $same_id_obj = $this->getSameIdObjects();
+        if ($same_id_obj == TRUE){
+            return TRUE;
+        }
+        else{
+            return FALSE;
+        }
+    }
+    
     protected function setPubTypeError(){
         if($this->pub_type_checker->getDetectedType()){
             
