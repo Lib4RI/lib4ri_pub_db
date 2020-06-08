@@ -162,7 +162,21 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
  * DOI-validation wrapper.
  */
 function lib4ri_pub_db_doi_validate_ingest($element, &$form_state, $form) {
-    if (!empty($form_state['values']['identifiers']['doi'])){
+
+    $elems = array($element['#value'],
+                   $form_state['values']['identifiers']['doi'],
+                   $form_state['values']['identifiers'][0][0]['doi'],
+    );
+    
+    $elem = NULL;
+    
+    foreach ($elems as $elem){
+        if (!empty($elem)){
+            break;
+        }
+    }
+        
+    if (!empty($elem)){
 //         form_load_include($form_state, 'inc', 'lib4ri_pub_db', 'includes/utils');
 //         return lib4ri_pub_db_doi_validate($element, $form_state, $form, TRUE);
         module_load_include('inc', 'lib4ri_pub_db', 'utils/classes');
