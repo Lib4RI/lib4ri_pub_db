@@ -685,7 +685,13 @@ class DoiValidator extends IdValidator{
     }
     
     protected function setServantId(){
-        $this->serv->setDoi(trim($this->id));
+        $id = trim($this->id);
+        
+        $needle = 'doi.org/';
+        $idx = strpos($id, $needle);
+        $id = substr($id, $idx+strlen($needle));
+        
+        $this->serv->setDoi($id);
         return $this;
     }
     
