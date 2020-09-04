@@ -689,7 +689,9 @@ class DoiValidator extends IdValidator{
         
         $needle = 'doi.org/';
         $idx = strpos($id, $needle);
-        $id = substr($id, $idx+strlen($needle));
+        if ($idx !== false){
+            $id = substr($id, $idx+strlen($needle));
+        }
         
         $this->serv->setDoi($id);
         return $this;
