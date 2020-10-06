@@ -19,6 +19,13 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
         $doi = trim($_GET['doi'],'_');
         $eid = trim($_GET['eid'],'_');
         $type = trim($_GET['type'],'_');
+        $fid = trim($_GET['fid'],'_');
+        
+        if($fid){
+            $file = file_load($fid);
+            $form_state['islandora']['step_storage']['lib4ridora_multi_pdf_upload']['files'][$file->filename] = $file;
+        }
+        
         
         $fill_doi = false;
         switch ($type) {
