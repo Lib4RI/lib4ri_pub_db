@@ -159,6 +159,7 @@
 		<originInfo>
 			<dateIssued encoding="w3cdtf" keyDate="yes"><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/publicationdate/year"/></dateIssued>
 		</originInfo>
+		<note type="department descriptor">sco</note>
 	</mods>
 	</xsl:template>
 </xsl:stylesheet>

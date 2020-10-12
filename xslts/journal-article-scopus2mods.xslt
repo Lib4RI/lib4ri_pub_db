@@ -100,6 +100,7 @@
 				</extent>
 			</part>
   		</relatedItem>
+  		<note type="department descriptor">sco</note>
 	</mods>
 	</xsl:template>
 </xsl:stylesheet>
