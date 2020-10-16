@@ -75,7 +75,7 @@
 				</extent>
 			</part>
   		</relatedItem>
-				
+				<note type="department descriptor">cro</note>
 		</mods>
 	</xsl:template>
 </xsl:stylesheet>

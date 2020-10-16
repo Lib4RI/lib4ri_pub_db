@@ -106,7 +106,7 @@
 		<originInfo>
 			<dateIssued encoding="w3cdtf" keyDate="yes"><xsl:value-of select="/doi_records/doi_record/crossref/conference/proceedings_metadata/publication_date/year"/></dateIssued>
 		</originInfo>
-		
+		<note type="department descriptor">cro</note>
 		</mods>
 	</xsl:template>
 </xsl:stylesheet>
