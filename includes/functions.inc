@@ -63,10 +63,12 @@ function get_authors_data_from_name($g_name, $f_name){
     return $ret;
 }
 function get_authors_unit_from_aff_name($group){
-    $qp = new IslandoraSolrQueryProcessor();
-    $qp->buildQuery(format_string('!field:(!value)', array(
-        '!field' => islandora_solr_lesser_escape(variable_get('lib4ri_pub_db_group_id_solr_search_field')),
-        '!value' => $group,
+    $qp = new IslandoraSolrQueryProcessor();    
+    $qp->buildQuery(format_string('!field1:(!value1) AND !field2:(!value2*)', array(
+        '!field1' => islandora_solr_lesser_escape(variable_get('lib4ri_pub_db_group_id_solr_search_field')),
+        '!value1' => $group,
+        '!field2' => 'PID',
+        '!value2' => islandora_solr_lesser_escape(variable_get('lib4ri_pub_db_units_solr_namespace')),
     )));
     
     $qp->solrParams['fl'] = 'PID, '.variable_get('lib4ri_pub_db_group_current_solr_search_field');
