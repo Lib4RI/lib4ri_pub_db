@@ -100,7 +100,8 @@
 				</extent>
 			</part>
   		</relatedItem>
-  		<note type="department descriptor">sco</note>
+  		<note type="quality_control_ID">sco</note>
+  		<note type="quality_control">Yes</note>
 	</mods>
 	</xsl:template>
 </xsl:stylesheet>
