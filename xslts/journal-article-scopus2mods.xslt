@@ -102,6 +102,44 @@
   		</relatedItem>
   		<note type="quality_control_ID">sco</note>
   		<note type="quality_control">Yes</note>
+  		<extension>
+  			<fundingReferences>
+  				<xsl:for-each select="/dtd:abstracts-retrieval-response/item/xocs:meta/xocs:funding-list/xocs:funding">
+  					<xsl:choose> 
+  						<xsl:when test="xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/100010661'] or xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/501100007601']">
+  							<fundingReference>
+								<funderName>European Commission</funderName>
+								<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100000780</funderIdentifier>
+								<fundingStream>Horizon 2020 Framework Programme</fundingStream>
+								<awardTitle></awardTitle>
+								<awardNumber><xsl:value-of select="xocs:funding-id"/></awardNumber>
+								</fundingReference>
+  						</xsl:when>
+
+  						<xsl:when test="xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/100011102'] or xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/501100004963']">
+  							<fundingReference>
+								<funderName>European Commission</funderName>
+								<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100000780</funderIdentifier>
+								<fundingStream>Seventh Framework Programme</fundingStream>
+								<awardTitle></awardTitle>
+								<awardNumber><xsl:value-of select="xocs:funding-id"/></awardNumber>
+								</fundingReference>
+  						</xsl:when>
+
+  						<xsl:when test="xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/501100001711']">
+  							<fundingReference>
+								<funderName>Swiss National Science Foundation</funderName>
+								<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100001711</funderIdentifier>
+								<fundingStream>SNSF</fundingStream>
+								<awardTitle></awardTitle>
+								<awardNumber><xsl:value-of select="xocs:funding-id"/></awardNumber>
+								</fundingReference>
+  						</xsl:when>
+  						
+  					</xsl:choose>
+  				</xsl:for-each>
+  			</fundingReferences>
+  		</extension>
 	</mods>
 	</xsl:template>
 </xsl:stylesheet>

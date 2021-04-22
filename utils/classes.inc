@@ -67,6 +67,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     public function enrich(){
         $this->addStdName();
         $this->checkJournal();
+        $this->checkFunding();
     }
     
     public function setIds($ids){
@@ -234,6 +235,35 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         return $this;
     }
     
+    public function checkFunding() {
+        module_load_include('inc', 'lib4ri_funding', 'includes/queries');
+        module_load_include('inc', 'lib4ri_funding', 'includes/autocomplete');
+        
+        $this->xpath = new DOMXPath($this->dom);
+        
+        $refs = $this->xpath->query(variable_get('lib4ri_pub_db_fund_refs_xpath_query'));
+        foreach ($refs as $ref){
+            $stream_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_fund_stream_tag_name'))[0];
+            $stream = $stream_node->nodeValue;
+            
+            $awnum_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_fund_awnum_tag_name'))[0];
+            $awnum = $awnum_node->nodeValue;
+            
+        }
+        
+        $funder_node = $this->xpath->query(variable_get('lib4ri_pub_db_funder_xpath_query'))[0];
+        $funder = $funder_node->nodeValue;
+        
+        $id_node = $this->xpath->query(variable_get('lib4ri_pub_db_fund_id_xpath_query'))[0];
+        $id = $funder_node->nodeValue;
+        
+        
+        $title_node = $this->xpath->query(variable_get('lib4ri_pub_db_fund_title_xpath_query'))[0];
+        $title = $title_node->nodeValue;
+        
+        
+        return $this;
+    }
     
 }
 
