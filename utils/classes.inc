@@ -249,19 +249,31 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             $awnum_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_fund_awnum_tag_name'))[0];
             $awnum = $awnum_node->nodeValue;
             
+            if (!empty($awnum)) {
+                            
+                $stream_id = get_stream_id($stream);
+                $title = get_award_title($stream_id, $awnum);
+                
+                if (!empty($title)) {
+                    $title_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_fund_title_tag_name'))[0];
+                    $title_node->nodeValue = $title;
+                }
+                else{
+                    $this->setMessage('No match for '.$stream.' project number '.$awnum, 'warning');
+                }
+            }
+            else{
+                
+                $ref->parentNode->removeChild($ref);
+//                 $funder_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_funder_tag_name'))[0];
+//                 $funder_node->nodeValue = '';
+                
+//                 $id_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_fund_id_tag_name'))[0];
+//                 $id_node->nodeValue = '';
+                
+            }
         }
-        
-        $funder_node = $this->xpath->query(variable_get('lib4ri_pub_db_funder_xpath_query'))[0];
-        $funder = $funder_node->nodeValue;
-        
-        $id_node = $this->xpath->query(variable_get('lib4ri_pub_db_fund_id_xpath_query'))[0];
-        $id = $funder_node->nodeValue;
-        
-        
-        $title_node = $this->xpath->query(variable_get('lib4ri_pub_db_fund_title_xpath_query'))[0];
-        $title = $title_node->nodeValue;
-        
-        
+
         return $this;
     }
     

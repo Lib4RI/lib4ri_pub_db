@@ -465,42 +465,42 @@ function lib4ri_pub_db_admin_form() {
     $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_refs_xpath_query'] = array(
         '#type' => 'textfield',
         '#title' => t('MODS XPATH Funding references query'),
-        '#default_value' => variable_get('lib4ri_pub_db_fund_refs_xpath_query', ''),
+        '#default_value' => variable_get('lib4ri_pub_db_fund_refs_xpath_query', '//mods:mods/mods:extension/mods:fundingReferences/mods:fundingReference'),
         '#required' => false,
     );
     
-    $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_funder_xpath_query'] = array(
+    $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_funder_tag_name'] = array(
         '#type' => 'textfield',
-        '#title' => t('MODS XPATH Funder name query'),
-        '#default_value' => variable_get('lib4ri_pub_db_funder_xpath_query', ''),
+        '#title' => t('MODS Funder tag name'),
+        '#default_value' => variable_get('lib4ri_pub_db_funder_tag_name', 'funderName'),
         '#required' => false,
     );
 
-    $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_id_xpath_query'] = array(
+    $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_id_tag_name'] = array(
         '#type' => 'textfield',
-        '#title' => t('MODS XPATH Funder ID query'),
-        '#default_value' => variable_get('lib4ri_pub_db_fund_id_xpath_query', ''),
+        '#title' => t('MODS Funder ID tag name'),
+        '#default_value' => variable_get('lib4ri_pub_db_fund_id_tag_name', 'funderIdentifier'),
         '#required' => false,
     );
 
     $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_stream_tag_name'] = array(
         '#type' => 'textfield',
         '#title' => t('MODS Funding Stream tag name'),
-        '#default_value' => variable_get('lib4ri_pub_db_fund_stream_tag_name', ''),
+        '#default_value' => variable_get('lib4ri_pub_db_fund_stream_tag_name', 'fundingStream'),
         '#required' => false,
     );
 
-    $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_title_xpath_query'] = array(
+    $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_title_tag_name'] = array(
         '#type' => 'textfield',
-        '#title' => t('MODS XPATH Award Title query'),
-        '#default_value' => variable_get('lib4ri_pub_db_fund_title_xpath_query', ''),
+        '#title' => t('MODS Award Title tag name'),
+        '#default_value' => variable_get('lib4ri_pub_db_fund_title_tag_name', 'awardTitle'),
         '#required' => false,
     );
 
     $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_awnum_tag_name'] = array(
         '#type' => 'textfield',
         '#title' => t('MODS Award Number tag name'),
-        '#default_value' => variable_get('lib4ri_pub_db_fund_awnum_tag_name', ''),
+        '#default_value' => variable_get('lib4ri_pub_db_fund_awnum_tag_name', 'awardNumber'),
         '#required' => false,
     );
     
