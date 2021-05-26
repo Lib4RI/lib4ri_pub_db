@@ -107,35 +107,40 @@
   				<xsl:for-each select="/dtd:abstracts-retrieval-response/item/xocs:meta/xocs:funding-list/xocs:funding">
   					<xsl:choose> 
   						<xsl:when test="xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/100010661'] or xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/501100007601']">
-  							<fundingReference>
-								<funderName>European Commission</funderName>
-								<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100000780</funderIdentifier>
-								<fundingStream>Horizon 2020 Framework Programme</fundingStream>
-								<awardTitle></awardTitle>
-								<awardNumber><xsl:value-of select="xocs:funding-id"/></awardNumber>
+  							<xsl:for-each select="xocs:funding-id">
+	  							<fundingReference>
+									<funderName>European Commission</funderName>
+									<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100000780</funderIdentifier>
+									<fundingStream>Horizon 2020 Framework Programme</fundingStream>
+									<awardTitle></awardTitle>
+									<awardNumber><xsl:value-of select="current()"/></awardNumber>
 								</fundingReference>
+							</xsl:for-each>
   						</xsl:when>
 
   						<xsl:when test="xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/100011102'] or xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/501100004963']">
-  							<fundingReference>
-								<funderName>European Commission</funderName>
-								<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100000780</funderIdentifier>
-								<fundingStream>Seventh Framework Programme</fundingStream>
-								<awardTitle></awardTitle>
-								<awardNumber><xsl:value-of select="xocs:funding-id"/></awardNumber>
-								</fundingReference>
+  							<xsl:for-each select="xocs:funding-id">
+	  							<fundingReference>
+									<funderName>European Commission</funderName>
+									<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100000780</funderIdentifier>
+									<fundingStream>Seventh Framework Programme</fundingStream>
+									<awardTitle></awardTitle>
+									<awardNumber><xsl:value-of select="current()"/></awardNumber>
+									</fundingReference>
+							</xsl:for-each>									
   						</xsl:when>
 
   						<xsl:when test="xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/501100001711']">
-  							<fundingReference>
-								<funderName>Swiss National Science Foundation</funderName>
-								<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100001711</funderIdentifier>
-								<fundingStream>SNSF</fundingStream>
-								<awardTitle></awardTitle>
-								<awardNumber><xsl:value-of select="xocs:funding-id"/></awardNumber>
+  							<xsl:for-each select="xocs:funding-id">
+	  							<fundingReference>
+									<funderName>Swiss National Science Foundation</funderName>
+									<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100001711</funderIdentifier>
+									<fundingStream>SNSF</fundingStream>
+									<awardTitle></awardTitle>
+									<awardNumber><xsl:value-of select="current()"/></awardNumber>
 								</fundingReference>
-  						</xsl:when>
-  						
+							</xsl:for-each>				
+  						</xsl:when>	
   					</xsl:choose>
   				</xsl:for-each>
   			</fundingReferences>
