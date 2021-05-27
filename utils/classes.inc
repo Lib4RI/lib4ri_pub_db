@@ -257,7 +257,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             $awnum_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_fund_awnum_tag_name'))[0];
             $awnum = $awnum_node->nodeValue;
             
-            if ($stream == 'SNSF'){
+            if (($stream == 'SNSF') && variable_get('lib4ri_pub_db_fund_snf_id_proc')){
                 $awnum = $this->processSNSFid($awnum);
                 $awnum_node->nodeValue = $awnum;
             }
@@ -272,7 +272,12 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                     $title_node->nodeValue = $title;
                 }
                 else{
-                    $this->setMessage('No match for '.$stream.' project number '.$awnum, 'warning');
+                    if (variable_get('lib4ri_pub_db_fund_warn_on_mismatch')){
+                        $this->setMessage('No match for '.$stream.' project number '.$awnum, 'warning');
+                    }
+                    else{
+                        $ref->parentNode->removeChild($ref);
+                    }
                 }
             }
             else{

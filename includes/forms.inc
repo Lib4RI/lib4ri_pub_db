@@ -504,5 +504,19 @@ function lib4ri_pub_db_admin_form() {
         '#required' => false,
     );
     
+    $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_snf_id_proc'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Attempt SNSF ID detection'),
+        '#default_value' => variable_get('lib4ri_pub_db_fund_snf_id_proc', ''),
+        '#required' => FALSE,
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_warn_on_mismatch'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Raise a warning when no ID match is found'),
+        '#default_value' => variable_get('lib4ri_pub_db_fund_warn_on_mismatch', ''),
+        '#required' => FALSE,
+    );
+    
     return system_settings_form($form);
 }
