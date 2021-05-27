@@ -506,7 +506,7 @@ function lib4ri_pub_db_admin_form() {
     
     $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_snf_id_proc'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Attempt SNSF ID detection'),
+        '#title' => t('Attempt SNSF ID extraction'),
         '#default_value' => variable_get('lib4ri_pub_db_fund_snf_id_proc', ''),
         '#required' => FALSE,
     );
