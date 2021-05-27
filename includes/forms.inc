@@ -84,7 +84,7 @@ function lib4ri_pub_db_admin_form() {
     
     $form['lib4ri_pub_tabs']['lib4ri_pub_scopus']['lib4ri_pub_db_kw_lc'] = array(
         '#type' => 'checkbox',
-        '#title' => t('Convert keywords to lowecase'),
+        '#title' => t('Convert keywords to lowercase'),
         '#default_value' => variable_get('lib4ri_pub_db_kw_lc', ''),
         '#required' => FALSE,
     );
