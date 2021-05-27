@@ -235,6 +235,14 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         return $this;
     }
     
+    private function processSNSFid($id){
+        $id = end(explode('-', $id));
+        $id = end(explode('_', $id));
+        $id = explode('/', $id)[0];
+        $id = ltrim($id, '0');
+        return $id;
+    }
+    
     public function checkFunding() {
         module_load_include('inc', 'lib4ri_funding', 'includes/queries');
         module_load_include('inc', 'lib4ri_funding', 'includes/autocomplete');
@@ -248,6 +256,11 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             
             $awnum_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_fund_awnum_tag_name'))[0];
             $awnum = $awnum_node->nodeValue;
+            
+            if ($stream == 'SNSF'){
+                $awnum = $this->processSNSFid($awnum);
+                $awnum_node->nodeValue = $awnum;
+            }
             
             if (!empty($awnum)) {
                             
