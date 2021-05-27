@@ -449,6 +449,7 @@ class PsiProceedingsPapersMetaDataEnricher extends PsiMetaDataEnricher{
     public function enrich(){
         $this->addStdName();
         $this->addBeamlines();
+        $this->checkFunding();
     }
     
 }
