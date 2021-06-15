@@ -103,6 +103,9 @@ class Lib4riProceedingsPaperCrossref2ModsServant extends Lib4riCrossref2ModsServ
     }
 }
 
+class PsiProceedingsPaperCrossref2ModsServant extends Lib4riProceedingsPaperCrossref2ModsServant{
+    protected $xslt = 'psi-proceedings-paper-crossref2mods.xslt';
+}
 
 /**
  * Class to get MODS from DOI using Scopus data
@@ -253,4 +256,8 @@ class Lib4riProceedingsPaperScopus2ModsServant extends Lib4riScopus2ModsServant{
             )
         );
     }
+}
+
+class PsiProceedingsPaperScopus2ModsServant extends Lib4riProceedingsPaperScopus2ModsServant{
+    protected $xslt = 'psi-proceedings-paper-scopus2mods.xslt';
 }

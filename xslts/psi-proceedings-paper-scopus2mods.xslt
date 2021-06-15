@@ -139,7 +139,7 @@
 				<detail type="issue">
 					<number><xsl:value-of select="/dtd:abstracts-retrieval-response/item/bibrecord/head/source/volisspag/voliss/@issue"/></number>
 				</detail>
-				<extent unit="page">
+				<extent unit="pages">
 					<xsl:choose>
 						<xsl:when test="/dtd:abstracts-retrieval-response/dtd:coredata/prism:startingPage">
 							<start><xsl:value-of select="/dtd:abstracts-retrieval-response/dtd:coredata/prism:startingPage"/></start>
