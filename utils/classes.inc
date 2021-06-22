@@ -269,7 +269,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 
                 if (!empty($title)) {
                     $title_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_fund_title_tag_name'))[0];
-                    $title_node->nodeValue = $title;
+                    $title_node->nodeValue = htmlspecialchars($title);
                 }
                 else{
                     if (variable_get('lib4ri_pub_db_fund_warn_on_mismatch')){
