@@ -67,7 +67,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     public function enrich(){
         $this->addStdName();
         $this->checkJournal();
-//        $this->checkFunding();
+        $this->checkFunding();
     }
     
     public function setIds($ids){
@@ -458,6 +458,7 @@ class Lib4riProceedingsPaperMetaDataEnricher extends Lib4riMetaDataEnricher{
     
     public function enrich(){
         $this->addStdName();
+        $this->checkFunding();
     }
 }
 
