@@ -461,6 +461,13 @@ function lib4ri_pub_db_admin_form() {
 //         '#default_value' => variable_get('lib4ri_pub_db_title_tags', '<sup><inf><i><sub><em>'),
 //         '#required' => false,
 //     );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_refs_section_xpath_query'] = array(
+        '#type' => 'textfield',
+        '#title' => t('MODS XPATH Funding references section query'),
+        '#default_value' => variable_get('lib4ri_pub_db_fund_refs_section_xpath_query', '//mods:mods/mods:extension/mods:fundingReferences'),
+        '#required' => false,
+    );
     
     $form['lib4ri_pub_tabs']['lib4ri_pub_fund']['lib4ri_pub_db_fund_refs_xpath_query'] = array(
         '#type' => 'textfield',

@@ -248,7 +248,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         module_load_include('inc', 'lib4ri_funding', 'includes/autocomplete');
         
         $this->xpath = new DOMXPath($this->dom);
-        
+        $awards=array();
         $refs = $this->xpath->query(variable_get('lib4ri_pub_db_fund_refs_xpath_query'));
         foreach ($refs as $ref){
             $stream_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_fund_stream_tag_name'))[0];
@@ -270,6 +270,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 if (!empty($title)) {
                     $title_node = $ref->getElementsByTagName(variable_get('lib4ri_pub_db_fund_title_tag_name'))[0];
                     $title_node->nodeValue = htmlspecialchars($title);
+                    $awards[$stream_id][$awnum] = 1;
                 }
                 else{
                     if (variable_get('lib4ri_pub_db_fund_warn_on_mismatch')){
@@ -291,7 +292,41 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 
             }
         }
-
+        
+        $pubs = get_pubs_by_doi($this->ids['doi']);
+        foreach ($pubs as $pub){
+            if (!isset($awards[$pub->stream_id][$pub->number])){
+                $title = get_award_title($pub->stream_id, $pub->number);
+                $stream = get_stream_name($pub->stream_id);
+                $funder = get_funder_by_stream($stream);
+                $funder_ident = get_funder_ident($funder);
+                
+                $this->xpath = new DOMXPath($this->dom);
+                $references = $this->xpath->query(variable_get('lib4ri_pub_db_fund_refs_section_xpath_query'))[0];
+                if (isset($references)){
+                    $funding_reference = $this->dom->createElement('fundingReference');
+                    
+                    $funder_name = $this->dom->createElement('funderName',$funder);
+                    $funding_reference->appendChild($funder_name);
+                    
+                    $funder_identifier = $this->dom->createElement('funderIdentifier', $funder_ident);
+                    $funder_identifier->setAttribute('funderIdentifierType','Crossref_Funder');
+                    $funding_reference->appendChild($funder_identifier);
+                    
+                    $funding_stream = $this->dom->createElement('fundingStream', $stream);
+                    $funding_reference->appendChild($funding_stream);
+                    
+                    $award_title = $this->dom->createElement('awardTitle',$title);
+                    $funding_reference->appendChild($award_title);
+                    
+                    $award_number = $this->dom->createElement('awardNumber',$pub->number);
+                    $funding_reference->appendChild($award_number);
+                    
+                    $references->appendChild($funding_reference);
+                }
+            }
+        }
+        
         return $this;
     }
     
