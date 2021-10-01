@@ -12,7 +12,7 @@ function lib4ri_pub_db_use_this_collection($url){
 }
 
 function lib4ri_pub_db_form_alter(&$form, &$form_state) {
-    if (($form['form_step_id']['#value'] == 'lib4ridora_ingest_selector') && lib4ri_pub_db_use_this_collection($_GET['q']))  {
+    if ((@$form['form_step_id']['#value'] == 'lib4ridora_ingest_selector') && lib4ri_pub_db_use_this_collection($_GET['q']))  {
         
         global $user;
         
@@ -108,7 +108,7 @@ function lib4ri_pub_db_form_alter(&$form, &$form_state) {
         $form['next']['#weight'] = 20;
     }
     
-    if ($form['form_step_id']['#value'] == 'xml_form_builder_metadata_step') {
+    if (@$form['form_step_id']['#value'] == 'xml_form_builder_metadata_step') {
         if (in_array('identifiers', $form) && in_array('doi', $form['identifiers'])) {
 //            unset ($form['identifiers']['doi']['#element_validate']);          
             $form['identifiers']['doi']['#element_validate'] = array('lib4ri_pub_db_doi_validate_ingest');
