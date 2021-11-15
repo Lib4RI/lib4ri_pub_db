@@ -923,3 +923,11 @@ class CrossrefPubTypeMatcher extends PubTypeMatcher{
     }
     
 }
+
+class FundingMetaDataEnricher extends Lib4riMetaDataEnricher{
+    
+    public function enrich(){
+        $this->checkFunding();
+    }
+    
+}
