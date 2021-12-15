@@ -248,6 +248,8 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         module_load_include('inc', 'lib4ri_funding', 'includes/autocomplete');
         
         $this->xpath = new DOMXPath($this->dom);
+        $this->xpath->registerNamespace('mods', 'http://loc.gov/mods/v3');
+        
         $awards=array();
         $refs = $this->xpath->query(variable_get('lib4ri_pub_db_fund_refs_xpath_query'));
         foreach ($refs as $ref){
@@ -297,10 +299,9 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         $pubs = get_pubs_by_doi($this->ids['doi']);
         
 //var_dump($pubs);        
-        $this->xpath = new DOMXPath($this->dom);
+//        $this->xpath = new DOMXPath($this->dom);
         $references = $this->xpath->query(variable_get('lib4ri_pub_db_fund_refs_section_xpath_query'))[0];
         if (is_null($references)){
-            
             $extension = $this->xpath->query('//mods:mods/mods:extension')[0];
             if (is_null($estension)){
                 $mods_root = $this->xpath->query('//mods:mods')[0];
@@ -338,7 +339,6 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                     
                     $award_number = $this->dom->createElement('awardNumber',$pub->number);
                     $funding_reference->appendChild($award_number);
-                    
                     $references->appendChild($funding_reference);
                 }
             }
