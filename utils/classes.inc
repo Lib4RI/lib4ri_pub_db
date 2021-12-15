@@ -292,17 +292,34 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 
             }
         }
-        
+
+        #Add info from additional sources
         $pubs = get_pubs_by_doi($this->ids['doi']);
+        
+//var_dump($pubs);        
+        $this->xpath = new DOMXPath($this->dom);
+        $references = $this->xpath->query(variable_get('lib4ri_pub_db_fund_refs_section_xpath_query'))[0];
+        if (is_null($references)){
+            
+            $extension = $this->xpath->query('//mods:mods/mods:extension')[0];
+            if (is_null($estension)){
+                $mods_root = $this->xpath->query('//mods:mods')[0];
+                $extension = $this->dom->createElement('extension');
+                $mods_root->appendChild($extension);
+            }
+            $references = $this->dom->createElement('fundingReferences');
+            $extension->appendChild($references);
+        }
+        
         foreach ($pubs as $pub){
+            
             if (!isset($awards[$pub->stream_id][$pub->number])){
+                
                 $title = get_award_title($pub->stream_id, $pub->number);
                 $stream = get_stream_name($pub->stream_id);
                 $funder = get_funder_by_stream($stream);
                 $funder_ident = get_funder_ident($funder);
                 
-                $this->xpath = new DOMXPath($this->dom);
-                $references = $this->xpath->query(variable_get('lib4ri_pub_db_fund_refs_section_xpath_query'))[0];
                 if (isset($references)){
                     $funding_reference = $this->dom->createElement('fundingReference');
                     
@@ -326,7 +343,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 }
             }
         }
-        
+//        echo $this->dom->saveXML();
         return $this;
     }
     
