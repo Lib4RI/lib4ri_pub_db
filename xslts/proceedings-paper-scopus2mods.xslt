@@ -176,7 +176,6 @@
 								</fundingReference>
 							</xsl:for-each>
   						</xsl:when>
-
   						<xsl:when test="xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/100011102'] or xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/501100004963']">
   							<xsl:for-each select="xocs:funding-id">
 	  							<fundingReference>
@@ -188,7 +187,6 @@
 									</fundingReference>
 							</xsl:for-each>									
   						</xsl:when>
-
   						<xsl:when test="xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/501100001711']">
   							<xsl:for-each select="xocs:funding-id">
 	  							<fundingReference>
