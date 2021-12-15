@@ -297,8 +297,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
 
         #Add info from additional sources
         $pubs = get_pubs_by_doi($this->ids['doi']);
-        
-//var_dump($pubs);        
+              
 //        $this->xpath = new DOMXPath($this->dom);
         $references = $this->xpath->query(variable_get('lib4ri_pub_db_fund_refs_section_xpath_query'))[0];
         if (is_null($references)){
