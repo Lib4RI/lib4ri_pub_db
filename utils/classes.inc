@@ -68,6 +68,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         $this->addStdName();
         $this->checkJournal();
         $this->checkFunding();
+        $this->checkResearchData();
     }
     
     public function setIds($ids){
@@ -346,6 +347,52 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         return $this;
     }
     
+    public function checkResearchData(){
+        if (!$this->ids['doi']){
+            return $this;
+        }
+        
+        $research_data_enrich_class = variable_get('lib4ri_pub_db_resdata_enrich_class');
+        $res_data_fetcher = new $research_data_enrich_class();
+        $res_data_fetcher->setDoi($this->ids['doi']);
+        $data_doi = @$res_data_fetcher->serve()->getProcessedArray()[0]['item']['doi'];
+        if (strlen($data_doi) == 0){
+            return $this;
+        }
+        
+        
+        $this->xpath = new DOMXPath($this->dom);
+        $this->xpath->registerNamespace('mods', 'http://loc.gov/mods/v3');
+        $section = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section'))[0];
+        if (is_null($section)){
+            $mods_root = $this->xpath->query('//mods:mods')[0];
+            $section = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_section_name'));
+            $section->setAttribute(variable_get('lib4ri_pub_db_resdata_section_attribute_label'),variable_get('lib4ri_pub_db_resdata_section_attribute_value'));
+            $mods_root->appendChild($section);
+            
+            $data_uri = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_tag_name'));
+            $data_uri->setAttribute(variable_get('lib4ri_pub_db_resdata_tag_attribute_label'),variable_get('lib4ri_pub_db_resdata_tag_attribute_value'));
+            $data_uri->nodeValue = 'https://doi.org/'.$data_doi; 
+            $section->appendChild($data_uri);
+        }
+        else{
+            $data_uris = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_section'));
+            foreach ($data_uris as $uri){
+                if (strpos($uri, $data_doi) !== false){
+                    return $this;
+                }
+            }
+            $data_uri = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_tag_name'));
+            $data_uri->setAttribute(variable_get('lib4ri_pub_db_resdata_tag_attribute_label'),variable_get('lib4ri_pub_db_resdata_tag_attribute_value'));
+            $data_uri->nodeValue = 'https://doi.org/'.$data_doi;
+            $section->appendChild($data_uri);
+        }
+        
+        return $this;
+    }
+    
+    
+    
 }
 
 class ThreeRiMetaDataEnricher extends Lib4riMetaDataEnricher{
@@ -359,6 +406,7 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
         $this->checkJournal();
         $this->addBeamlines();
         $this->checkFunding();
+        $this->checkResearchData();
     }
     
     public function addBeamlines(){

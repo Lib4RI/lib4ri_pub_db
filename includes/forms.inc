@@ -43,6 +43,10 @@ function lib4ri_pub_db_admin_form() {
                 '#type' => 'fieldset',
                 '#title' => t('Funding data'),
             ),
+            'lib4ri_pub_resdata' => array(
+                '#type' => 'fieldset',
+                '#title' => t('Research data'),
+            ),
          )
     );
     
@@ -522,6 +526,69 @@ function lib4ri_pub_db_admin_form() {
         '#type' => 'checkbox',
         '#title' => t('Raise a warning when no ID match is found'),
         '#default_value' => variable_get('lib4ri_pub_db_fund_warn_on_mismatch', ''),
+        '#required' => FALSE,
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_enrich_class'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Research data enrichment class'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_enrich_class', 'DataCiteDoisServant'),
+        '#required' => FALSE,
+    );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_section'] = array(
+        '#type' => 'textfield',
+        '#title' => t('MODS XPATH research data section query'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_section', '//mods:mods/mods:relatedItem [@type="otherType"]'),
+        '#required' => FALSE,
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_section_name'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Research data section name'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_section_name', 'relatedItem'),
+        '#required' => FALSE,
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_section_attribute_label'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Research data section attribute label'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_section_attribute_label', 'type'),
+        '#required' => FALSE,
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_section_attribute_value'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Research data section attribute value'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_section_attribute_value', 'otherType'),
+        '#required' => FALSE,
+    );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_tag'] = array(
+        '#type' => 'textfield',
+        '#title' => t('MODS XPATH research data tag sub-query'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_tag', '/mods:identifier [@type="uri"]'),
+        '#required' => FALSE,
+    );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_tag_name'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Research data tag name'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_tag_name', 'identifier'),
+        '#required' => FALSE,
+    );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_tag_attribute_label'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Research data tag attribute label'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_tag_attribute_label', 'type'),
+        '#required' => FALSE,
+    );
+    
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_tag_attribute_value'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Research data tag attribute value'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_tag_attribute_value', 'uri'),
         '#required' => FALSE,
     );
     
