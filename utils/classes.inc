@@ -995,3 +995,11 @@ class FundingMetaDataEnricher extends Lib4riMetaDataEnricher{
     }
     
 }
+
+class ResearchDataMetaDataEnricher extends Lib4riMetaDataEnricher{
+    
+    public function enrich(){
+        $this->checkResearchData();
+    }
+    
+}
