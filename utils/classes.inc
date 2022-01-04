@@ -55,6 +55,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     protected $sections;
     protected $messages = [];
     protected $ids = [];
+    protected $enriched = [];
     
     /**
      * Constructor.
@@ -348,6 +349,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
     }
     
     public function checkResearchData(){
+        $this->enriched['research_data'] = FALSE;
         if (!$this->ids['doi']){
             return $this;
         }
@@ -382,6 +384,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                     return $this;
                 }
             }
+            $this->enriched['research_data'] = TRUE;
             $data_uri = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_tag_name'));
             $data_uri->setAttribute(variable_get('lib4ri_pub_db_resdata_tag_attribute_label'),variable_get('lib4ri_pub_db_resdata_tag_attribute_value'));
             $data_uri->nodeValue = 'https://doi.org/'.$data_doi;
@@ -391,7 +394,9 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         return $this;
     }
     
-    
+    public function isResearchDataEnriched(){
+        return $this->enriched['research_data'];
+    }
     
 }
 
