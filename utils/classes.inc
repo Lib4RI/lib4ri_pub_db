@@ -366,6 +366,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         $this->xpath = new DOMXPath($this->dom);
         $this->xpath->registerNamespace('mods', 'http://loc.gov/mods/v3');
         $section = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section'))[0];
+        
         if (is_null($section)){
             $mods_root = $this->xpath->query('//mods:mods')[0];
             $section = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_section_name'));
@@ -378,7 +379,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             $section->appendChild($data_uri);
         }
         else{
-            $data_uris = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_section'));
+            $data_uris = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_tag'));
             foreach ($data_uris as $uri){
                 if (strpos($uri, $data_doi) !== false){
                     return $this;
