@@ -302,7 +302,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         $references = $this->xpath->query(variable_get('lib4ri_pub_db_fund_refs_section_xpath_query'))[0];
         if (is_null($references)){
             $extension = $this->xpath->query('//mods:mods/mods:extension')[0];
-            if (is_null($estension)){
+            if (is_null($extension)){
                 $mods_root = $this->xpath->query('//mods:mods')[0];
                 $extension = $this->dom->createElement('extension');
                 $mods_root->appendChild($extension);
