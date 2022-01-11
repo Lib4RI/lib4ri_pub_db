@@ -76,6 +76,7 @@
 			</part>
   		</relatedItem>
 				<note type="quality_control_ID">cro</note>
+		<extension/>
 		</mods>
 	</xsl:template>
 </xsl:stylesheet>
