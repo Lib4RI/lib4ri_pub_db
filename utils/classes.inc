@@ -117,6 +117,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                 }
                 
                 $affil_search = 1;
+                $no_affil = 0;
                 $auth_data = get_authors_data_from_name($g_name, $f_name);
                 
                 if (sizeof($auth_data) > 1){
@@ -131,7 +132,12 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                     $affil_search = 0;
                     $this->setMessage('No matches for auhor '.$g_name.' '.$f_name, 'warning');
                 }
-                                                
+                if (is_null($auth_data[0]['group'])){
+                    $this->setMessage('No affiliation found for author '.$g_name.' '.$f_name, 'warning');
+                    $affil_search = 0;
+                    $no_affil = 1;
+                }
+                
                 $elem = $this->dom->createElement('fullName',$auth_data[0]['std_name']);
                 $elem2 = $this->dom->createElement('nameIdentifier',$auth_data[0]['pid']);
                 $elem2->setAttribute('type','authorId');
@@ -150,6 +156,12 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
                     
                     $elem_group = $this->dom->createElement('affiliation',$unit_name);
 //                    $elem_group->setAttribute('type','group');
+                    $section->appendChild($elem_group);
+                }
+                
+                if ($no_affil){
+                    $elem_group = $this->dom->createElement('affiliation','No match');
+                    //                    $elem_group->setAttribute('type','group');
                     $section->appendChild($elem_group);
                 }
                 
