@@ -369,6 +369,16 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         $research_data_enrich_class = variable_get('lib4ri_pub_db_resdata_enrich_class');
         $res_data_fetcher = new $research_data_enrich_class();
         $res_data_fetcher->setDoi($this->ids['doi']);
+        $relation_types = explode(',', trim(variable_get('lib4ri_pub_db_resdata_enrich_relations', 'IsSupplementTo')));
+        foreach ($relation_types as $type){
+            $res_data_fetcher->pushRelationType(trim($type));
+        }
+        
+        $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
+        foreach ($publishers as $publisher){
+            $res_data_fetcher->pushPublisher(trim($publisher));
+        }
+        
         $data_doi = @$res_data_fetcher->serve()->getProcessedArray()[0]['item']['doi'];
         if (strlen($data_doi) == 0){
             return $this;
