@@ -505,3 +505,44 @@ function lib4ri_pub_db_unspace_name_given( $nameGiven ) {
     }
     return str_replace("  "," ",trim($given) );
 }
+
+function lib4ri_pub_db_res_data_filter_publisher($dom, $params){
+    $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
+    $xpath = new DOMXPath($dom);
+    $items = $xpath->query('//results/item');
+    foreach($items as $item){
+        $found = false;
+        foreach($publishers as $publisher){
+            if (strpos(trim($publisher), $item->getElementsByTagName("publisher")->item(0)->nodeValue) !== false){
+                $found = true;
+                break;
+            }
+        }
+        if($found == false){
+            $item->parentNode->removeChild($item);
+        }
+    }
+    
+    return $dom;
+}
+
+function lib4ri_pub_db_res_data_filter_relation_type($dom, $params){
+    $relation_types = explode(',', trim(variable_get('lib4ri_pub_db_resdata_enrich_relations', 'IsSupplementTo')));
+    $xpath = new DOMXPath($dom);
+    $items = $xpath->query('//results/item/relatedIdentifiers/item');
+    foreach($items as $item){
+        $found = false;
+        foreach($relation_types as $type){
+            if (strpos(trim($type), $item->getElementsByTagName("relationType")->item(0)->nodeValue) !== false){
+                $found = true;
+                break;
+            }
+        }
+        if($found == false){
+            $item->parentNode->removeChild($item);
+        }
+    }
+    
+    
+    return $dom;
+}

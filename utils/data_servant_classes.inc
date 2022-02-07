@@ -261,3 +261,27 @@ class Lib4riProceedingsPaperScopus2ModsServant extends Lib4riScopus2ModsServant{
 class PsiProceedingsPaperScopus2ModsServant extends Lib4riProceedingsPaperScopus2ModsServant{
     protected $xslt = 'psi-proceedings-paper-scopus2mods.xslt';
 }
+
+class Lib4riDataCiteDoisServant extends DataCiteDoisServant{
+    /**
+     * Constructor.
+     */
+    public function __construct() {
+        parent::__construct();
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_res_data_filter_relation_type',
+            'source' => '',
+            'params' => array(
+                )  
+            )
+        );
+        $this->processor->addSteps(array('type' => 'callback',
+            'rule' => 'lib4ri_pub_db_res_data_filter_publisher',
+            'source' => '',
+            'params' => array(
+                )
+            )
+        );
+        
+    }
+}
