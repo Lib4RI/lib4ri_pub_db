@@ -378,12 +378,17 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         foreach ($publishers as $publisher){
             $res_data_fetcher->pushPublisher(trim($publisher));
         }
+
         
-        $data_doi = @$res_data_fetcher->serve()->getProcessedArray()[0]['item']['doi'];
-        if (strlen($data_doi) == 0){
+        $data_dois = @$res_data_fetcher->serve()->getProcessedDom()[0]->getElementsByTagName("doi");
+        if ($data_dois->length < 1){
             return $this;
         }
         
+        $fetched_dois = [];
+        foreach ($data_dois as $data_doi){
+            array_push($fetched_dois, $data_doi->nodeValue);
+        }
         
         $this->xpath = new DOMXPath($this->dom);
         $this->xpath->registerNamespace('mods', 'http://loc.gov/mods/v3');
@@ -394,24 +399,19 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             $section = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_section_name'));
             $section->setAttribute(variable_get('lib4ri_pub_db_resdata_section_attribute_label'),variable_get('lib4ri_pub_db_resdata_section_attribute_value'));
             $mods_root->appendChild($section);
-            
-            $data_uri = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_tag_name'));
-            $data_uri->setAttribute(variable_get('lib4ri_pub_db_resdata_tag_attribute_label'),variable_get('lib4ri_pub_db_resdata_tag_attribute_value'));
-            $data_uri->nodeValue = 'https://doi.org/'.$data_doi; 
-            $section->appendChild($data_uri);
+            $mods_dois = [];
         }
         else{
-            $data_uris = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_tag'));
-            foreach ($data_uris as $uri){
-                if (strpos($uri, $data_doi) !== false){
-                    return $this;
-                }
-            }
-            $this->enriched['research_data'] = TRUE;
+            $mods_dois = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_tag'));
+        }
+        
+        $dois_to_add = array_diff($fetched_dois, $mods_dois);
+        foreach($dois_to_add as $doi){
             $data_uri = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_tag_name'));
             $data_uri->setAttribute(variable_get('lib4ri_pub_db_resdata_tag_attribute_label'),variable_get('lib4ri_pub_db_resdata_tag_attribute_value'));
-            $data_uri->nodeValue = 'https://doi.org/'.$data_doi;
+            $data_uri->nodeValue = 'https://doi.org/'.$doi;
             $section->appendChild($data_uri);
+            $this->enriched['research_data'] = TRUE;
         }
         
         return $this;
