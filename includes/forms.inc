@@ -550,6 +550,13 @@ function lib4ri_pub_db_admin_form() {
         '#required' => FALSE,
     );
 
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_enrich_excl_relations'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Research data enrichment - Datacite <i>excluded</i> relation types (comma separated)'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_enrich_excl_relations', 'IsObsoletedBy, IsPartOf'),
+        '#required' => FALSE,
+    );
+    
     $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_enrich_publishers'] = array(
         '#type' => 'textarea',
         '#title' => t('Research data enrichment - Datacite publishers (one per line)'),
