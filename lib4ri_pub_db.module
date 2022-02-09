@@ -1,4 +1,7 @@
 <?php
+/** TEMPORARY **/
+module_load_include('inc', 'lib4ri_pub_db', 'utils/data_servant_classes');
+/*********************/
 
 function lib4ri_pub_db_use_this_collection($url){
     $collections = array_map('trim',explode(',',variable_get('lib4ri_pub_db_excl_collections')));
@@ -407,6 +410,21 @@ function lib4ri_pub_db_menu() {
         'file' => 'includes/forms.inc',
     );
     
+    /** TEMPORARY **/
+    $items['admin/islandora/lib4ri_pub_db/datacite/fetched'] = array(
+        'page callback' => 'lib4ri_pub_db_datacite_fetched',
+        'access arguments' => array('administer site configuration'),
+        'type' => MENU_CALLBACK,
+        //         'access arguments' => array(ISLANDORA_ADD_DS, 2),
+    );
+    
+    $items['admin/islandora/lib4ri_pub_db/datacite/processed'] = array(
+        'page callback' => 'lib4ri_pub_db_datacite_processed',
+        'access arguments' => array('search islandora solr'),
+        'type' => MENU_CALLBACK,
+        //         'access arguments' => array(ISLANDORA_ADD_DS, 2),
+    );
+    /***********************************/
     return $items;
 }
 
@@ -420,3 +438,38 @@ function lib4ri_pub_db_is_doi_in_collection($samedoiobjs, $collections) {
     return FALSE;
     
 }
+
+/** TEMPORARY **/
+function lib4ri_pub_db_datacite_fetched($doi1 = NULL, $doi2 = NULL, $doi3 = NULL) {
+    $doi = rtrim($doi1.'/'.$doi2.'/'.$doi3, '/');
+    $serv = lib4ri_pub_db_datacite($doi);
+    
+    echo($serv->getFetchedXML()[0]);
+    module_invoke_all('exit');
+    exit();
+}
+
+function lib4ri_pub_db_datacite_processed($doi1 = NULL, $doi2 = NULL, $doi3 = NULL) {
+    $doi = rtrim($doi1.'/'.$doi2.'/'.$doi3, '/');
+    $serv = lib4ri_pub_db_datacite($doi);
+    
+    echo($serv->getProcessedXML()[0]);
+    module_invoke_all('exit');
+    exit();
+}
+
+function lib4ri_pub_db_datacite($doi) {
+    $serv = new Lib4riDataCiteDoisServant();
+    $serv->setDoi($doi);
+    $serv->pushRelationType('IsSupplementTo');
+    $serv->pushExcludeRelationType('IsObsoletedBy');
+    $serv->pushExcludeRelationType('IsPartOf');
+    $serv->pushPublisher('Eawag: Swiss Federal Institute of Aquatic Science and Technology');
+    $serv->pushPublisher('PANGAEA - Data Publisher for Earth & Environmental Science');
+    $serv->pushPublisher('HEPData');
+    $serv->serve();
+    return $serv;
+    //var_dump($serv->serve()->getProcessedXML()[0]);
+    
+}
+/***********************************/
