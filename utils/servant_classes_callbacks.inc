@@ -517,6 +517,11 @@ function lib4ri_pub_db_res_data_filter_publisher($dom, $params){
                 $found = true;
                 break;
             }
+            else{
+                if (function_exists('lib4ri_pub_db_res_data_filter_publisher_'.$publisher)){
+                    
+                }
+            }
         }
         if($found == false){
             $item->parentNode->removeChild($item);
@@ -546,3 +551,4 @@ function lib4ri_pub_db_res_data_filter_relation_type($dom, $params){
     
     return $dom;
 }
+

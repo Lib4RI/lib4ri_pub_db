@@ -6,3 +6,61 @@ function lib4ri_pub_db_install() {
     ->condition('name', 'lib4ri_staged_ingest', '=')
     ->execute();
 }
+
+/**
+ * Implements hook_schema().
+ */
+function protein_db_schema() {    
+    $schema['lib4ri_pub_db_data_publishers_conf'] = array(
+        'description' => '-',
+        'fields' => array(
+            'id' => array(
+                'description' => 'key',
+                'type' => 'serial',
+                'unsigned' => TRUE,
+                'not null' => TRUE
+            ),
+            'label' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+            ),
+            'publisher_string' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+            ),
+            'allowed_rel_types' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+            ),
+            'forbidden_rel_types' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+            ),
+            'function' => array(
+                'type' => 'varchar',
+                'length' => 255,
+                'default' => '',
+            ),
+            'active' => array(
+                'type' => 'int',
+                'unsigned' => TRUE,
+                'size' => 'small',
+                'not null' => TRUE,
+                'default' => '1',
+            ),
+        ),
+        'unique keys' => array(
+            'id' => array('id')
+        ),
+        'primary key' => array(
+            'id'
+        )
+    );
+    
+    
+    return $schema;
+}

@@ -373,6 +373,11 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         foreach ($relation_types as $type){
             $res_data_fetcher->pushRelationType(trim($type));
         }
+
+        $relation_types_excl = explode(',', trim(variable_get('lib4ri_pub_db_resdata_enrich_excl_relations', 'IsObsoletedBy, IsPartOf')));
+        foreach ($relation_types as $type){
+            $res_data_fetcher->pushRelationType(trim($type));
+        }
         
         $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
         foreach ($publishers as $publisher){

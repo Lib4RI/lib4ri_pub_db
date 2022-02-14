@@ -3,7 +3,7 @@ define('LIB4RI_PSI_AUTHORS_GROUPS_TABLE', 'lib4ri_psi_authors_groups');
 define('LIB4RI_PSI_AUTHORS_SECTIONS_TABLE', 'lib4ri_psi_authors_sections');
 define('LIB4RI_PSI_AUTHORS_DEPARTMENTS_TABLE', 'lib4ri_psi_authors_departments');
 define('LIB4RI_PSI_AUTHORS_DIVISIONS_TABLE', 'lib4ri_psi_authors_divisions');
-
+define('LIB4RI_PUB_DB_DATA_PUBLISHERS_TABLE', 'lib4ri_pub_db_data_publishers_conf');
 
 function get_authors_data_from_name($g_name, $f_name){
     $family_name_search = variable_get('lib4ri_pub_db_family_name_solr_search_field');
@@ -146,4 +146,54 @@ function lib4ri_pub_db_get_division_from_id($id){
     }
     return $name;
     
+}
+
+function lib4ri_pub_db_get_data_publishers(){
+    $res = db_select(LIB4RI_PUB_DB_DATA_PUBLISHERS_TABLE, 'f')
+    ->fields('f', array('id', 'label', 'publisher_string', 'allowed_rel_types','forbidden_rel_types','function', 'active'));
+    
+    if ($active == TRUE){
+        $res=$res->condition('active', 1);
+    }
+    
+    $res = $res->execute();
+    
+    $publishers = [];
+    foreach ($res as $publisher) {
+        array_push($publishers, $publisher);
+    }
+    return $publishers;
+}
+
+function lib4ri_pub_db_insert_data_publisher($data){
+    db_insert(LIB4RI_PUB_DB_DATA_PUBLISHERS_TABLE)
+    ->fields(array(
+        'label' => $data['label'],
+        'publisher_string' => $data['publisher_string'],
+        'allowed_rel_types' => $data['allowed_rel_types'],
+        'forbidden_rel_types' => $data['forbidden_rel_types'],
+        'function' => $data['function'],
+        'active' => $data['active'],
+    ))
+    ->execute();
+}
+
+function lib4ri_pub_db_update_data_publisher($data){
+    db_update(LIB4RI_PUB_DB_DATA_PUBLISHERS_TABLE)
+    ->fields(array(
+        'label' => $data['label'],
+        'publisher_string' => $data['publisher_string'],
+        'allowed_rel_types' => $data['allowed_rel_types'],
+        'forbidden_rel_types' => $data['forbidden_rel_types'],
+        'function' => $data['function'],
+        'active' => $data['active'],
+    ))
+    ->condition('id', $data['id'], '=')
+    ->execute();
+}
+
+function lib4ri_pub_db_delete_data_publisher($form_id){
+    db_delete(LIB4RI_PUB_DB_DATA_PUBLISHERS_TABLE)
+    ->condition('id', $form_id)
+    ->execute();
 }

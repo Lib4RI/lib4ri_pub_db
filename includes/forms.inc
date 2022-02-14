@@ -557,6 +557,12 @@ function lib4ri_pub_db_admin_form() {
         '#required' => FALSE,
     );
     
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_enrich_publishers_conf'] = array(
+        '#type' => 'markup',
+        '#markup' => t('<a href="config/publishers">Research data enrichment - Individual publisher conf</a>'),
+    );
+    
+    
     $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_section'] = array(
         '#type' => 'textfield',
         '#title' => t('MODS XPATH research data section query'),
@@ -614,4 +620,161 @@ function lib4ri_pub_db_admin_form() {
     );
     
     return system_settings_form($form);
+}
+
+function lib4ri_pub_db_data_publishers_form() {
+    $form = [];
+    return $form;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+
+function lib4ri_pub_db_form_lib4ri_pub_db_data_publishers_form_alter(&$form, &$form_state) {
+    //     $form = [];
+    //     return $form;
+    module_load_include('inc', 'lib4ri_pub_db', 'includes/functions');
+    $publishers = lib4ri_pub_db_get_data_publishers();
+    
+    foreach ($publishers as $publisher){
+        $form[$publisher->id.'_set'] = array(
+            '#title' => t($publisher->label),
+            '#type' => 'fieldset',
+            '#collapsible' => TRUE,
+            '#collapsed' => TRUE,
+        );
+        $form[$publisher->id.'_set'][$publisher->id.'_label'] = array(
+            '#title' => t('Label'),
+            '#default_value' => t($publisher->label),
+            '#type' => 'textfield',
+        );
+        $form[$publisher->id.'_set'][$publisher->id.'_publisher_string'] = array(
+            '#title' => t('Publisher string'),
+            '#default_value' => t($publisher->publisher_string),
+            '#type' => 'textfield',
+        );
+        $form[$publisher->id.'_set'][$publisher->id.'_allowed_rel_types'] = array(
+            '#title' => t('Allowed relation types'),
+            '#default_value' => t($publisher->allowed_rel_types),
+            '#type' => 'textfield',
+        );
+        $form[$publisher->id.'_set'][$publisher->id.'_forbidden_rel_types'] = array(
+            '#title' => t('Excluded relation types'),
+            '#default_value' => t($publisher->forbidden_rel_types),
+            '#type' => 'textfield',
+        );
+        $form[$publisher->id.'_set'][$publisher->id.'_function'] = array(
+            '#title' => t('Additional processing function'),
+            '#default_value' => t($publisher->function),
+            '#type' => 'textfield',
+        );
+        $form[$publisher->id.'_set'][$publisher->id.'_active'] = array(
+            '#title' => t('Active'),
+            '#default_value' => $publisher->active,
+            '#type' => 'checkbox',
+        );
+        $form[$publisher->id.'_set'][$publisher->id.'_update'] = array(
+            '#name' => $source->id.'_update',
+            '#type' => 'submit',
+            '#value' => t('Update'),
+        );
+        $form[$publisher->id.'_set'][$publisher->id.'_delete'] = array(
+            '#name' => $source->id.'_delete',
+            '#type' => 'submit',
+            '#value' => t('Delete'),
+        );
+    }
+    /****************************************************************************/
+    $form['new_set'] = array(
+        '#title' => t('Insert a new publisher'),
+        '#type' => 'fieldset',
+        '#collapsible' => TRUE,
+        '#collapsed' => FALSE,
+    );
+    
+    $form['new_set']['new_label'] = array(
+        '#title' => t('Label'),
+        '#default_value' => '',
+        '#type' => 'textfield',
+        '#required' => FALSE,
+    );
+    
+    $form['new_set']['new_publisher_string'] = array(
+        '#title' => t('Publisher string'),
+        '#default_value' => '',
+        '#type' => 'textfield',
+    );
+    $form['new_set']['new_allowed_rel_types'] = array(
+        '#title' => t('Allowed relation types'),
+        '#default_value' => '',
+        '#type' => 'textfield',
+    );
+    $form['new_set']['new_forbidden_rel_types'] = array(
+        '#title' => t('Excluded relation types'),
+        '#default_value' => '',
+        '#type' => 'textfield',
+    );
+    $form['new_set']['new_function'] = array(
+        '#title' => t('Additional processing function'),
+        '#default_value' => '',
+        '#type' => 'textfield',
+    );
+    $form['new_set']['new_active'] = array(
+        '#title' => t('Active'),
+        '#default_value' => $source->active,
+        '#type' => 'checkbox',
+    );
+    $form['new_set']['insert_new'] = array(
+        '#type' => 'submit',
+        '#value' => t('Insert'),
+    );
+    
+    return $form;
+}
+
+function lib4ri_pub_db_data_publishers_form_validate($form, &$form_state) {
+    if (empty($form_state['values']['new_label']) && ($form_state['clicked_button']['#parents'][0] == 'insert_new')){
+        form_set_error('new_label', t('Label is required'));
+    }
+    if (empty($form_state['values']['new_publisher_string']) && ($form_state['clicked_button']['#parents'][0] == 'insert_new')){
+        form_set_error('new_publisher_string', t('Publisher string is required'));
+    }
+    
+}
+
+function lib4ri_pub_db_data_publishers_form_submit(&$form, &$form_state) {
+    module_load_include('inc', 'protein_db', 'includes/queries');
+    
+    if ($form_state['clicked_button']['#parents'][0] == 'insert_new'){
+        lib4ri_pub_db_insert_data_publisher(array('id' => $form_state['values']['new_id'],
+            'label' => $form_state['values']['new_label'],
+            'publisher_string' => $form_state['values']['new_publisher_string'],
+            'allowed_rel_types' => $form_state['values']['new_allowed_rel_types'],
+            'forbidden_rel_types' => $form_state['values']['new_forbidden_rel_types'],
+            'function' => $form_state['values']['new_function'],
+            'active' => $form_state['values']['new_active'],
+        ));
+    }
+    
+    if (strpos($form_state['clicked_button']['#parents'][0], '_delete') !== false) {
+        $id = str_replace('_delete', '', $form_state['clicked_button']['#parents'][0]);
+        lib4ri_pub_db_delete_data_publisher($id);
+    }
+    
+    if (strpos($form_state['clicked_button']['#parents'][0], '_update') !== false) {
+        $id = str_replace('_update', '', $form_state['clicked_button']['#parents'][0]);
+        lib4ri_pub_db_update_data_publisher(array(
+            'id' => $id,
+            'label' => $form_state['values'][$id.'_label'],
+            'publisher_string' => $form_state['values'][$id.'_publisher_string'],
+            'allowed_rel_types' => $form_state['values'][$id.'_allowed_rel_types'],
+            'forbidden_rel_types' => $form_state['values'][$id.'_forbidden_rel_types'],
+            'function' => $form_state['values'][$id.'_function'],
+            'active' => $form_state['values'][$id.'_active'],
+        ));
+    }
+    
+    
+    //     drupal_set_message(t($message));
 }
