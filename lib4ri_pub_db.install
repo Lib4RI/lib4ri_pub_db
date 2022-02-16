@@ -10,7 +10,7 @@ function lib4ri_pub_db_install() {
 /**
  * Implements hook_schema().
  */
-function protein_db_schema() {    
+function lib4ri_pub_db_schema() {    
     $schema['lib4ri_pub_db_data_publishers_conf'] = array(
         'description' => '-',
         'fields' => array(
