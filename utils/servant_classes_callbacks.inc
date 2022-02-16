@@ -507,20 +507,45 @@ function lib4ri_pub_db_unspace_name_given( $nameGiven ) {
 }
 
 function lib4ri_pub_db_res_data_filter_publisher($dom, $params){
-    $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
+    module_load_include('inc', 'lib4ri_pub_db', 'includes/functions');
+//    $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
+    $publishers = lib4ri_pub_db_get_data_publishers(TRUE);
     $xpath = new DOMXPath($dom);
     $items = $xpath->query('//results/item');
     foreach($items as $item){
         $found = false;
         foreach($publishers as $publisher){
-            if (strpos(trim($publisher), $item->getElementsByTagName("publisher")->item(0)->nodeValue) !== false){
+            if (strpos(trim($publisher->publisher_string), $item->getElementsByTagName("publisher")->item(0)->nodeValue) !== false){
                 $found = true;
-                break;
-            }
-            else{
-                if (function_exists('lib4ri_pub_db_res_data_filter_publisher_'.$publisher)){
-                    
+                
+                $related_identifiers = $xpath->query("descendant::relatedIdentifiers/item", $item);
+                $allowed_relation_found = FALSE;
+                if (isset($publisher->allowed_rel_types) and $publisher->allowed_rel_types != ''){
+                    $relation_types = explode(',', trim($publisher->allowed_rel_types));
+                    foreach($related_identifiers as $identifier){
+                        if(in_array($identifier->getElementsByTagName("relationType")[0]->nodeValue, $relation_types)){
+                            $allowed_relation_found = TRUE;
+                            break;
+                        }
+                    }
+                    if($allowed_relation_found == FALSE){
+                        $item->parentNode->removeChild($item);
+                    }
                 }
+                
+                if (isset($publisher->forbidden_rel_types) and $publisher->forbidden_rel_types != ''){
+                    $relation_types = explode(',', trim($publisher->forbidden_rel_types));
+                    foreach($related_identifiers as $identifier){
+                        if(in_array($identifier->getElementsByTagName("relationType")[0]->nodeValue, $relation_types)){
+                            $item->parentNode->removeChild($item);
+                        }
+                    }
+                }
+                
+                if (isset($publisher->function) and $publisher->function != ''){
+                    $dom = $publisher->function($dom);
+                }
+                break;
             }
         }
         if($found == false){

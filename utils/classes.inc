@@ -1,6 +1,7 @@
 <?php 
 
 module_load_include('php', 'publication_DB', 'lib/MetaDataServants');
+module_load_include('inc', 'publication_DB', 'includes/functions');
 
 class Lib4riMetaDataIntegrator{
     
@@ -379,9 +380,10 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             $res_data_fetcher->pushRelationType(trim($type));
         }
         
-        $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
+//        $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
+        $publishers = lib4ri_pub_db_get_data_publishers(TRUE);
         foreach ($publishers as $publisher){
-            $res_data_fetcher->pushPublisher(trim($publisher));
+            $res_data_fetcher->pushPublisher(trim($publisher->publisher_string));
         }
 
         

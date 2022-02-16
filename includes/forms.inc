@@ -550,16 +550,16 @@ function lib4ri_pub_db_admin_form() {
         '#required' => FALSE,
     );
     
-    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_enrich_publishers'] = array(
-        '#type' => 'textarea',
-        '#title' => t('Research data enrichment - Datacite publishers (one per line)'),
-        '#default_value' => variable_get('lib4ri_pub_db_resdata_enrich_publishers', ''),
-        '#required' => FALSE,
-    );
+//     $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_enrich_publishers'] = array(
+//         '#type' => 'textarea',
+//         '#title' => t('Research data enrichment - Datacite publishers (one per line)'),
+//         '#default_value' => variable_get('lib4ri_pub_db_resdata_enrich_publishers', ''),
+//         '#required' => FALSE,
+//     );
     
     $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_enrich_publishers_conf'] = array(
         '#type' => 'markup',
-        '#markup' => t('<a href="config/publishers">Research data enrichment - Individual publisher conf</a>'),
+        '#markup' => t('<a href="config/publishers">Research data enrichment - Publishers configuration</a>'),
     );
     
     
@@ -675,12 +675,12 @@ function lib4ri_pub_db_form_lib4ri_pub_db_data_publishers_form_alter(&$form, &$f
             '#type' => 'checkbox',
         );
         $form[$publisher->id.'_set'][$publisher->id.'_update'] = array(
-            '#name' => $source->id.'_update',
+            '#name' => $publisher->id.'_update',
             '#type' => 'submit',
             '#value' => t('Update'),
         );
         $form[$publisher->id.'_set'][$publisher->id.'_delete'] = array(
-            '#name' => $source->id.'_delete',
+            '#name' => $publisher->id.'_delete',
             '#type' => 'submit',
             '#value' => t('Delete'),
         );
@@ -722,7 +722,7 @@ function lib4ri_pub_db_form_lib4ri_pub_db_data_publishers_form_alter(&$form, &$f
     );
     $form['new_set']['new_active'] = array(
         '#title' => t('Active'),
-        '#default_value' => $source->active,
+        '#default_value' => '1',
         '#type' => 'checkbox',
     );
     $form['new_set']['insert_new'] = array(
