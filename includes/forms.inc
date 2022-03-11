@@ -618,6 +618,13 @@ function lib4ri_pub_db_admin_form() {
         '#default_value' => variable_get('lib4ri_pub_db_resdata_tag_attribute_value', 'uri'),
         '#required' => FALSE,
     );
+
+    $form['lib4ri_pub_tabs']['lib4ri_pub_resdata']['lib4ri_pub_db_resdata_solr_doi_field'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Research data tag attribute value'),
+        '#default_value' => variable_get('lib4ri_pub_db_resdata_solr_doi_field', 'mods_identifier_doi_ms'),
+        '#required' => FALSE,
+    );
     
     return system_settings_form($form);
 }
