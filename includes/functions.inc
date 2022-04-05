@@ -197,3 +197,4 @@ function lib4ri_pub_db_delete_data_publisher($form_id){
     ->condition('id', $form_id)
     ->execute();
 }
+

@@ -367,59 +367,26 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
             return $this;
         }
         
-        $research_data_enrich_class = variable_get('lib4ri_pub_db_resdata_enrich_class');
-        $res_data_fetcher = new $research_data_enrich_class();
-        $res_data_fetcher->setDoi($this->ids['doi']);
-        $relation_types = explode(',', trim(variable_get('lib4ri_pub_db_resdata_enrich_relations', 'IsSupplementTo')));
-        foreach ($relation_types as $type){
-            $res_data_fetcher->pushRelationType(trim($type));
-        }
-
-        $relation_types_excl = explode(',', trim(variable_get('lib4ri_pub_db_resdata_enrich_excl_relations', 'IsObsoletedBy, IsPartOf')));
-        foreach ($relation_types_excl as $type){
-            $res_data_fetcher->pushExcludeRelationType(trim($type));
-        }
+        $search_fetcher = new Lib4riReserchDataChecker();
+        $search_fetcher->setDom($this->dom)
+                       ->setSearchFethcer(variable_get('lib4ri_pub_db_resdata_enrich_class'))
+                       ->setSearchDoi($this->ids['doi'])
+                       ->setSearchQuery()
+                       ->searchFetch();
         
-//        $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
-        $publishers = lib4ri_pub_db_get_data_publishers(TRUE);
-        foreach ($publishers as $publisher){
-            $res_data_fetcher->pushPublisher(trim($publisher->publisher_string));
-        }
-
-        
-        $data_dois = @$res_data_fetcher->serve()->getProcessedDom()[0]->getElementsByTagName("doi");
-        if ($data_dois->length < 1){
+        if ($search_fetcher->getFetchedPackageDois()->length < 1){
             return $this;
         }
-        
-        $fetched_dois = [];
-        foreach ($data_dois as $data_doi){
-            array_push($fetched_dois, $data_doi->nodeValue);
+                        
+        $search_fetcher->IsDataSectionInMods(true);
+        foreach ($search_fetcher->getFetchedPackageDois() as $data_doi){
+            if(!$search_fetcher->isDatapackageInMods($data_doi->nodeValue)){
+                $search_fetcher->addDatapackageToMods($data_doi->nodeValue);
+                $this->enriched['research_data'] = TRUE;
+            }
         }
         
-        $this->xpath = new DOMXPath($this->dom);
-        $this->xpath->registerNamespace('mods', 'http://loc.gov/mods/v3');
-        $section = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section'))[0];
-        
-        if (is_null($section)){
-            $mods_root = $this->xpath->query('//mods:mods')[0];
-            $section = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_section_name'));
-            $section->setAttribute(variable_get('lib4ri_pub_db_resdata_section_attribute_label'),variable_get('lib4ri_pub_db_resdata_section_attribute_value'));
-            $mods_root->appendChild($section);
-            $mods_dois = [];
-        }
-        else{
-            $mods_dois = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_tag'));
-        }
-        
-        $dois_to_add = array_diff($fetched_dois, $mods_dois);
-        foreach($dois_to_add as $doi){
-            $data_uri = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_tag_name'));
-            $data_uri->setAttribute(variable_get('lib4ri_pub_db_resdata_tag_attribute_label'),variable_get('lib4ri_pub_db_resdata_tag_attribute_value'));
-            $data_uri->nodeValue = 'https://doi.org/'.$doi;
-            $section->appendChild($data_uri);
-            $this->enriched['research_data'] = TRUE;
-        }
+        $this->dom = $search_fetcher->getDom();
         
         return $this;
     }
@@ -1037,4 +1004,139 @@ class ResearchDataMetaDataEnricher extends Lib4riMetaDataEnricher{
         $this->checkResearchData();
     }
     
+}
+
+class Lib4riReserchDataChecker extends MetaDataAbstract{
+
+    protected $dom;
+    protected $xpath;
+    protected $messages = [];
+    protected $data_section = null;
+    protected $search_fetcher;
+    protected $data_dois;
+    
+    /**
+     * Constructor.
+     */
+    
+    public function __construct() {
+     
+        
+    }
+        
+    protected function setMessage($message, $type = 'status'){
+        array_push($this->messages, array('message' => $message, 'type' => $type));
+    }
+    
+    public function getMessages(){
+        return $this->messages;
+    }
+    
+    public function setDom($dom){
+        $this->dom = $dom;
+        $this->xpath = new DOMXPath($this->dom);
+        return $this;
+    }
+    
+    public function setSearchFethcer($fetcher){
+        $this->search_fetcher = new $fetcher();
+        
+        return $this;
+    }
+    
+    public function setSearchDoi($doi){
+        $this->search_fetcher->setDoi($doi);
+        
+        return $this;
+    }
+    
+    public function setSearchQuery(){
+        $relation_types = explode(',', trim(variable_get('lib4ri_pub_db_resdata_enrich_relations', 'IsSupplementTo')));
+        foreach ($relation_types as $type){
+            $this->search_fetcher->pushRelationType(trim($type));
+        }
+        
+        $relation_types_excl = explode(',', trim(variable_get('lib4ri_pub_db_resdata_enrich_excl_relations', 'IsObsoletedBy, IsPartOf')));
+        foreach ($relation_types_excl as $type){
+            $this->search_fetcher->pushExcludeRelationType(trim($type));
+        }
+        
+        //        $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
+        $publishers = lib4ri_pub_db_get_data_publishers(TRUE);
+        foreach ($publishers as $publisher){
+            $this->search_fetcher->pushPublisher(trim($publisher->publisher_string));
+        }
+        
+        return $this;
+    }
+    
+    public function searchFetch(){
+        $this->data_dois = @$this->search_fetcher->serve()->getProcessedDom()[0]->getElementsByTagName("doi");
+        
+        return $this;
+    }
+    
+    public function getDataSection(){
+        return $this->data_section;
+    }
+    
+    public function getFetchedPackageDois(){
+        return $this->data_dois;
+    }
+        
+    public function IsDataSectionInMods($create = false){
+        
+        $created = false;
+        $section_in_mods = false;
+        
+        $this->data_section = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section'))[0];
+
+        if (is_null($this->data_section)){
+            if($create){
+                $this->mods_root = $this->xpath->query('//mods:mods')[0];
+                $this->data_section = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_section_name'));
+                $this->data_section->setAttribute(variable_get('lib4ri_pub_db_resdata_section_attribute_label'),variable_get('lib4ri_pub_db_resdata_section_attribute_value'));
+                $this->mods_root->appendChild($this->data_section);
+                $created = true;
+            }
+        }
+        else{
+            $section_in_mods = true;
+        }
+        
+        return array($section_in_mods, $created);
+        
+    }
+    
+    public function isDatapackageInMods($doi){
+        
+        if (!is_null($this->data_section)){
+            $mods_dois = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_tag'));
+            if (in_array($doi, $mods_dois)){
+                return true;
+            }
+        }
+        
+        return false;
+        
+    }
+    
+    function addDatapackageToMods($doi){
+        //    $package_section = lib4ri_pub_db_fetch_datapackage_metadata($doi);
+        
+        if (is_null($this->data_section)){
+            return false;
+        }
+        
+        $data_uri = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_tag_name'));
+        $data_uri->setAttribute(variable_get('lib4ri_pub_db_resdata_tag_attribute_label'),variable_get('lib4ri_pub_db_resdata_tag_attribute_value'));
+        $data_uri->nodeValue = 'https://doi.org/'.$doi;
+        $this->data_section->appendChild($data_uri);
+        
+        return $this;
+    }
+    
+    public function FetchDatapackageMetadata($doi){
+        
+    }
 }
