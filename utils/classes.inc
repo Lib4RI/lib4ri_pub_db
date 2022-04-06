@@ -1109,12 +1109,13 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
     }
     
     public function isDatapackageInMods($doi){
-        
-        if (!is_null($this->data_section)){
-            $mods_dois = $this->xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_tag'));
-            if (in_array($doi, $mods_dois)){
-                return true;
-            }
+        function getValue($node){
+            return $node->nodeValue;
+        }
+
+        $mods_dois = array_map('getValue', iterator_to_array($this->xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_tag'))));
+        if((in_array('https://doi.org/'.$datadoi, $mods_dois)) || (in_array($datadoi, $mods_dois))){
+            return true;
         }
         
         return false;
@@ -1122,12 +1123,7 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
     }
     
     function addDatapackageToMods($doi){
-        //    $package_section = lib4ri_pub_db_fetch_datapackage_metadata($doi);
-        
-        if (is_null($this->data_section)){
-            return false;
-        }
-        
+               
         $data_uri = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_tag_name'));
         $data_uri->setAttribute(variable_get('lib4ri_pub_db_resdata_tag_attribute_label'),variable_get('lib4ri_pub_db_resdata_tag_attribute_value'));
         $data_uri->nodeValue = 'https://doi.org/'.$doi;
@@ -1136,7 +1132,7 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
         return $this;
     }
     
-    public function FetchDatapackageMetadata($doi){
+    public function fetchDatapackageMetadata($doi){
         
     }
 }
