@@ -1,6 +1,7 @@
 <?php 
 
 module_load_include('php', 'publication_DB', 'lib/MetaDataServants');
+module_load_include('php', 'publication_DB', 'lib/MetaDataFetchers');
 module_load_include('inc', 'publication_DB', 'includes/functions');
 
 class Lib4riMetaDataIntegrator{
@@ -1084,7 +1085,7 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
         return $this->data_dois;
     }
         
-    public function IsDataSectionInMods($create = false){
+    public function IsDataSectionInModsOld($create = false){
         
         $created = false;
         $section_in_mods = false;
@@ -1107,14 +1108,37 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
         return array($section_in_mods, $created);
         
     }
+
+    public function IsDataSectionInMods($create = false){
+        
+        $created = false;
+        $section_in_mods = false;
+        
+        $this->data_section = $this->xpath->query('//mods:mods/mods:extension')[0];
+        
+        if (is_null($this->data_section)){
+            if($create){
+                $this->mods_root = $this->xpath->query('//mods:mods')[0];
+                $this->data_section = $this->dom->createElement('extension');
+                $this->mods_root->appendChild($this->data_section);
+                $created = true;
+            }
+        }
+        else{
+            $section_in_mods = true;
+        }
+        
+        return array($section_in_mods, $created);
+        
+    }
     
-    public function isDatapackageInMods($doi){
+    public function isDatapackageInModsOld($doi){
         function getValue($node){
             return $node->nodeValue;
         }
 
         $mods_dois = array_map('getValue', iterator_to_array($this->xpath->query(variable_get('lib4ri_pub_db_resdata_section').variable_get('lib4ri_pub_db_resdata_tag'))));
-        if((in_array('https://doi.org/'.$datadoi, $mods_dois)) || (in_array($datadoi, $mods_dois))){
+        if((in_array('https://doi.org/'.$doi, $mods_dois)) || (in_array($doi, $mods_dois))){
             return true;
         }
         
@@ -1122,7 +1146,22 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
         
     }
     
-    function addDatapackageToMods($doi){
+    private function getValue($node){
+        return $node->nodeValue;
+    }
+    
+    public function isDatapackageInMods($doi){
+        $this->xpath->registerNamespace('r', 'http://schema.datacite.org/meta/kernel-4.3/metadata.xsd');
+        $mods_dois = array_map(array($this, 'getValue'), iterator_to_array($this->xpath->query('//mods:mods/mods:extension/resource/identifier [@type="DOI"]')));
+        if((in_array($doi, $mods_dois))){
+            return true;
+        }
+        
+        return false;
+        
+    }
+    
+    public function addDatapackageToModsOld($doi){
                
         $data_uri = $this->dom->createElement(variable_get('lib4ri_pub_db_resdata_tag_name'));
         $data_uri->setAttribute(variable_get('lib4ri_pub_db_resdata_tag_attribute_label'),variable_get('lib4ri_pub_db_resdata_tag_attribute_value'));
@@ -1132,7 +1171,21 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
         return $this;
     }
     
-    public function fetchDatapackageMetadata($doi){
+    public function addDatapackageToMods($doi){
+        $xml = $this->fetchDatapackageMetadata($doi);
+        $xml_dom = new DOMDocument();
+        $xml_dom->loadXML($xml);
+//        $xpath = new DOMXPath($xml_dom);
+        $resource = $xml_dom->getElementsByTagName('resource')[0];
+        $resource = $this->dom->importNode($resource, true);
+        $this->data_section->appendChild($resource);
         
+        return $this;
+    }
+    
+    public function fetchDatapackageMetadata($doi){
+        $fetch = new DataCitePackageFetcher();
+        
+        return  base64_decode($fetch->setDoi($doi)->fetch()->getArray()['data']['attributes']['xml']);
     }
 }
