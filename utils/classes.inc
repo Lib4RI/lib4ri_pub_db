@@ -1151,9 +1151,9 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
     }
     
     public function isDatapackageInMods($doi){
-        $this->xpath->registerNamespace('r', 'http://schema.datacite.org/meta/kernel-4.3/metadata.xsd');
-        $mods_dois = array_map(array($this, 'getValue'), iterator_to_array($this->xpath->query('//mods:mods/mods:extension/resource/identifier [@type="DOI"]')));
-        if((in_array($doi, $mods_dois))){
+//        $this->xpath->registerNamespace('r', 'http://schema.datacite.org/meta/kernel-4.3/metadata.xsd');
+        $mods_dois = array_map('strtolower',array_map(array($this, 'getValue'), iterator_to_array($this->xpath->query('//mods:mods/mods:extension/mods:dataciteResource/mods:identifier [@identifierType="DOI"]'))));
+        if((in_array(strtolower($doi), $mods_dois))){
             return true;
         }
         
@@ -1177,13 +1177,28 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
         $xml_dom->loadXML($xml);
 //        $xpath = new DOMXPath($xml_dom);
         $resource = $xml_dom->getElementsByTagName('resource')[0];
+        
         $resource = $this->dom->importNode($resource, true);
+        $resource = $this->domRenameElement($resource, 'dataciteResource');
         $this->data_section->appendChild($resource);
         
         return $this;
     }
     
-    public function fetchDatapackageMetadata($doi){
+    protected function domRenameElement($node, $name) {
+        $renamed = $node->ownerDocument->createElement($name);
+        
+        foreach ($node->attributes as $attribute) {
+            $renamed->setAttribute($attribute->nodeName, $attribute->nodeValue);
+        }
+        
+        while ($node->firstChild) {
+            $renamed->appendChild($node->firstChild);
+        }
+        
+        return $node->parentNode->replaceChild($renamed, $node);
+    }
+    protected function fetchDatapackageMetadata($doi){
         $fetch = new DataCitePackageFetcher();
         
         return  base64_decode($fetch->setDoi($doi)->fetch()->getArray()['data']['attributes']['xml']);
