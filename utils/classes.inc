@@ -1152,7 +1152,7 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
     
     public function isDatapackageInMods($doi){
 //        $this->xpath->registerNamespace('r', 'http://schema.datacite.org/meta/kernel-4.3/metadata.xsd');
-        $mods_dois = array_map('strtolower',array_map(array($this, 'getValue'), iterator_to_array($this->xpath->query('//mods:mods/mods:extension/mods:dataciteResource/mods:identifier [@identifierType="DOI"]'))));
+        $mods_dois = array_map('strtolower',array_map(array($this, 'getValue'), iterator_to_array($this->xpath->query('//mods:mods/mods:extension/mods:resource/mods:identifier [@identifierType="DOI"]'))));
         if((in_array(strtolower($doi), $mods_dois))){
             return true;
         }
@@ -1182,7 +1182,7 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
         foreach ($resource->attributes as $attribute) {
             $resource->removeAttribute($attribute->nodeName);
         }
-        $resource = $this->domRenameElement($resource, 'dataciteResource', false);
+//        $resource = $this->domRenameElement($resource, 'dataciteResource', false);
         $this->data_section->appendChild($resource);
 
         return $this;
