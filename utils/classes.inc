@@ -1175,28 +1175,39 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
         $xml = $this->fetchDatapackageMetadata($doi);
         $xml_dom = new DOMDocument();
         $xml_dom->loadXML($xml);
-//        $xpath = new DOMXPath($xml_dom);
+
         $resource = $xml_dom->getElementsByTagName('resource')[0];
-        
+        $resource->removeAttributeNS($resource->getAttributeNode("xmlns")->nodeValue,"");
         $resource = $this->dom->importNode($resource, true);
-        $resource = $this->domRenameElement($resource, 'dataciteResource');
+        foreach ($resource->attributes as $attribute) {
+            $resource->removeAttribute($attribute->nodeName);
+        }
+        $resource = $this->domRenameElement($resource, 'dataciteResource', false);
         $this->data_section->appendChild($resource);
-        
+
         return $this;
     }
     
-    protected function domRenameElement($node, $name) {
+    protected function domRenameElement($node, $name, $attributes = true) {
         $renamed = $node->ownerDocument->createElement($name);
         
+
         foreach ($node->attributes as $attribute) {
             $renamed->setAttribute($attribute->nodeName, $attribute->nodeValue);
         }
+
         
         while ($node->firstChild) {
             $renamed->appendChild($node->firstChild);
         }
         
-        return $node->parentNode->replaceChild($renamed, $node);
+        if (!$attribute){
+            foreach ($renamed->attributes as $attribute) {
+                $renamed->removeAttribute($attribute->nodeName);
+            }
+        }
+        
+        return $renamed;
     }
     protected function fetchDatapackageMetadata($doi){
         $fetch = new DataCitePackageFetcher();
