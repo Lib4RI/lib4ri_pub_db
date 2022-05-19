@@ -1187,7 +1187,7 @@ class Lib4riReserchDataChecker extends MetaDataAbstract{
 
         return $this;
     }
-    
+   
     protected function domRenameElement($node, $name, $attributes = true) {
         $renamed = $node->ownerDocument->createElement($name);
         
