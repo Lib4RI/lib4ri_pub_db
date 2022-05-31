@@ -71,7 +71,7 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         $this->addStdName();
         $this->checkJournal();
         $this->checkFunding();
-        $this->checkResearchData();
+//        $this->checkResearchData();
     }
     
     public function setIds($ids){
@@ -409,7 +409,7 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
         $this->checkJournal();
         $this->addBeamlines();
         $this->checkFunding();
-        $this->checkResearchData();
+//        $this->checkResearchData();
     }
     
     public function addBeamlines(){
