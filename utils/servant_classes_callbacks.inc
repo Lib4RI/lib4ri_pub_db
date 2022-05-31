@@ -543,7 +543,8 @@ function lib4ri_pub_db_res_data_filter_publisher($dom, $params){
                 }
                 
                 if (isset($publisher->function) and $publisher->function != ''){
-                    $dom = $publisher->function($xpath, $item);
+                    $fun = $publisher->function;
+                    $dom = $fun($dom, $xpath, $item);
                 }
                 break;
             }
@@ -577,7 +578,7 @@ function lib4ri_pub_db_res_data_filter_relation_type($dom, $params){
     return $dom;
 }
 
-function discard_appended_version($xpath, $item){
+function hep_discard_appended_version($dom, $xpath, $item){
     $publishers = lib4ri_pub_db_get_data_publishers(TRUE);
     
     
