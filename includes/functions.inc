@@ -148,7 +148,7 @@ function lib4ri_pub_db_get_division_from_id($id){
     
 }
 
-function lib4ri_pub_db_get_data_publishers(){
+function lib4ri_pub_db_get_data_publishers($active = FALSE){
     $res = db_select(LIB4RI_PUB_DB_DATA_PUBLISHERS_TABLE, 'f')
     ->fields('f', array('id', 'label', 'publisher_string', 'allowed_rel_types','forbidden_rel_types','function', 'active'));
     
