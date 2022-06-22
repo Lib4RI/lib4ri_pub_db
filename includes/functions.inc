@@ -119,7 +119,7 @@ function get_authors_historical_affiliation_from_aff_name($group, $year){
     $query->addField('g', 'section', 's_name');
     $query->addField('g', 'department', 'l_name');
     $query->addField('g', 'division', 'd_name');
-    $query->addField('g', 'name', 'g_name');
+    $query->addField('g', 'group_name', 'g_name');
     
     $res = $query->execute();
     $affils = [];
