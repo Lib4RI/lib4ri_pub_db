@@ -5,6 +5,8 @@ define('LIB4RI_PSI_AUTHORS_DEPARTMENTS_TABLE', 'lib4ri_psi_authors_departments')
 define('LIB4RI_PSI_AUTHORS_DIVISIONS_TABLE', 'lib4ri_psi_authors_divisions');
 define('LIB4RI_PUB_DB_DATA_PUBLISHERS_TABLE', 'lib4ri_pub_db_data_publishers_conf');
 
+define('LIB4RI_PSI_AUTHORS_HISTORICAL_TABLE', 'lib4ri_psi_authors_historical');
+
 function get_authors_data_from_name($g_name, $f_name){
     $family_name_search = variable_get('lib4ri_pub_db_family_name_solr_search_field');
     $given_name_search = variable_get('lib4ri_pub_db_given_name_solr_search_field'); //configurable search field
@@ -105,6 +107,28 @@ function get_authors_affiliation_from_aff_name($group){
     $affils[0]->s_name = lib4ri_pub_db_get_section_from_id($affils[0]->s_id);
     $affils[0]->l_name = lib4ri_pub_db_get_department_from_id($affils[0]->l_id);
     $affils[0]->d_name = lib4ri_pub_db_get_division_from_id($affils[0]->d_id);
+    return $affils[0];
+    
+}
+
+function get_authors_historical_affiliation_from_aff_name($group, $year){
+    $query = db_select(LIB4RI_PSI_AUTHORS_HISTORICAL_TABLE, 'g');
+    $query->condition('g.group_name',$group);
+    $query->condition('g.year',$year);
+    $query->addField('g', 'group_id', 'g_id');
+    $query->addField('g', 'section', 's_name');
+    $query->addField('g', 'department', 'l_name');
+    $query->addField('g', 'division', 'd_name');
+    $query->addField('g', 'name', 'g_name');
+    
+    $res = $query->execute();
+    $affils = [];
+    foreach ($res as $affil) {
+        array_push($affils, $affil);
+    }
+    $affils[0]->s_id = '';
+    $affils[0]->l_id = '';
+    $affils[0]->d_id = '';
     return $affils[0];
     
 }

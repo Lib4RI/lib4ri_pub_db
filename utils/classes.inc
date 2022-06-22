@@ -465,8 +465,11 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
     public function addStdName(){
         module_load_include('inc', 'lib4ri_pub_db', 'includes/functions');
         
+        global $user;
+        
         $this->xpath = new DOMXPath($this->dom);
         $sections = $this->xpath->query(variable_get('lib4ri_pub_db_auth_xpath_query'));
+        $publication_year = $this->xpath->query('//mods:mods/mods:originInfo/mods:dateIssued')[0]->nodeValue;
         foreach ($sections as $section){
             unset($affil_data);
             $fourri_node = $section->getElementsByTagName('fourri')[0];
@@ -514,7 +517,17 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
                     $unit_data = get_authors_unit_from_aff_name($auth_data[0]['group'])[0];
                     $unit_id = $unit_data['g_pid'];
                     $unit_name = $unit_data['g_cname'];
-                    $affil_data = get_authors_affiliation_from_aff_name($unit_name);
+                    
+                    if (($user->name != 'anonymous') && ($publication_year != date("Y"))){
+                        $affil_data = get_authors_historical_affiliation_from_aff_name($unit_name, $publication_year);
+                    }
+                    
+                    if ($affil_data){
+                        $this->setMessage('Affiliation structure for year '.$publication_year, 'warning');
+                    }
+                    else{
+                        $affil_data = get_authors_affiliation_from_aff_name($unit_name);
+                    }
                     
                     $elem_uid = $this->dom->createElement('nameIdentifier',$unit_id);
                     $elem_uid->setAttribute('type','organizational unit id');
