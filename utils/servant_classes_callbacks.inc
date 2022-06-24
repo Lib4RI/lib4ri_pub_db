@@ -544,7 +544,9 @@ function lib4ri_pub_db_res_data_filter_publisher($dom, $params){
                 
                 if (isset($publisher->function) and $publisher->function != ''){
                     $fun = $publisher->function;
-                    $dom = $fun($dom, $xpath, $item);
+                    if($fun($item)){
+                        $item->parentNode->removeChild($item);
+                    }
                 }
                 break;
             }
@@ -578,10 +580,22 @@ function lib4ri_pub_db_res_data_filter_relation_type($dom, $params){
     return $dom;
 }
 
-function hep_discard_appended_version($dom, $xpath, $item){
-    $publishers = lib4ri_pub_db_get_data_publishers(TRUE);
+function hep_discard_appended_version($item, $params = NULL){
+    $doi = $item->getElementsByTagName("doi")->item(0)->nodeValue;
+    $pattern = "/.v(\d)+|\/t\d+/"; // match .v{number}/t{number}
+    $main = preg_replace($pattern,'', $doi);
+    
+    if (strcmp($main, $doi) == 1){ //if no pattern found return false
+        return FALSE;
+    }
     
     
+    foreach($params as $other_item){ //double check that the doi resulting from pattern removal matches with one in the list
+        $other_doi = $other_item->getElementsByTagName("doi")->item(0)->nodeValue;
+        if (strcmp($main, $other_doi) == 1){
+            return TRUE;        
+        }
+    }
     
-    return $dom;
+    return FALSE;
 }
