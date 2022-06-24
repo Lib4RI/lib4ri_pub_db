@@ -544,7 +544,7 @@ function lib4ri_pub_db_res_data_filter_publisher($dom, $params){
                 
                 if (isset($publisher->function) and $publisher->function != ''){
                     $fun = $publisher->function;
-                    if($fun($item)){
+                    if($fun($item, $items)){
                         $item->parentNode->removeChild($item);
                     }
                 }
@@ -585,14 +585,14 @@ function hep_discard_appended_version($item, $params = NULL){
     $pattern = "/.v(\d)+|\/t\d+/"; // match .v{number}/t{number}
     $main = preg_replace($pattern,'', $doi);
     
-    if (strcmp($main, $doi) == 1){ //if no pattern found return false
+    if (strcmp($main, $doi) == 0){ //if no pattern found return false
         return FALSE;
     }
     
     
-    foreach($params as $other_item){ //double check that the doi resulting from pattern removal matches with one in the list
+    foreach($params as $other_item){ //double check that the doi resulting from pattern removal matches one in the list
         $other_doi = $other_item->getElementsByTagName("doi")->item(0)->nodeValue;
-        if (strcmp($main, $other_doi) == 1){
+        if (strcmp($main, $other_doi) == 0){
             return TRUE;        
         }
     }
