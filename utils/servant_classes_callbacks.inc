@@ -508,11 +508,12 @@ function lib4ri_pub_db_unspace_name_given( $nameGiven ) {
 
 function lib4ri_pub_db_res_data_filter_publisher($dom, $params){
     module_load_include('inc', 'lib4ri_pub_db', 'includes/functions');
-//    $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
     $publishers = lib4ri_pub_db_get_data_publishers(TRUE);
     $xpath = new DOMXPath($dom);
     $items = $xpath->query('//results/item');
+//    $ii = 0;
     foreach($items as $item){
+//        echo ++$ii."\n"; 
         $found = false;
         foreach($publishers as $publisher){
             if (strpos(trim($publisher->publisher_string), $item->getElementsByTagName("publisher")->item(0)->nodeValue) !== false){
@@ -547,8 +548,10 @@ function lib4ri_pub_db_res_data_filter_publisher($dom, $params){
                 
                 if (isset($publisher->function) and ($publisher->function != '') and (!$removed)){
                     $fun = $publisher->function;
-                    if($fun($item, $items)){
+                    if($fun($item) and ($item->parentNode)){
                         $item->parentNode->removeChild($item);
+//                        echo $item->getElementsByTagName("doi")->item(0)->nodeValue." removed\n";
+                        break;
                     }
                 }
                 break;
@@ -584,6 +587,7 @@ function lib4ri_pub_db_res_data_filter_relation_type($dom, $params){
 }
 
 function hep_discard_appended_version($item, $params = NULL){
+    
     $doi = $item->getElementsByTagName("doi")->item(0)->nodeValue;
     $pattern = "/.v(\d)+|\/t\d+/"; // match .v{number}/t{number}
     $main = preg_replace($pattern,'', $doi);
@@ -592,13 +596,5 @@ function hep_discard_appended_version($item, $params = NULL){
         return FALSE;
     }
     
-    
-    foreach($params as $other_item){ //double check that the doi resulting from pattern removal matches one in the list
-        $other_doi = $other_item->getElementsByTagName("doi")->item(0)->nodeValue;
-        if (strcmp($main, $other_doi) == 0){
-            return TRUE;        
-        }
-    }
-    
-    return FALSE;
+    return TRUE;
 }
