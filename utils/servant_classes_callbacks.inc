@@ -508,16 +508,17 @@ function lib4ri_pub_db_unspace_name_given( $nameGiven ) {
 
 function lib4ri_pub_db_res_data_filter_publisher($dom, $params){
     module_load_include('inc', 'lib4ri_pub_db', 'includes/functions');
-//    $publishers = explode("\n", trim(variable_get('lib4ri_pub_db_resdata_enrich_publishers')));
     $publishers = lib4ri_pub_db_get_data_publishers(TRUE);
     $xpath = new DOMXPath($dom);
     $items = $xpath->query('//results/item');
+//    $ii = 0;
     foreach($items as $item){
+//        echo ++$ii."\n"; 
         $found = false;
         foreach($publishers as $publisher){
             if (strpos(trim($publisher->publisher_string), $item->getElementsByTagName("publisher")->item(0)->nodeValue) !== false){
                 $found = true;
-                
+                $removed = false;
                 $related_identifiers = $xpath->query("descendant::relatedIdentifiers/item", $item);
                 $allowed_relation_found = FALSE;
                 if (isset($publisher->allowed_rel_types) and $publisher->allowed_rel_types != ''){
@@ -530,21 +531,28 @@ function lib4ri_pub_db_res_data_filter_publisher($dom, $params){
                     }
                     if($allowed_relation_found == FALSE){
                         $item->parentNode->removeChild($item);
+                        $removed = true;
                     }
                 }
                 
-                if (isset($publisher->forbidden_rel_types) and $publisher->forbidden_rel_types != ''){
+                if (isset($publisher->forbidden_rel_types) and ($publisher->forbidden_rel_types != '') and (!$removed)){
                     $relation_types = explode(',', trim($publisher->forbidden_rel_types));
                     foreach($related_identifiers as $identifier){
                         if(in_array($identifier->getElementsByTagName("relationType")[0]->nodeValue, $relation_types)){
                             $item->parentNode->removeChild($item);
+                            $removed = true;
+                            break;
                         }
                     }
                 }
                 
-                if (isset($publisher->function) and $publisher->function != ''){
+                if (isset($publisher->function) and ($publisher->function != '') and (!$removed)){
                     $fun = $publisher->function;
-                    $dom = $fun($dom, $xpath, $item);
+                    if($fun($item) and ($item->parentNode)){
+                        $item->parentNode->removeChild($item);
+//                        echo $item->getElementsByTagName("doi")->item(0)->nodeValue." removed\n";
+                        break;
+                    }
                 }
                 break;
             }
@@ -578,10 +586,15 @@ function lib4ri_pub_db_res_data_filter_relation_type($dom, $params){
     return $dom;
 }
 
-function hep_discard_appended_version($dom, $xpath, $item){
-    $publishers = lib4ri_pub_db_get_data_publishers(TRUE);
+function hep_discard_appended_version($item, $params = NULL){
     
+    $doi = $item->getElementsByTagName("doi")->item(0)->nodeValue;
+    $pattern = "/.v(\d)+|\/t\d+/"; // match .v{number}/t{number}
+    $main = preg_replace($pattern,'', $doi);
     
+    if (strcmp($main, $doi) == 0){ //if no pattern found return false
+        return FALSE;
+    }
     
-    return $dom;
+    return TRUE;
 }
