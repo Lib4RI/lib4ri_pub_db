@@ -519,7 +519,12 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
                     $unit_name = $unit_data['g_cname'];
                     
                     if (($user->name != 'anonymous') && ($publication_year != date("Y"))){
-                        $affil_data = get_authors_historical_affiliation_from_aff_name($unit_name, $publication_year);
+                        if (intval($publication_year) < 2006){
+                            $affil_data = get_000psi_affiliation($publication_year);
+                        }
+                        else{
+                            $affil_data = get_authors_historical_affiliation_from_aff_name($unit_name, $publication_year);
+                        }
                     }
                     
                     if ($affil_data){
