@@ -135,12 +135,12 @@ function get_authors_historical_affiliation_from_aff_name($group, $year){
 
 function get_000psi_affiliation($year){
     $out = array();
-    $out[0]->department = NULL;
-    $out[0]->division = NULL;
+    $out[0]->department = '';
+    $out[0]->division = '';
     $out[0]->group_id = '0000';
     $out[0]->group_name = '0000 PSI';
-    $out[0]->id = NULL;
-    $out[0]->department = NULL;
+    $out[0]->id = '';
+    $out[0]->department = '';
     $out[0]->year = $year;
     
     return $out;
