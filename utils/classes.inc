@@ -513,12 +513,14 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
                 $elemU->appendChild($elem2);
                 $section->appendChild($elemU);
                 
+                $hist_search = 0;
                 if ($affil_search){
                     $unit_data = get_authors_unit_from_aff_name($auth_data[0]['group'])[0];
                     $unit_id = $unit_data['g_pid'];
                     $unit_name = $unit_data['g_cname'];
                     
                     if (($user->name != 'anonymous') && ($publication_year != date("Y"))){
+                        $hist_search = 1;
                         if (intval($publication_year) < 2006){
                             $affil_data = get_000psi_affiliation($publication_year);
                             $unit_name = '0000 PSI';
@@ -533,6 +535,9 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
                     }
                     else{
                         $affil_data = get_authors_affiliation_from_aff_name($unit_name);
+                        if ($hist_search){
+                            $this->setMessage('NO'.$publication_year.' affiliation structure for author '.$g_name.' '.$f_name.' has been found', 'warning');
+                        }
                     }
                     
                     $elem_uid = $this->dom->createElement('nameIdentifier',$unit_id);
