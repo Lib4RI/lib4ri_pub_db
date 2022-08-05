@@ -521,6 +521,7 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
                     if (($user->name != 'anonymous') && ($publication_year != date("Y"))){
                         if (intval($publication_year) < 2006){
                             $affil_data = get_000psi_affiliation($publication_year);
+                            $unit_name = '0000 PSI';
                         }
                         else{
                             $affil_data = get_authors_historical_affiliation_from_aff_name($unit_name, $publication_year);
@@ -528,7 +529,7 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
                     }
                     
                     if ($affil_data){
-                        $this->setMessage('Affiliation structure for year '.$publication_year, 'warning');
+                        $this->setMessage($publication_year.' affiliation structure for author '.$g_name.' '.$f_name, 'warning');
                     }
                     else{
                         $affil_data = get_authors_affiliation_from_aff_name($unit_name);
