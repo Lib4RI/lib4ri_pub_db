@@ -531,7 +531,7 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
                     }
                     
                     if ($affil_data){
-                        $this->setMessage($publication_year.' affiliation structure for author '.$g_name.' '.$f_name, 'warning');
+                        $this->setMessage('Please double check '.$publication_year.' affiliation structure for author '.$g_name.' '.$f_name, 'warning');
                     }
                     else{
                         $affil_data = get_authors_affiliation_from_aff_name($unit_name);
