@@ -217,10 +217,10 @@ class Lib4riMetaDataEnricher extends MetaDataAbstract{
         foreach ($qp->islandoraSolrResult['response']['objects'] as $object) {
             $found = 1;
             $doc = $object['solr_doc'];
-            $title_node->nodeValue = htmlentities($doc[variable_get('lib4ri_pub_db_journ_title_solr_field')][0]);
+            $title_node->nodeValue = htmlspecialchars($doc[variable_get('lib4ri_pub_db_journ_title_solr_field')][0]);
             $id->nodeValue = $doc['PID'];
-            $abbrev_title->nodeValue = htmlentities($doc[variable_get('lib4ri_pub_db_abbr_title_solr_field')][0]);
-            $publisher->nodeValue = htmlentities($doc[variable_get('lib4ri_pub_db_journ_publish_solr_field')][0]);
+            $abbrev_title->nodeValue = htmlspecialchars($doc[variable_get('lib4ri_pub_db_abbr_title_solr_field')][0]);
+            $publisher->nodeValue = htmlspecialchars($doc[variable_get('lib4ri_pub_db_journ_publish_solr_field')][0]);
             $issn->nodeValue = $doc[variable_get('lib4ri_pub_db_journ_issn_solr_field')][0];
             $e_issn->nodeValue = $doc[variable_get('lib4ri_pub_db_journ_eissn_solr_field')][0];             
         }
