@@ -524,7 +524,7 @@ class PsiMetaDataEnricher extends Lib4riMetaDataEnricher{
                         if (intval($publication_year) < 2006){
                             $affil_data = get_000psi_affiliation($publication_year);
                             $unit_name = '0000 PSI';
-                            $unit_id = 'psi-units:4510';
+                            $unit_id = 'psi-units:697';
                         }
                         else{
                             $affil_data = get_authors_historical_affiliation_from_aff_name($unit_name, $publication_year);
