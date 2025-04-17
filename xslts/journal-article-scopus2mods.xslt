@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0"
-  xmlns="http://www.loc.gov/mods/v3" 
+  xmlns="http://www.loc.gov/mods/v3"
   xmlns:mods="http://www.loc.gov/mods/v3" 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
   xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -152,10 +152,12 @@
   						</xsl:when>	
   					</xsl:choose>
   				</xsl:for-each>
-  				<xsl:for-each select="/dtd:abstracts-retrieval-response/item/xocs:bibrecord/xocs:grantlist/xocs:grant">
+  				<xsl:for-each select="/dtd:abstracts-retrieval-response/item/bibrecord/head/grantlist/grant">
+  					<here>
+  					</here>  				
   					<xsl:choose>
-  						<xsl:when test="xocs:grant-agency-id[.='501100001711']">
-  							<xsl:for-each select="xocs:grant-id">
+  						<xsl:when test="grant-agency-id[.='501100001711']">
+  							<xsl:for-each select="grant-id">
 	  							<fundingReference>
 									<funderName>Swiss National Science Foundation</funderName>
 									<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100001711</funderIdentifier>
