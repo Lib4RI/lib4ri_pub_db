@@ -152,6 +152,21 @@
   						</xsl:when>	
   					</xsl:choose>
   				</xsl:for-each>
+  				<xsl:for-each select="/dtd:abstracts-retrieval-response/item/xocs:bibrecord/xocs:grantlist/xocs:grant">
+  					<xsl:choose>
+  						<xsl:when test="xocs:grant-agency-id[.='501100001711']">
+  							<xsl:for-each select="xocs:grant-id">
+	  							<fundingReference>
+									<funderName>Swiss National Science Foundation</funderName>
+									<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100001711</funderIdentifier>
+									<fundingStream>SNSF</fundingStream>
+									<awardTitle></awardTitle>
+									<awardNumber><xsl:value-of select="current()"/></awardNumber>
+								</fundingReference>
+							</xsl:for-each>				
+  						</xsl:when>	  						
+  					</xsl:choose>
+  				</xsl:for-each>
   			</fundingReferences>
   		</extension>
 	</mods>
