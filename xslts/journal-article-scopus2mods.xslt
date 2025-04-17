@@ -153,9 +153,40 @@
   					</xsl:choose>
   				</xsl:for-each>
   				<xsl:for-each select="/dtd:abstracts-retrieval-response/item/bibrecord/head/grantlist/grant">
-  					<here>
-  					</here>  				
   					<xsl:choose>
+  						<xsl:when test="grant-agency-id[.='100018693']">
+  							<xsl:for-each select="grant-id">
+	  							<fundingReference>
+									<funderName>European Commission</funderName>
+									<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100000780</funderIdentifier>
+									<fundingStream>Horizon Europe Framework Programme</fundingStream>
+									<awardTitle></awardTitle>
+									<awardNumber><xsl:value-of select="current()"/></awardNumber>
+								</fundingReference>
+							</xsl:for-each>
+						</xsl:when>				  					
+  						<xsl:when test="grant-agency-id[.='100010661']">
+  							<xsl:for-each select="grant-id">
+	  							<fundingReference>
+									<funderName>European Commission</funderName>
+									<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100000780</funderIdentifier>
+									<fundingStream>Horizon 2020 Framework Programme</fundingStream>
+									<awardTitle></awardTitle>
+									<awardNumber><xsl:value-of select="current()"/></awardNumber>
+								</fundingReference>
+							</xsl:for-each>
+						</xsl:when>				
+  						<xsl:when test="grant-agency-id[.='100011102']">
+  							<xsl:for-each select="grant-id">
+	  							<fundingReference>
+									<funderName>European Commission</funderName>
+									<funderIdentifier funderIdentifierType="Crossref_Funder">http://dx.doi.org/10.13039/501100000780</funderIdentifier>
+									<fundingStream>Seventh Framework Programme</fundingStream>
+									<awardTitle></awardTitle>
+									<awardNumber><xsl:value-of select="current()"/></awardNumber>
+								</fundingReference>
+							</xsl:for-each>				
+  						</xsl:when>	  						
   						<xsl:when test="grant-agency-id[.='501100001711']">
   							<xsl:for-each select="grant-id">
 	  							<fundingReference>
