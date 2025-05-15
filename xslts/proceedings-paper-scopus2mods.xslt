@@ -176,7 +176,7 @@
 								</fundingReference>
 							</xsl:for-each>
   						</xsl:when>
-  						<xsl:when test="xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/100010661'] or xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/501100007601']">
+  						<xsl:when test="xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/100010661'] or xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/501100007601'] or xocs:funding-agency-id[.='http://data.elsevier.com/vocabulary/SciValFunders/100010665']">
   							<xsl:for-each select="xocs:funding-id">
 	  							<fundingReference>
 									<funderName>European Commission</funderName>
@@ -224,7 +224,7 @@
 								</fundingReference>
 							</xsl:for-each>
 						</xsl:when>				  					
-  						<xsl:when test="grant-agency-id[.='100010661']">
+  						<xsl:when test="grant-agency-id[.='100010661'] or grant-agency-id[.='501100007601'] or grant-agency-id[.='100010665']">
   							<xsl:for-each select="grant-id">
 	  							<fundingReference>
 									<funderName>European Commission</funderName>
@@ -235,7 +235,7 @@
 								</fundingReference>
 							</xsl:for-each>
 						</xsl:when>				
-  						<xsl:when test="grant-agency-id[.='100011102']">
+  						<xsl:when test="grant-agency-id[.='100011102'] or grant-agency-id[.='501100004963']">
   							<xsl:for-each select="grant-id">
 	  							<fundingReference>
 									<funderName>European Commission</funderName>
