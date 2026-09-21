@@ -615,7 +615,35 @@ class IdValidator{
 //         'edited_book' => 'Edited Book',
     );
     
+    protected $eid;
+    protected $servant_id_mode = NULL;
     
+    public function setEid($eid){
+        $this->eid = $eid;
+        return $this;
+    }
+    
+    /**
+     * Ordered fetch attempts, as array(method, identifier to use).
+     */
+    protected function getFetchStrategy(){
+        return array(array('fetchFromScopus', 'doi'));
+    }
+    
+    protected function retrieveMods(){
+        foreach ($this->getFetchStrategy() as $attempt){
+            list($method, $this->servant_id_mode) = $attempt;
+            $this->$method();
+            // Stop on success and on -1 (pub type mismatch, must not fall
+            // through). FALSE means nothing came back, NULL means the source
+            // is switched off -- both continue to the next attempt.
+            if ($this->mods !== FALSE && $this->mods !== NULL){
+                break;
+            }
+        }
+        
+        return $this;
+    }
     public function __construct() {
         $this->setSolrfield();
     }
@@ -870,6 +898,11 @@ class IdValidator{
 class DoiValidator extends IdValidator{
     protected $id_label = 'DOI';
     
+    protected function getFetchStrategy(){
+        return array(array('fetchFromScopus', 'doi'),
+            array('fetchFromXref',   'doi'));
+    }
+    
     protected function setSolrfield(){
         $this->idsolrfield = variable_get('lib4ridora_solr_field_document_doi', 'mods_identifier_doi_mlt');
     }
@@ -887,21 +920,25 @@ class DoiValidator extends IdValidator{
         return $this;
     }
     
-    protected function retrieveMods(){
-        $this->fetchFromScopus();
+// //     protected function retrieveMods(){
+// //         $this->fetchFromScopus();
         
-        if ($this->mods == FALSE){
-            $this->fetchFromXref();        
-        }
+// //         if ($this->mods == FALSE){
+// //             $this->fetchFromXref();        
+// //         }
         
-        return $this;
-    }
+//         return $this;
+//     }
     
 }
 
 class EidValidator extends IdValidator{
     protected $id_label = 'Scopus ID';
 
+    protected function getFetchStrategy(){
+        return array(array('fetchFromScopus', 'eid'));
+    }
+    
     protected function setSolrfield(){
         $this->idsolrfield = 'mods_identifier_scopus_mlt';
     }
@@ -911,10 +948,35 @@ class EidValidator extends IdValidator{
         return $this;
     }
     
-    protected function retrieveMods(){
-        $this->fetchFromScopus();
+//     protected function retrieveMods(){
+//         $this->fetchFromScopus();
      
-        return $this;
+//         return $this;
+//     }
+}
+
+class DoiEidValidator extends DoiValidator{
+    
+    protected function getFetchStrategy(){
+        return array(array('fetchFromScopus', 'doi'),
+            array('fetchFromScopus', 'eid'),
+            array('fetchFromXref',   'doi'));
+    }
+    
+    protected function getIdQueryFields(){
+        return array(
+            $this->idsolrfield           => $this->id,
+            'mods_identifier_scopus_mlt' => $this->eid,
+        );
+    }
+    
+    protected function setServantId(){
+        if ($this->servant_id_mode === 'eid'){
+            $this->serv->setEid(trim($this->eid));
+            return $this;
+        }
+        
+        return parent::setServantId();
     }
 }
 
