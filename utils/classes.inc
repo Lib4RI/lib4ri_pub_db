@@ -614,6 +614,7 @@ class IdValidator{
 //         'book_chapter' => 'Book Chapter',
 //         'edited_book' => 'Edited Book',
     );
+    protected $id_labels = array('doi' => 'DOI', 'eid' => 'Scopus ID');
     
     protected $eid;
     protected $servant_id_mode = NULL;
@@ -804,6 +805,7 @@ class IdValidator{
             $this->setServantId();
             $this->serv->setKey(variable_get('lib4ri_pub_db_scopus_api_key'))->serve();
             $this->mods = $this->serv->getProcessedDom()[0];
+            $source = $this->id_labels[$this->servant_id_mode];
             
             global $user;
             
@@ -817,19 +819,19 @@ class IdValidator{
                     }
                     else {
                         if ($user->name != 'anonymous'){
-                            $this->setMessage('Data fetched from Scopus', 'status');
+                            $this->setMessage("Data fetched from Scopus using $source", 'status');
                         }
                     }
                 }
                 else {
                     if ($user->name != 'anonymous'){
-                        $this->setMessage('Data fetched from Scopus', 'status');
+                        $this->setMessage("Data fetched from Scopus using $source", 'status');
                     }
                 }
             }
             else {
                 if ($user->name != 'anonymous'){
-                    $this->setMessage('Cannot fetch data from Scopus', 'warning');
+                    $this->setMessage("Cannot fetch data from Scopus $source", 'warning');
                 }
             }
         }
