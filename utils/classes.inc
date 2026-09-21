@@ -831,7 +831,7 @@ class IdValidator{
             }
             else {
                 if ($user->name != 'anonymous'){
-                    $this->setMessage("Cannot fetch data from Scopus $source", 'warning');
+                    $this->setMessage("Cannot fetch data from Scopus using $source", 'warning');
                 }
             }
         }
