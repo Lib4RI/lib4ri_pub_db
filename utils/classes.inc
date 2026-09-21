@@ -723,11 +723,7 @@ class IdValidator{
     protected function setServantId(){
         return $this;
     }
-    
-    protected function retrieveMods(){
-
-    }
-    
+        
     
     protected function getSameIdObjects(){
         module_load_include('inc', 'islandora_solr', 'includes/utilities');
